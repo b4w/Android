@@ -19,21 +19,21 @@ public class ToDoListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // ‡агрузка представлениЯ.
+        // Р—Р°РіСЂСѓР¶Р°РµРј РЅР°С€Рµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
         setContentView(R.layout.activity_to_do_list);
         
-        // Џолучаем ссылки на элементы пользовательского интерфейса.
+        // РџРѕР»СѓС‡Р°РµРј СЃСЃС‹Р»РєРё РЅР° СЌР»РµРјРµРЅС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
         ListView mylistView = (ListView) findViewById(R.id.myListView);
         final EditText myEditText = (EditText) findViewById(R.id.myEditText); 
         
-        // ‘оздаем список длЯ хранениЯ наших задач.
+        // РЎРѕР·РґР°РµРј СЃРїРёСЃРѕРє РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р·Р°РґР°С‡
         final ArrayList<String> toDoItems = new ArrayList<String>();
         
-        // ‘оздаем ArrayAdapter, что бы привЯзать список к ListView.
+        // РЎРѕР·РґР°РµРј ArrayAdapter, С‡С‚Рѕ Р±С‹ РїСЂРёРІСЏР·Р°С‚СЊ РјР°СЃСЃРёРІ Рє ListView.
         final ArrayAdapter<String> arrayAdapter;
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, toDoItems);
         
-        // ЏривЯзываем список к ListView.
+        // РџСЂРёРІСЏР·С‹РІР°РµРј РјР°СЃСЃРёРІ Рє ListView.
         mylistView.setAdapter(arrayAdapter);
         
         myEditText.setOnKeyListener(new View.OnKeyListener() {
