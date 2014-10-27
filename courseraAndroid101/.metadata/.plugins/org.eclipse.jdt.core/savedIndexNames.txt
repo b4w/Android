@@ -1,0 +1,1 @@
+INDEX VERSION 1.126+/Users/KonstantinSysoev/Documents/Programming/Java/Projects/courseraAndroid101workspace/.metadata/.plugins/org.eclipse.jdt.core
