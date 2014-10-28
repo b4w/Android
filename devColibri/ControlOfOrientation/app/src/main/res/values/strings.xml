@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ControlOfOrientation</string>
+    <string name="megaButtonOne">Мега кнопка 1</string>
+    <string name="megaButtonTwo">Мега кнопка 2</string>
+    <string name="megaButtonTree">Мега кнопка 3</string>
+    <string name="textViewDevColibri">Devcolibri.com</string>
+</resources>
