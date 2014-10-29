@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AndroidLogExam</string>
+    <string name="title_activity_main">Логирование</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="info">Info</string>
+    <string name="error">Error</string>
+    <string name="warn">Warn</string>
+    <string name="debug">Debug</string>
+    <string name="verbose">Verbose</string>
+    <string name="wtf">WTF</string>
+
+</resources>
