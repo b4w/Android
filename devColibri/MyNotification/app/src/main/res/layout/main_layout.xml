@@ -11,4 +11,10 @@
             android:text="@string/showNotification"
             android:onClick="showNotification"
             android:id="@+id/button" android:layout_gravity="center_horizontal"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:onClick="cancelNotification"
+            android:id="@+id/button2" android:layout_gravity="center_horizontal"/>
 </LinearLayout>

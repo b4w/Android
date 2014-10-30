@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -34,9 +35,23 @@ public class MyNotificationActivity extends Activity {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 .setContentTitle("Уведомление")
-                .setContentText("Нажмите что бы узнать секрет");
+                .setContentText("Нажмите что бы узнать секрет")
+                .setProgress(100, 20, true);
 
         Notification notification = builder.build();
+
+        notification.defaults = Notification.DEFAULT_VIBRATE;
+        notification.sound = Uri.parse("android.resource://com.devcolibri.mynotification.app" + R.raw.believe_notification);
+
+        long[] vibrate = new long[]{1500, 1000, 1500, 1000};
+        notification.vibrate = vibrate;
+
+        notification.flags = notification.flags | Notification.FLAG_INSISTENT;
+
         nm.notify(NOTIFICATION_ID, notification);
+    }
+
+    public void cancelNotification(View view) {
+        nm.cancel(NOTIFICATION_ID);
     }
 }
