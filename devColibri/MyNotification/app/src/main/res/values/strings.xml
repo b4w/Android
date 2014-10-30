@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyNotification</string>
+    <string name="showNotification">Показать уведомление</string>
+    <string name="youKnowSecret">Вы узнали секрет</string>
+</resources>
