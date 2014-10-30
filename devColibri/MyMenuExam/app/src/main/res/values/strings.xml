@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MyMenuExam</string>
+    <string name="item_Settings">Настройки</string>
+    <string name="item_about">Об авторе</string>
+    <string name="item_site">Офф. сайт</string>
+</resources>
