@@ -30,6 +30,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         btnLoad = (Button) findViewById(R.id.btnLoad);
         btnLoad.setOnClickListener(this);
+
+        loadText();
     }
 
     @Override
@@ -44,6 +46,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        saveText();
+        super.onDestroy();
     }
 
     private void saveText() {
