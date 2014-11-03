@@ -1,0 +1,65 @@
+Copyright (c) 2013 Lawrence Angrave
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+--
+The Internet map png image is by The Opte Project and licensed under 
+Creative Commons Attribution 2.5 Generic license.
+See
+https://en.m.wikipedia.org/wiki/File:Internet_map_1024_-_transparent.png
+https://en.wikipedia.org/wiki/Internet
+--
+
+To use this software:
+
+1. Put your original images in 'originals' directory
+
+2. Run "Reducer'
+e.g. In Eclipse, right-click/Command-click on Reducer in the Package Explorer View and select "Run As Java Application"
+
+3. Reduced versions of the images appear in output directory
+Hint: In Eclipse, right-click/Command-click on the project name and select Refresh(F5) for them to show up.
+You can then copy-paste them to where you need them
+
+Typical output:
+Processing originals/illiac1.jpg
+Source width,height : 2560,1920
+Output width,height : 640,480
+Memory requirements : 1200 KB
+Output file:output/4.0/illiac1.jpg, file size : 347 KB
+
+
+To change the reduction factor edit Reducer.java :
+The default reduces the memory requirements of the image by 1/16th:
+
+double factor = 4; 
+
+- the output image is a 1/4th of the width and 1/4th of the height
+
+e.g.
+double factor = 3;
+
+This will create output images that are three times smaller
+i.e. require about 1/9th of the memory.
+ 
+
+You are free to modify and reuse this code as you wish - see the above open source license for details.
+The picture of the Illiac I is by Lawrence Angrave and is also covered by the same license.
+The Internet map png image is by The Opte Project and licensed under 
+Creative Commons Attribution 2.5 Generic license.
