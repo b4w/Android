@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.climbtraining.app.activity.SettingsActivity" >
+
+    <item android:id="@+id/menuMain"
+          android:title="@string/main"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/menuWorkouts"
+          android:title="@string/workouts"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/menuExercises"
+          android:title="@string/exercises"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+</menu>
