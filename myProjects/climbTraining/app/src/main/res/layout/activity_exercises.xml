@@ -1,16 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.climbtraining.app.activity.ExercisesActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.climbtraining.app.activity.ExercisesActivity">
 
-    <TextView
-        android:text="@string/exercises"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <fragment
+            android:id="@+id/activityExercisesCategoryFragment"
+            android:name="com.climbtraining.app.fragments.exercisesActivity.CategoryFragment"
+            tools:layout="@layout/activity_exercises_category_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"/>
+    <!--<fragment-->
+            <!--android:id="@+id/activityExercisesButtonsFragment"-->
+            <!--android:name="com.climbtraining.app.fragments.exercisesActivity.ButtonsFragment"-->
+            <!--tools:layout="@layout/activity_exercises_buttons_fragment"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
 
 </RelativeLayout>

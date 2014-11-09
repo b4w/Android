@@ -1,13 +1,13 @@
 package com.climbtraining.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.climbtraining.app.R;
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
