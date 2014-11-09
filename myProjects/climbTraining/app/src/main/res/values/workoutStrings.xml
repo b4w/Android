@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="exercise">Exercise</string>
-    <string name="comments">Comments</string>
-    <string name="clear">Clear</string>
-    <string name="cancel">Cancel</string>
-    <string name="filters">Filters</string>
-</resources>
