@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 import com.climbtraining.app.R;
 import com.climbtraining.app.pojo.Exercise;
 
@@ -17,7 +18,7 @@ public class ExerciseAdapter extends BaseAdapter {
 
     public ExerciseAdapter(Context context, List<Exercise> exercisesList) {
         this.exercisesList = exercisesList;
-        layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -37,9 +38,18 @@ public class ExerciseAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.activity_exercises_category_fragment, parent, false);
+        View view = convertView;
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.activity_exercises_category_fragment, parent, false);
         }
-        return convertView;
+
+        Exercise exercise = getExercise(position);
+        ((TextView) view.findViewById(R.id.textViewForListViewCategoryFragment)).setText(exercise.getName());
+
+        return view;
+    }
+
+    private Exercise getExercise(int position) {
+        return (Exercise) getItem(position);
     }
 }
