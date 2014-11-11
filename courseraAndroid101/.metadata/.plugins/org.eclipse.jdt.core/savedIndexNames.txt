@@ -1,5 +1,5 @@
 INDEX VERSION 1.126+/Users/KonstantinSysoev/Documents/Programming/Java/Projects/Android/courseraAndroid101/.metadata/.plugins/org.eclipse.jdt.core
-649527416.index
 762274045.index
+649527416.index
 2592479938.index
 65846847.index

@@ -8,15 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.climbtraining.app.R;
-import com.climbtraining.app.dbhelpers.exercises.ExercisesSQLHelper;
-import com.climbtraining.app.pojo.Exercise;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener{
 
     private Button btnAdd;
     private Button btnCancel;
-    private ExercisesSQLHelper exercisesSQLHelper;
 
+    private ICommunicatorExercises iCommunicatorExercises;
 
     @Nullable
     @Override
@@ -29,8 +27,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener{
         btnCancel.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
 
-        exercisesSQLHelper = new ExercisesSQLHelper(view.getContext());
-
+        iCommunicatorExercises = (ICommunicatorExercises) getActivity();
         return view;
     }
 
@@ -38,16 +35,11 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAdd:
-                insertNewItemToDB();
+                iCommunicatorExercises.showDialogAddCategory();
                 break;
             case R.id.btnCancel:
 
                 break;
         }
-    }
-
-    private void insertNewItemToDB() {
-        Exercise exercise = new Exercise("Отжимания", "Какой-то комментарий для категории отжимания");
-        exercisesSQLHelper.insertExercise(exercise);
     }
 }

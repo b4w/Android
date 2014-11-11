@@ -15,6 +15,7 @@ public class ExercisesSQLHelper extends AbstractSQLHelper {
 
     private static final String TAG = ExercisesSQLHelper.class.getSimpleName();
     private static final String DATABASE_TABLE = "Exercises";
+    private static final int DATABASE_VERSION = 1;
 
     public ExercisesSQLHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
