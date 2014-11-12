@@ -18,5 +18,6 @@
     <string name="add">Add</string>
     <string name="enterCategoryName">Enter the name of the category</string>
     <string name="ok">Ok</string>
+    <string name="remove">Remove</string>
 
 </resources>

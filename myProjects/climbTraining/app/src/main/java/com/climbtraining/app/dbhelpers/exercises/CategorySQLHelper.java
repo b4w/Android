@@ -14,7 +14,7 @@ import java.util.List;
 public class CategorySQLHelper extends AbstractSQLHelper {
 
     private static final String TAG = CategorySQLHelper.class.getSimpleName();
-    private static final String DATABASE_TABLE = "CATEGORY";
+    public static final String DATABASE_TABLE = "CATEGORY";
     private static final int DATABASE_VERSION = 2;
 
     private static final int INDEX_ID = 0;

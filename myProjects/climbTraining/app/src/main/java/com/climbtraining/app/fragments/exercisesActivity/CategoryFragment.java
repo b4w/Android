@@ -25,4 +25,8 @@ public class CategoryFragment extends ListFragment {
     private List<Category> init() {
         return categorySQLHelper.getAllCategories();
     }
+
+    public void updateCategoriesAdapter() {
+        categoriesAdapter.notifyDataSetChanged();
+    }
 }

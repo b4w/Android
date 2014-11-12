@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.climbtraining.app.R;
 import com.climbtraining.app.dbhelpers.exercises.CategorySQLHelper;
-import com.climbtraining.app.dbhelpers.exercises.ExercisesSQLHelper;
 import com.climbtraining.app.fragments.exercisesActivity.AddCategoryFragment;
 import com.climbtraining.app.fragments.exercisesActivity.ICommunicatorExercises;
 import com.climbtraining.app.pojo.Exercise;
@@ -57,6 +56,11 @@ public class ExercisesActivity extends FragmentActivity implements ICommunicator
         Category category = new Category();
         category.setName(nameCategory);
         categorySQLHelper.insertValue(category);
+    }
+
+    @Override
+    public void removeCategoryById(String id) {
+        categorySQLHelper.removeEntityById(CategorySQLHelper.DATABASE_TABLE, id);
     }
 
     public void showDialogAddCategory() {

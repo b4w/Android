@@ -11,8 +11,9 @@ import com.climbtraining.app.R;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener{
 
-    private Button btnAdd;
-    private Button btnCancel;
+    private Button btnAddCategory;
+    private Button btnCancelCategory;
+    private Button btnRemoveCategory;
 
     private ICommunicatorExercises iCommunicatorExercises;
 
@@ -21,11 +22,13 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_exercises_buttons_fragment, container, false);
 
-        btnAdd = (Button) view.findViewById(R.id.btnAdd);
-        btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        btnAddCategory = (Button) view.findViewById(R.id.btnAddCategory);
+        btnCancelCategory = (Button) view.findViewById(R.id.btnCancelCategory);
+        btnRemoveCategory = (Button) view.findViewById(R.id.btnRemoveCategory);
 
-        btnCancel.setOnClickListener(this);
-        btnAdd.setOnClickListener(this);
+        btnCancelCategory.setOnClickListener(this);
+        btnAddCategory.setOnClickListener(this);
+        btnRemoveCategory.setOnClickListener(this);
 
         iCommunicatorExercises = (ICommunicatorExercises) getActivity();
         return view;
@@ -34,11 +37,14 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnAdd:
+            case R.id.btnAddCategory:
                 iCommunicatorExercises.showDialogAddCategory();
                 break;
-            case R.id.btnCancel:
+            case R.id.btnCancelCategory:
 
+                break;
+            case R.id.btnRemoveCategory:
+                iCommunicatorExercises.removeCategoryById("2");
                 break;
         }
     }
