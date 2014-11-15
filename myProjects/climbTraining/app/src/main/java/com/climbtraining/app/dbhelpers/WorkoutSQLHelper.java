@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class WorkoutSQLHelper extends SQLiteOpenHelper {
 
-    private final String LOG_TAG = "workoutHelper";
+    private final String LOG_TAG = WorkoutSQLHelper.class.getSimpleName();
     public static final String TABLE_NAME = "workoutTable";
 
     public WorkoutSQLHelper(Context context) {

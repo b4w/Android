@@ -1,23 +1,18 @@
 package com.climbtraining.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import com.climbtraining.app.R;
 
-public class MainActivity extends ActionBarActivity {
-
-    private Button btnAddNewWorkout;
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btnAddNewWorkout = (Button) findViewById(R.id.btnAddNewWorkout);
     }
 
     @Override
@@ -43,9 +38,5 @@ public class MainActivity extends ActionBarActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void addNewWorkout(View view) {
-        startActivity(new Intent(getApplicationContext(), WorkoutActivity.class));
     }
 }

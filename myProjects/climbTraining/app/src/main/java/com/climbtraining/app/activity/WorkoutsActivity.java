@@ -1,31 +1,31 @@
 package com.climbtraining.app.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.climbtraining.app.R;
-import com.climbtraining.app.adapters.TrainingAdapter;
 import com.climbtraining.app.dbhelpers.WorkoutSQLHelper;
+import com.climbtraining.app.fragments.workoutsActivity.ICommunicatorWorkouts;
+import com.climbtraining.app.fragments.workoutsActivity.ListViewWorkoutFragment;
 import com.climbtraining.app.pojo.Training;
 import com.climbtraining.app.utils.DateFormatting;
-import com.climbtraining.app.utils.RequestCodes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class WorkoutsActivity extends ActionBarActivity {
+public class WorkoutsActivity extends FragmentActivity implements ICommunicatorWorkouts {
 
-    private final String LOG = "WorkoutActivityLog";
+    private final String TAG = WorkoutsActivity.class.getSimpleName();
 
     private List<Training> listTraining;
     private ListView listViewWorkout;
@@ -35,16 +35,19 @@ public class WorkoutsActivity extends ActionBarActivity {
     private String workoutName;
     private String workoutComments;
 
+    private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workouts);
 
         // todo подключаемся к БД и смотрим записи - обновляем лист
-        updateViewList();
-        listViewWorkout = (ListView) findViewById(R.id.listViewWorkout);
-        TrainingAdapter trainingAdapter = new TrainingAdapter(this, getListTraining());
-        listViewWorkout.setAdapter(trainingAdapter);
+//        updateViewList();
+//        listViewWorkout = (ListView) findViewById(R.id.listViewWorkout);
+//        TrainingAdapter trainingAdapter = new TrainingAdapter(this, getListTraining());
+//        listViewWorkout.setAdapter(trainingAdapter);
     }
 
     @Override
@@ -69,29 +72,15 @@ public class WorkoutsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onCreateNewWorkout(View view) {
-        Log.d(LOG, "add new workout");
-        Intent intent = new Intent(this, WorkoutActivity.class);
-        startActivityForResult(intent, RequestCodes.REQUEST_CODE_WORKOUT.ordinal());
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == RequestCodes.REQUEST_CODE_WORKOUT.ordinal()) {
-                setWorkoutName(data.getStringExtra("etWorkoutName"));
-                setWorkoutComments(data.getStringExtra("etWorkoutComments"));
-                addNewEntry();
-                // todo часто обращаюсь к БД, надо переделать
-                updateViewList();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR!", Toast.LENGTH_SHORT).show();
-        }
+    public void addItemToDataList(String item) {
+        fragmentManager = getFragmentManager();
+        ListViewWorkoutFragment fragment = (ListViewWorkoutFragment) fragmentManager.findFragmentById(R.id.listViewWorkoutFragment);
+        fragment.addItemToDataList(item);
     }
 
     private void addNewEntry() {
-        Log.d(LOG, "addNewEntry() start");
+        Log.d(TAG, "addNewEntry() start");
 
         // todo перенести в onCreate?
         ContentValues contentValues = new ContentValues();
@@ -111,11 +100,11 @@ public class WorkoutsActivity extends ActionBarActivity {
         contentValues.put("comments", comments);
 
         sqLiteDatabase.insert(WorkoutSQLHelper.TABLE_NAME, null, contentValues);
-        Log.d(LOG, "addNewEntry() done");
+        Log.d(TAG, "addNewEntry() done");
     }
 
     private void updateViewList() {
-        Log.d(LOG, "updateViewList() start");
+        Log.d(TAG, "updateViewList() start");
         //  делаем запрос к БД, вытаскиваем все записи
         if (sqLiteDatabase == null || (sqLiteDatabase.isReadOnly() && !sqLiteDatabase.isOpen())) {
             sqLiteDatabase = getWorkoutSQLHelper().getWritableDatabase();
@@ -140,7 +129,7 @@ public class WorkoutsActivity extends ActionBarActivity {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        Log.d(LOG, "updateViewList() done. ListTraining size = " + getListTraining().size());
+        Log.d(TAG, "updateViewList() done. ListTraining size = " + getListTraining().size());
     }
 
     // ------------- GETTERS AND SETTERS -----------------
