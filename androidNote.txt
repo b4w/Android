@@ -1,0 +1,438 @@
+# Android проект на Intellij IDEA
+
+/.idea - конфигаруционные файлы idea
+/gradle - библиотеки gradle, кот. позвоняют собирать android проект
+/%projectName% - файлы проекта
+	-/build - папка, которая генерится в момент запуска команды gradle - build (build - перегенерация папки /build. clean - очищаем /build)
+		-/....
+		-/java
+		-/src
+
+Activity - (свободная трактовка) - такой компонент, который позволяет общаться нашим View и логике нашего приложения (если сравнивать с MVC, то Activity - это контроллер)
+Layout - если сравнивать с MVC, то Layout - view (отображение), которое будет взаимодействовать с Activity.
+Все Activity обязательно объявляются в AndroidManifest.xml.
+
+Каждое окно, которое мы видем на телефоне в android - это activity (если сравнивать с ОС Windows, то Activity - диалоговые окна (формы) программ)
+Любое android приложение имеет 1 главное activity - это то activity, которое открывается при открытии нашего приложения.
+
+Создавая новую Activity мы должны:
+1) Унаследоваться от базового класса Activity
+2) После того как мы стали наследником, мы можем переопределить методы. Например методы цикла жизни Activity:
+- onCreate - срабатывает при открытии приложения либо при переходе с одного activity на другое (в случае если мы на него не переходили)
+- onStart - если приложение остановлено, то с помощью метода onStart мы можем его заново запустить (из стека activity). Но мы в этом методе еще не видем самого activity. Можем подготовить какие-то данные для пользователя.
+- onResume - метод вызывается когда activity находиться на переднем плане и доступно пользователю.
+- onPause - вызывается в тот момент, когда пользователь решил перейти к другому activity. При этом onPause вызывается для той activity на который находится пользователь (до перехода). Так же после onPause может повторно вызваться метод onResume.
+- onStop - делает текущий activity невидимым - помещает его в стек всех activity. Стек activity - такой стек, куда помещаются все activity с которыми пользователь в данный момент не работает, т.е. ему сейчас не нужны, но при условии что они ему еще потребуются.
+- onRestart - вызывается в том случае, если уже был вызван метод onStop и мы ходим вернуться к прежнему activity, т.е. метод onRestart вернет activity из стека не пересоздавая его - будет вызван метод - onStart.
+- onDestroy - срабатывает после метода onStop. В случае если acitivity находится в стеке activity и система решает уничтожить ее - вызывается метод onDestroy.
+
+Intent - предназначены для вызова компонентов в android. Компонентами в android можно представить себе либо activity, сервисы, либо какие-то другие приложения.
+Например:
+У нас в приложении 3 activity: a, b, c. Для того что бы перейти с одного activity на другой - мы можем использовать intent-ов. С помощью intent-ов так же можно запускать сервисы. Например мы из нашего приложения хотим отправить письмо с помощью приложения gmail - переход будет осуществляться с помощью intent-a.
+Если кратко, то intent - это механизм вызова каких-то компонентов (нашего либо другого приложения).
+
+Для того что бы передать с помощью intent какие-либо параментры другой activity - необходимо использовать метод intent.putExtra(). Например - intent.putExtra("login", login.getText().toString()) - приводим к строке, т.к. необходимо передать строку.;
+Для того что бы принять какие-либо параметры из "внодгого" intent-а, необходимо воспользоваться методом - getIntent().getStringExtra("%fildName%"). Например - getIntent.getStringExtra("login"). (так же есть методы getIntegerExtra() и т.д.))
+
+Toast - это всплывающие уведомления в android адресованные пользователю, которое появляется по верх всех окон, тем самым привлекая его внимание. Как правило всплывающие уведомления используются для показа каких-то коротких уведомлений.
+Для создания нового объекта класса Toast необходимо указать контекст - Toast toast = new Toast(this или getApplicationContext());
+Для составления встплывающего уведомления необходимо использовать статический метод makeText с параметрами - контекст, сообщение, какое количество времени сообщение будет показываться. Для показа использовать метод - show();
+Например: Toast toast = Toast.makeText(getApplicationContext(), "привет!", Toast.LENGTH_SHORT);
+	  toast.show();
+Для позиционирования всплывающего уведомления можно использовать метод - toast.setGravity(); Например: toast.setGravity(Gravity.TOP, 0, 0); 0, 0, - позиции осей x и y.)
+
+
+# Landscape layout
+Для того что бы переопределить позиционирование объектов на layout, необходимо добавить папку в res/ -> layout-land из которой будут браться настройки отображения activity при горизонтальном разположении экрана.
+Важно помнить, что при повороте экрана и соответственно при применении нового layout-а, у нас заново создается наш layout, т.е. он не хранит сострояние.
+Для того что бы узнать ориентацию экрана или другие свойства - необходимо воспользоваться (сделать сравнение) методами:
+	Configuration configuration = getResources().getConfiguration();
+	if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT) { ... } // Configuration.ORIENTATION.LANDSCAPE
+
+# onActivityResult and RequestCode
+requestCode - код запроса, который мы передаем в методе вызова другой activity. Кодом может быть любое уникальное число, по которому в последующем будет определяться ответ activity.
+startActivityForResulted() - метод, который запустит нам activity и после выполнения там определенного действия мы получим результат этого activity.
+Например:
+Создали отдельный класс со статическими константами: public static final int REQUEST_CODE_PRESENTED = 1;
+Передаем константу в метод вызова activity - startActivityForResult(intent, )
+setResult(RESULT_OK, intent) (RESULT_OK/RESULT_CANCELED/RESULT_FIRST_USER и т.д.) - метод указывает результат, который будет передаваться в ответе на вызов метода startActivityForResulted().
+finish(); - этот метод говорит о том, что работа на данном Activity у нас окончена, он скрывает данный activity (уводить на задный план) и показывает activity, которая была до ее вызова.
+
+# AlertDialog. Ex 11
+AlertDialog - диалоговое окно с какой-либо информацией, которое предоставляет пользователю право выбора. Может содержать следующие элементы: заголовок, текстовое сообщение, кнопки, иконку, так же может содержать в себе какие-то флажки, переключатели, списки.
+Для создания диалоговых окон часто используется внутренний класс Builder класса AlertDialog, коротый позволяет нам строить alertDialog.
+Пример:
+AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setTitle("Devcolibri.com")  // сокращенная версия
+                .setMessage("Это информационное сообщение")
+                .setCancelable(false)
+                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Вы не согласны с нами", Toast.LENGTH_SHORT).show();
+                    }
+                })
+		.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Вы согласны с нами", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+	AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+# Диспетчер компоновки LinearLayout. Ex 12
+orientation - свойство LinearLayout которое отвечает за позиционирование layout-а (вертикальное или горизонтальное)
+layout_wedth - свойство, которое указывает вес элемента, расположенного на LinearLayout
+gravity - включает в себя много свойств, которые отвечают за расположение компонентов на нашем layout-е (если мы задаем эти свойства layout-у). Свойства gravity: top, bottom, left, right, center_vertical, fill_vertical, center_horizontal, fill_horizontal, center, fill, clip_vertical, clip_horizontal, start, end.
+
+# Диспетчер компоновки TableLayout. Ex 13
+TableLayout - является дочерним компонентом LinearLayout и позволяет хранить наши компоненты в таблице.
+layout_column - номер колонки в которой будет храниться наш элэмент.
+layout_width и layout_height - определяют ширину и высоту нашего элемента. Могут заполняться как константными, так и асболютными значениями (20px, 50dip, fill_parent, match_parent)
+fill_parent - после версии API 8.0 - считается устаревшим.
+match_parrent - обозначает, что элемент займет всю доступную ему в родительском элементе ширину или высоту.
+wrap_content - обозначает, что ширина или высота будет определяться его содержимым
+
+# Диспетчер компоновки GridLayout. Ex 14
+В отличае от TableLayout не создается излишний код при удаленном позиционировании элементов в таблице компоновки.
+Позиционирование элемента:
+android:layout_row="0" - строка начиная снизу, позиционирует снизу.
+android:layout_column="6" - колонка позиционируется по правому краю.
+Для того, что бы начало позиционирования начиналось сверху, необходимо вместо android:layout_row="0" написать android:layout_rowSpan="0"
+Для начала позиционирования по левому краю, необходимо использовать - android:layout_columnSpan="6"
+При компоновке представлений c помощью GridLayout нельзя учитывать вес (weight) элемента. Для позиционирования можно воспользоваться свойством gravity.
+
+# Диспетчер компоновки RelatyveLayout. Ex 15
+В компоновке RelativeLayout элементы в контейнере выстраиваются по отношению к контейнеру либо к другим элементам контейнера. Контейнер в данном случае - <RelativLayout></relativeLayout>.
+Некоторые свойства:
+layout_alignParentTop, layout_alignParentLeft и т.д. - разположение нашего компонента к родителю по верху, слева и т.д.
+layout_below="@+id/button" - свойство указывает, что данный компонент будет распологаться снизу указанного компонента - "@+id/button"
+
+# Логирование в Android. Ex 16
+Логирование - процесс ведения журнала действий выполняемых программой либо приложением. С помощью логирования мы можем наблюдать за поведением программы, увидеть ошибки и т.д.
+Уровни логирования:
+- info
+- warning
+- error
+- debug
+- verbose
+- wtf
+Логирование можно посмотеть в LogCat IDE разработки android приложений. Так же разное логирование отображается в LogCat разными цветами.
+Пример:
+Log.i(TAG, "Info level"); // info log. TAG = String "Dev" - для поиска по списку логов.
+
+# Intent Filter, явный и неявный вызов Activity. Ex 17
+Intent - механизм для описания одной операции. Например - сделай звонок на определенный номер.
+Явный вызов activity - когда мы вызываем activity через intent - Intent intent = new Intent (getApplicationContext(), DateActivity.class); startActivity(intent);
+Неявный вызов activity - когда мы при создании intent не указываем activity на который хотим перейти, а все настройки производим в файле manifest для activity куда будем переходить. Пример: Intent intent = new Intent("devcolibri"); startActivity(intent);
+В manifest - <intent-filter>
+                <action android:name="devcolibri"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+<action> - указывает на действие которое мы хотим выполнить. Помимо кастомной action c именем "devcolibri", существуют стандартные action.
+Actions:
+- ACTION_VIEW
+- ACTION_EDIT
+- ACTION_PICK
+- ACTION_DIAI
+- и т.д.
+Именовать action стоит полным путем к той activity на которую мы будем переходить ("com.devcolibri.intentfilterexam.app.SiteActivity")
+Имя action не обязательно должно быть уникальным. Если будут одинаковые вызовы у двух activity, то будет выведено info-окно с предложением выбора нужной activity. Пример: когда мы на телефоне запускаем видео-файл, то android показывает информационное окно с выбором нужного плеера для этого файла.
+Так же можно вызывать системные activity, например - контакты ->
+Intent intent = new Intent();
+intent.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity")); // указываем пакет и полный путь к activity
+startActivity(intent);
+
+# ListView и Adapters. Ex 18
+ArrayAdapter является простейшим адаптером, который специально предназначен для работы с элементами списка типа ListView, Spinner и им подобным.
+ListView - отображение информации на view с помощью списка.
+Пример стандартной реализации adapter:
+private List<String> initData() {
+        List<String> list = new ArrayList<String>();
+        list.add("IPhone");
+        list.add("HTC");
+        list.add("Sumsung");
+        list.add("LG");
+        return list;
+    }
+List<String> items = initData();
+ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, items);
+
+# Создание Menu. Ex 19
+Для создания меню необходимо в ресурсах res/ создать дирректорию menu/ где с помощью тегов <item> добавить нужные пункты меню.
+Некоторые параметры <item> :
+	- id - уникальный идентификатор нашего элемента
+	- orderInCategory - определяет позицию в этом списке - android:orderInCategory="1" (0 - корень)
+	- title - тот текст, который будет показываться в нашем выпадающем списке - android:title="@string/itemSettings"
+	- showAsAction - как именно будет отображаться наше меню:
+		- never - никогда не будет выводить в actionbar наши элементы и для того что бы увидеть элементы нам нужно его раскрыть.
+		- always - элементы всегда будут видны если для них есть место.
+		- ifRoom - будет виден только если для него есть место.
+		- withText - будет виден только текст, т.к. в меню можно добавлять какие-то иконки.
+	- onClick - указываем в случае если мы хотим выполнить обработку нажатия кнопки меню.
+
+onCreateOptionsMenu() - метод (перегруженный в Activity), который отвечает за появление нашего меню.
+Добавлять меню можно несколькоми способами:
+1) Создать <item>, в Activity переопределить метод public boolean onOptionsItemSelected(MenuItem item), где по item находить необходимый пункт меню.
+2) Создать <item>, задать в нем параметр android:onClick="onAuthor", где onAuthor - метод в Activity - public void onAbout(MenuItem menuItem).
+
+# Создание Notification. Ex 20
+Для работы с Notification необходимо 2 класса:
+ - Notification - в нем мы определяем свойства уведомления, иконку, сообщение, звук и другие свойства, которые мы можем указать нашему увидомлению.
+ - NotificationManager - управляет всеми нашими уведомлениями, показывать их и т.д.
+Для создания уведомления чаще всего используют builder-ы - Notification.Builder builder = new Notification.Builder(getApplicationContext());
+Некоторые свойства builder:
+ - builder.setContentIntent() - то, куда мы будем переходить после нажатия на уведомление.
+Пример:
+private NotificationManager nm;
+private final int NOTIFICATION_ID = 127;
+
+public void showNotification(View view) {
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        Intent intent = new Intent(getApplicationContext(), FinishActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        builder.setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher))
+                .setTicker("Новое уведомление")
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true)
+                .setContentTitle("Уведомление")
+                .setContentText("Нажмите что бы узнать секрет");
+
+        Notification notification = builder.build();
+        nm.notify(NOTIFICATION_ID, notification);
+}
+
+# Дополнительные возможности Notification. Ex 21
+Для того, что бы показать строку выполнения какой-либо активности в уведомлении, необходимо воспользоваться свойством setProgress() builder-а
+Пример: builder.setProgress(100, 20, true); (100 - конечное состояние, 20 - состояние на данный момент, true - indenterminate (true - непрерывное обновление, false - показывает текущее состояние))
+Для отмены ранее полученного уведомления необходимо использовать метод cancel NotificationManager-а
+Пример: nm.cancel(NOTIFICATION_ID);
+Для добавления к нашему уведомлению различных индикаторов, необходимо использовать статический метод - notification.defaults.
+Пример: notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE либо notification.defaults = Notification.DEFAULT_ALL;
+Так же можно добавлять свои мелодии для уведомления.
+Пример: notification.sound = Uri.parse("android.resource://com.devcolibri.mynotification.app" + R.raw.believe_notification);
+Установка вибро-звонка, пример:
+long[] vibrate = new long[]{1500, 1000, 1500, 1000}; // 1500 - пауза, 1000 - вибрация в микросекундах
+notification.vibrate = vibrate;
+Так же в manifest-e необходимо проставить - <uses-permission android:name="android.permission.VIBRATE"/>
+Создание незакрывающегося уведомления (например плеер) - т.е. данное уведомления будет иметь преоритетную важность и его нельзя будет закрыть свайпом - notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
+Показать очень важное уведомление, которое должен обязательно посмотеть пользователь. Создается совместно со звуковым уведомлением, которое напоминает до тех пор, пока пользователь не откроет панель уведомления - notification.flags = notification.flags | Notification.FLAG_INSISTENT;
+
+# Знакомимся с Fragment-ами. Ex 22
+Возможность работы с фрагментами в android внесли с 3 версии. 
+Фрагменты нельзя использовать без activity.
+При создании класса для фрагмента необходимо унаследоваться от базового класса Fragment и переопределить метод onCreateView.
+- import android.support.v4.app.Fragment; - для обратной совместимости до 3 версии
+- import android.app.Fragment; - без обратной совместимости от 3 и выше
+LayoutInflater - специальный менеджер компоновки, который позволяет получать доступ к нашим layout-ам с наших ресурсов.
+Bundle savedInstanceState - сможем ли мы в будущем использовать данный фрагмент для подключения в activity через контейнер.
+Пример:
+@Override
+public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.button_layout, container, false);
+}
+В layout xml fragment вставляется с помощью тега - <fragment/>
+Пример:
+<fragment android:name="com.mysuperfragment.app.ButtonFragment"
+              android:id="@+id/button_fragment"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              tools:layout="@layout/button_layout"/>
+
+# Цикл жизни fragment-a. Ex 23
+Жизненный цикл fragment-a:
+1) onAttach(); - метод, вызывающийся после того как фрагмент свяжется с activity.
+2) onCreate(); - метод похож на метод onCreate(); из activity, за тем исключением, что в нем нельзя использовать код, который зависит от ресурсов либо от layout-ов, потому что на этапе onCreate(); мы еще не знаем о ресурсах компонента, которые у нас находятся в нашем layout-е, мы даже не знаем какой именно layout использует данный фрагмент.
+3) onCreateView(); - метод позволяет инициализировать наши компонеты, присвоить им какие-то значения с layout-a. На этом этапе мы уже имеем всю иерархию компонентов, с которыми мы можем работать.
+4) onActivityCreated(); - метод вызывается после того как activity завершила свою обработку вызова метода onCreate(); В этом методе можно выполнять заключительные настройки пользовательского интерфейса до того как пользователь увидет его.
+5) onStart(); - метод похож на onStart(); из activity, в момент вызова этого метода пользователь уже видет текущий фрагмент, но пока мы еще не начали взаимодействие с пользователем (уже иден наш фрагмент, но мы пока не можем с ним взаимодействовать)
+6) onResume(); - выполняется после возвращения к нашему фрагменту, выполняет аналогичную логику что и в activity. После onResume(); пользователь видет наш фрагмент, он активен и с ним можно выполнять какие-то действия.
+7) onPause(); - этот метод вызывается после того как пользователь уходит на какие-то другие фрагменты. onPause(); работает точно так же как и в activity - останавливает наш фрагмент. Пример применения метода - мы смотрим видео файл, уходим с фрагмента и в методе onPause(); пишем что бы проигрывание файла остановилось. 
+8) onStop(); - метод по своей логике выполняет тоже самое, что и метод из activity - останавливает работу нашего фрагмента.
+9) onDestroyView(); - если фрагмент находится на пути к уничтожению или сохранению, то будет вызван метод onDestroyView(); Так же в этом методе мы можем выполнить возрождение к нашему onCreateView(); вызвав в методе - setRetainInstance(true);
+10) onDestroy(); - вызывается когда фрагмент больше не используется приложением. В этом методе мы можем почистить какие-то ресурсы либо удалить те объекты которые нам уже не нужно использовать в данном фрагменте.
+11) onDetach(); - вызывается для того что бы отвязать фрагмент от activity и полностью завершить цикл жизни нашего фрагмента.
+
+Сравнение жизненного цикла activity и fragment-а:
+————————————————————————————————————————————————
+- Created (activity) -> onAttach();
+			onCreate();
+			onCreateView();
+			onActivityCreated();
+————————————————————————————————————————————————
+- Started (activity) -> onStart();
+————————————————————————————————————————————————
+- Resumed (activity) -> onResume();
+————————————————————————————————————————————————
+- Paused (activity)  -> onPause();
+————————————————————————————————————————————————
+- Stopped (activity) -> onStop();
+————————————————————————————————————————————————
+- Destroyed(activity)-> onDestroyView();
+		     -> onDestroy();
+		     -> onDetach();	
+————————————————————————————————————————————————
+
+Для сохранения состояния нашего фрагмента (различные настройки и т.д.) используется метод onSaveInstanceState(Bundle outState); Для того что бы вернуться к сохраненному ранее состоянию необходимо вызвать метод setRetainInstance(true);				 
+
+# Динамическое добавление фрагментов. Ex 24
+Для того что бы начать работать с фрагментами из MainActivity необходимо создать объект этого фрагмента.
+Например:  
+private OneFragment oneFragment = new OneFragment();
+Для работы с фрагментами так же необходимы еще 2 класса - FragmentManager и FragmentTransaction.
+Транзакции в fragment-ах очень похожи на транзакции из баз данных: открываем транзакцию -> помещаем какие-то данные в фрагменты, выполняем какие-то манипуляции -> коммит транзакции -> наши транзакции попадают в наш менеджер и пользователь видет отображение фрагмента.
+Пример:
+Нажимаем на кнопку и добавляется новый фрагмент.
+public void onClickFragment(View view) {
+        transaction = manager.beginTransaction();
+        switch (view.getId()) {
+            case R.id.btnAdd :
+                transaction.add(R.id.container, oneFragment);
+                break;
+        }
+        transaction.commit();
+    }
+
+# Динамическое удаление и замена фрагментов. Ex 25
+Для того что бы работать с фрагментами (например проверить загружен он на данный момент или нет) необходимо использовать уникальную статическую строку в классе фрагмента.
+Пример:
+public static final String TAG = "TwoFragmentTag";
+Метод удаления и добавления фрагмента с проверкой на существование фрагмента
+public void onClickFragment(View view) {
+        transaction = manager.beginTransaction();
+        switch (view.getId()) {
+            case R.id.btnAdd:
+                if (manager.findFragmentByTag(OneFragment.TAG) == null) {
+                    transaction.add(R.id.container, oneFragment, OneFragment.TAG);
+                }
+                break;
+            case R.id.btnRemove:
+                if (manager.findFragmentByTag(OneFragment.TAG) != null) {
+                    transaction.remove(oneFragment);
+                }
+                if (manager.findFragmentByTag(TwoFragment.TAG) != null) {
+                    transaction.remove(twoFragment);
+                }
+                break;
+            case R.id.btnReplace:
+                if (manager.findFragmentByTag(OneFragment.TAG) != null) {
+                    transaction.replace(R.id.container, twoFragment, TwoFragment.TAG);
+                }
+                if (manager.findFragmentByTag(TwoFragment.TAG) != null) {
+                    transaction.replace(R.id.container, oneFragment, OneFragment.TAG);
+                }
+                break;
+        }
+        if (isBackStack.isChecked()) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+    }
+
+# Передача данных с одного фрагмента другому. Ex 26
+Для передачи данных между фрагментами используем FragmentTransaction и FragmentManager.
+Пример:
+1) Динамически добавляем в наш контейнер (ListLayout) фрагмент LastFragment 
+private void initFragmentLast() {
+        transaction = manager.beginTransaction();
+        transaction.add(R.id.container, new LastFragment());
+        transaction.commit();
+    }
+
+По событию «нажатие кнопки» передаем данные из одного фрагмента - другому. 
+Это решение будет работать ТОЛЬКО в том случае если наш фрагмент успел инициализироваться, добавился в нашу транзакцию и пользователь его видеть у себя на дисплее.
+    public void onClickButtonFragment(View view) {
+        EditText editText = (EditText) findViewById(R.id.text);
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(editText.toString());
+    }
+
+2) 
+Переопределяем в фрагменте метод onStart() и в нем производим все манипуляции. 
+@Override
+    public void onStart() {
+        super.onStart();
+        Button button = (Button) getActivity().findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = (EditText) getActivity().findViewById(R.id.text);
+                TextView textView = (TextView) getActivity().findViewById(R.id.textView);
+                textView.setText(editText.getText().toString());
+            }
+        });
+    }
+
+# AsyncTask - знакомство. Ex 27
+Некоторые методы базового класса AsyncTask:
+- onPreExecute(); - этот метод вызывается в потоке пользовательского интерфейса прежде чем задача будет выполнена, т.е. перед тем как наша задача будет начинать свое выполнение мы зайдем в данный метод.
+- onPostExecute(); - выполняется после окончания нашей задачи, т.е. после того как задача завершила свое выполнение - выполнится данный метод.
+- doInBackground(); - в этом методе выполняются все наши текущие задачи в фоновом режиме.
+- onProgressUpdate(); - этот метод вызывается в потоке пользовательского интерфейса после вызова метода publishProgress() и этот метод используется для отображения любых форм процессов в пользовательском интерфейсе.
+
+Пример activity (1 progressBar, TextView - процетны, Button - запуск)
+public class MainActivity extends Activity {
+
+    private ProgressBar progressBar;
+    private TextView txtStates;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_layout);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        txtStates = (TextView) findViewById(R.id.txtState);
+    }
+
+    public void onProgressButton(View view) {
+        new MyProgressBarAsyncTask().execute();
+    }
+
+    class MyProgressBarAsyncTask extends AsyncTask<Void, Integer, Void> {
+
+        private int progressBarValue = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(MainActivity.this, "Начало процесса", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(MainActivity.this, "Процесс окончен", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.setProgress(values[0]);
+            txtStates.setText(values[0] + " %");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            while (progressBarValue < 100) {
+                progressBarValue++;
+                publishProgress(progressBarValue);
+                SystemClock.sleep(200);
+            }
+
+            return null;
+        }
+    }
+}
+
+# AsyncTask - получаем результат. Ex 28
+При наследовании от базового класса AsyncTask - необходимо указывать 3 generic значения:
+1) Params extends Object - тип входящих данных.
+2) Progrсess extends Object - тип промежуточных данных - это те данные, которые потребуются для нашего AsyncTask что бы сделать определенные вычисления.
+3) Result extends Object - тип возврощаемых данных.
+
