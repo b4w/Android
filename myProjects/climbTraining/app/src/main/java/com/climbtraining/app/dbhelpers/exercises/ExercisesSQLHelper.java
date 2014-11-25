@@ -1,22 +1,20 @@
-package com.climbtraining.app.dbhelpers;
+package com.climbtraining.app.dbhelpers.exercises;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import com.climbtraining.app.dbhelpers.AbstractSQLHelper;
 import com.climbtraining.app.pojo.Exercise;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExercisesSQLHelper extends SQLiteOpenHelper {
+public class ExercisesSQLHelper extends AbstractSQLHelper {
 
     private static final String TAG = ExercisesSQLHelper.class.getSimpleName();
-    private static final String DATABASE_NAME = "myDatabase.db";
     private static final String DATABASE_TABLE = "Exercises";
-    private static final int DATABASE_VERSION = 1;
 
     public ExercisesSQLHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

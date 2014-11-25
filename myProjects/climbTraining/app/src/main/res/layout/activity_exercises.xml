@@ -9,17 +9,19 @@
                 tools:context="com.climbtraining.app.activity.ExercisesActivity">
 
     <fragment
-            android:id="@+id/activityExercisesCategoryFragment"
+            android:id="@+id/listViewWorkout"
             android:name="com.climbtraining.app.fragments.exercisesActivity.CategoryFragment"
             tools:layout="@layout/activity_exercises_category_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"/>
-    <!--<fragment-->
-            <!--android:id="@+id/activityExercisesButtonsFragment"-->
-            <!--android:name="com.climbtraining.app.fragments.exercisesActivity.ButtonsFragment"-->
-            <!--tools:layout="@layout/activity_exercises_buttons_fragment"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"/>-->
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/activityExercisesButtonsFragment"/>
+
+    <fragment
+            android:id="@+id/activityExercisesButtonsFragment"
+            android:name="com.climbtraining.app.fragments.exercisesActivity.ButtonsFragment"
+            tools:layout="@layout/activity_exercises_buttons_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 </RelativeLayout>

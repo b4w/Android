@@ -1,17 +1,14 @@
 package com.climbtraining.app.fragments.exercisesActivity;
 
 import android.app.Fragment;
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 import com.climbtraining.app.R;
-import com.climbtraining.app.dbhelpers.ExercisesSQLHelper;
+import com.climbtraining.app.dbhelpers.exercises.ExercisesSQLHelper;
 import com.climbtraining.app.pojo.Exercise;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener{
