@@ -8,46 +8,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.climbtraining.app.R;
-import com.climbtraining.app.dbhelpers.exercises.ExercisesSQLHelper;
-import com.climbtraining.app.pojo.Exercise;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener{
 
-    private Button btnAdd;
-    private Button btnCancel;
-    private ExercisesSQLHelper exercisesSQLHelper;
+    private Button btnAddCategory;
+    private Button btnCancelCategory;
+    private Button btnRemoveCategory;
 
+    private ICommunicatorExercises iCommunicatorExercises;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_exercises_buttons_fragment, container, false);
 
-        btnAdd = (Button) view.findViewById(R.id.btnAdd);
-        btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        btnAddCategory = (Button) view.findViewById(R.id.btnAddCategory);
+        btnCancelCategory = (Button) view.findViewById(R.id.btnCancelCategory);
+        btnRemoveCategory = (Button) view.findViewById(R.id.btnRemoveCategory);
 
-        btnCancel.setOnClickListener(this);
-        btnAdd.setOnClickListener(this);
+        btnCancelCategory.setOnClickListener(this);
+        btnAddCategory.setOnClickListener(this);
+        btnRemoveCategory.setOnClickListener(this);
 
-        exercisesSQLHelper = new ExercisesSQLHelper(view.getContext());
-
+        iCommunicatorExercises = (ICommunicatorExercises) getActivity();
         return view;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnAdd:
-                insertNewItemToDB();
+            case R.id.btnAddCategory:
+                iCommunicatorExercises.showDialogAddCategory();
                 break;
-            case R.id.btnCancel:
+            case R.id.btnCancelCategory:
 
+                break;
+            case R.id.btnRemoveCategory:
+                iCommunicatorExercises.removeCategoryById("2");
                 break;
         }
-    }
-
-    private void insertNewItemToDB() {
-        Exercise exercise = new Exercise("Отжимания", "Какой-то комментарий для категории отжимания");
-        exercisesSQLHelper.insertExercise(exercise);
     }
 }

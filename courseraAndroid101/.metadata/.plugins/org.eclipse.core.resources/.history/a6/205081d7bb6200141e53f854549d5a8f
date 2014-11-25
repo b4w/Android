@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Awesome2</string>
-    <string name="hello_world">Hello" \n 3&gt;2 2&lt; &amp; awsome world!</string>
-    <string name="action_settings">Settings</string>
-
-</resources>

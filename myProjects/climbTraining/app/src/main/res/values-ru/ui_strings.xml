@@ -16,5 +16,8 @@
     <string name="filters">Фильтры</string>
     <string name="listOfTraining">Список тренировок</string>
     <string name="add">Добавить</string>
+    <string name="enterCategoryName">Введите название категории</string>
+    <string name="ok">Принять</string>
+    <string name="remove">Удалить</string>
 
 </resources>

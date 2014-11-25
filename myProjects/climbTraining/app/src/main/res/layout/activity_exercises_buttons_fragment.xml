@@ -8,7 +8,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add"
-            android:id="@+id/btnAdd"
+            android:id="@+id/btnAddCategory"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
@@ -16,8 +16,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnCancelCategory"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remove"
+            android:id="@+id/btnRemoveCategory"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
 </RelativeLayout>

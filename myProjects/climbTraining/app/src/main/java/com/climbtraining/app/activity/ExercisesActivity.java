@@ -1,18 +1,32 @@
 package com.climbtraining.app.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.climbtraining.app.R;
+import com.climbtraining.app.dbhelpers.exercises.CategorySQLHelper;
+import com.climbtraining.app.fragments.exercisesActivity.AddCategoryFragment;
+import com.climbtraining.app.fragments.exercisesActivity.ICommunicatorExercises;
+import com.climbtraining.app.pojo.Exercise;
+import com.climbtraining.app.pojo.exercise.Category;
 
-public class ExercisesActivity extends FragmentActivity {
+public class ExercisesActivity extends FragmentActivity implements ICommunicatorExercises {
+
+    private static final String TAG = Exercise.class.getSimpleName();
+    private AddCategoryFragment addCategoryFragment;
+    private FragmentManager fragmentManager;
+    private CategorySQLHelper categorySQLHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercises);
+        addCategoryFragment = new AddCategoryFragment();
+        fragmentManager = getFragmentManager();
+        categorySQLHelper = new CategorySQLHelper(getApplicationContext());
     }
 
     @Override
@@ -36,5 +50,20 @@ public class ExercisesActivity extends FragmentActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addNewCategory(String nameCategory) {
+        Category category = new Category();
+        category.setName(nameCategory);
+        categorySQLHelper.insertValue(category);
+    }
+
+    @Override
+    public void removeCategoryById(String id) {
+        categorySQLHelper.removeEntityById(CategorySQLHelper.DATABASE_TABLE, id);
+    }
+
+    public void showDialogAddCategory() {
+        addCategoryFragment.show(fragmentManager, "AddCategoryFragment");
     }
 }

@@ -2,26 +2,31 @@ package com.climbtraining.app.fragments.exercisesActivity;
 
 import android.app.ListFragment;
 import android.os.Bundle;
-import com.climbtraining.app.adapters.ExerciseAdapter;
-import com.climbtraining.app.dbhelpers.exercises.ExercisesSQLHelper;
-import com.climbtraining.app.pojo.Exercise;
+import com.climbtraining.app.adapters.CategoriesAdapter;
+import com.climbtraining.app.dbhelpers.exercises.CategorySQLHelper;
+import com.climbtraining.app.pojo.exercise.Category;
 
 import java.util.List;
 
 public class CategoryFragment extends ListFragment {
 
-    ExercisesSQLHelper exercisesSQLHelper;
+    private CategorySQLHelper categorySQLHelper;
+    private CategoriesAdapter categoriesAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        exercisesSQLHelper = new ExercisesSQLHelper(getActivity().getApplicationContext());
-        List<Exercise> exercises = init();
-        ExerciseAdapter exerciseAdapter = new ExerciseAdapter(getActivity().getApplicationContext(), exercises);
-        setListAdapter(exerciseAdapter);
+        categorySQLHelper = new CategorySQLHelper(getActivity().getApplicationContext());
+        List<Category> categories = init();
+        categoriesAdapter = new CategoriesAdapter(getActivity().getApplicationContext(), categories);
+        setListAdapter(categoriesAdapter);
     }
 
-    private List<Exercise> init() {
-        return exercisesSQLHelper.getAllExercises();
+    private List<Category> init() {
+        return categorySQLHelper.getAllCategories();
+    }
+
+    public void updateCategoriesAdapter() {
+        categoriesAdapter.notifyDataSetChanged();
     }
 }
