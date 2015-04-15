@@ -15,10 +15,9 @@ public class Weather {
     @SerializedName("cnt")
     private int cnt;
     @SerializedName("list")
-    private List<WeatherList> list;
+    private List<WeatherInfo> weatherInfoList;
 
-//    GET & SET
-    public List<WeatherList> getList() {
-        return list;
+    public List<WeatherInfo> getWeatherInfoList() {
+        return weatherInfoList;
     }
 }

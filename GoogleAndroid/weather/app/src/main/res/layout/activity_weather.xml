@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/activity_weather_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="18sp"
+        android:layout_below="@+id/activity_weather_temperature"
+        android:layout_toRightOf="@+id/activity_weather_image_view"
+        android:layout_toEndOf="@+id/activity_weather_image_view" />
+
+    <ImageView
+        android:id="@+id/activity_weather_image_view"
+        android:src="@drawable/abc_btn_radio_to_on_mtrl_015"
+        android:layout_width="150dp"
+        android:layout_height="150dp" />
+
+    <TextView
+        android:id="@+id/activity_weather_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="18sp"
+        android:layout_alignBottom="@+id/activity_weather_image_view"
+        android:layout_alignLeft="@+id/activity_weather_humidity"
+        android:layout_alignStart="@+id/activity_weather_humidity" />
+
+    <TextView
+        android:id="@+id/activity_weather_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="18sp"
+        android:layout_below="@+id/activity_weather_date"
+        android:layout_toRightOf="@+id/activity_weather_image_view"
+        android:layout_toEndOf="@+id/activity_weather_image_view"
+        android:layout_marginTop="31dp" />
+
+    <Button
+        android:id="@+id/activity_weather_share_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Поделиться погодой"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

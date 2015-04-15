@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class WeatherList {
+public class WeatherInfo {
 
     @SerializedName("dt")
     private long dt;
@@ -66,10 +66,23 @@ public class WeatherList {
         private double humidity;
         @SerializedName("temp_kf")
         private double temp_kf;
+
+        public double getTemp() {
+            return temp;
+        }
+
+        public double getHumidity() {
+            return humidity;
+        }
     }
 
-//  ---  GET & SET ---
+    public double getTemp() {
+        return main.getTemp();
+    }
 
+    public double getHumidity() {
+        return main.getHumidity();
+    }
 
     public String getDt_txt() {
         return dt_txt;

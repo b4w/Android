@@ -1,18 +1,17 @@
 package com.example.android.constantine.weather.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.constantine.weather.Adapter.WeatherWeekAdapter;
+import com.example.android.constantine.weather.Enums.WeatherFieldsEnum;
 import com.example.android.constantine.weather.Loaders.RestWeather;
-import com.example.android.constantine.weather.Pojo.WeatherList;
+import com.example.android.constantine.weather.Pojo.WeatherInfo;
 import com.example.android.constantine.weather.R;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,15 +26,24 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ListView lView = (ListView) findViewById(R.id.activity_main_list_view);
-        RestWeather restWeather = new RestWeather();
-//
+
+        final WeatherWeekAdapter adapter = new WeatherWeekAdapter(this);
+
+        RestWeather restWeather = new RestWeather(adapter);
         restWeather.startAsyncWeather();
 
-        List<WeatherList> weatherList = new ArrayList<>();
+        lView.setAdapter(adapter);
 
-        WeatherWeekAdapter weatherWeekAdapter = new WeatherWeekAdapter(this, restWeather.getWeather().getList());
-        lView.setAdapter(weatherWeekAdapter);
+        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                WeatherInfo weatherInfo = adapter.getItem(position);
+                Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_DATE.name(), weatherInfo.getDt_txt());
+                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name(), weatherInfo.getHumidity());
+                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name(), weatherInfo.getTemp());
+                startActivity(intent);
+            }
+        });
     }
-
-
 }

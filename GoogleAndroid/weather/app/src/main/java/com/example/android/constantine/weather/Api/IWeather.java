@@ -1,7 +1,7 @@
 package com.example.android.constantine.weather.Api;
 
 import com.example.android.constantine.weather.Pojo.Weather;
-import com.example.android.constantine.weather.Pojo.WeatherList;
+import com.example.android.constantine.weather.Pojo.WeatherInfo;
 
 import retrofit.http.POST;
 
@@ -11,5 +11,5 @@ public interface IWeather {
     public Weather getWeather();
 
     @POST("/")
-    public WeatherList getWeatherList();
+    public WeatherInfo getWeatherList();
 }
