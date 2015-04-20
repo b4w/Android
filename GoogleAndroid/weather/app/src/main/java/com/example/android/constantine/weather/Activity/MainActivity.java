@@ -1,6 +1,8 @@
 package com.example.android.constantine.weather.Activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.example.android.constantine.weather.Enums.WeatherFieldsEnum;
 import com.example.android.constantine.weather.Loaders.RestWeather;
 import com.example.android.constantine.weather.Pojo.WeatherInfo;
 import com.example.android.constantine.weather.R;
+import com.example.android.constantine.weather.SQLHelper.WeatherDataBaseHelper;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,6 +30,13 @@ public class MainActivity extends ActionBarActivity {
 
         ListView lView = (ListView) findViewById(R.id.activity_main_list_view);
 
+        // создаем бд для погоды
+        SQLiteOpenHelper weatherDBHelper = new WeatherDataBaseHelper(this);
+        // открываем бд для чтения
+        SQLiteDatabase sdb = weatherDBHelper.getWritableDatabase();
+        sdb.close();
+        weatherDBHelper.close();
+
         final WeatherWeekAdapter adapter = new WeatherWeekAdapter(this);
 
         RestWeather restWeather = new RestWeather(adapter);
@@ -39,9 +49,9 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 WeatherInfo weatherInfo = adapter.getItem(position);
                 Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_DATE.name(), weatherInfo.getDt_txt());
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name(), weatherInfo.getHumidity());
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name(), weatherInfo.getTemp());
+                intent.putExtra(WeatherFieldsEnum.DATE.getName(), weatherInfo.getDt_txt());
+                intent.putExtra(WeatherFieldsEnum.HUMIDITY.getName(), weatherInfo.getHumidity());
+                intent.putExtra(WeatherFieldsEnum.TEMPERATURE.getName(), weatherInfo.getTemp());
                 startActivity(intent);
             }
         });

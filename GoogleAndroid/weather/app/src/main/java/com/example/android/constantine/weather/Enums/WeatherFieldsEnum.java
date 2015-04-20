@@ -5,8 +5,17 @@ package com.example.android.constantine.weather.Enums;
  */
 public enum WeatherFieldsEnum {
 
-    LIST_ITEM_DATE,
-    LIST_ITEM_TEMPERATURE,
-    LIST_ITEM_HUMIDITY;
+    DATE("date"),
+    TEMPERATURE("temperature"),
+    HUMIDITY("humidity");
 
+    private String name;
+
+    WeatherFieldsEnum(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

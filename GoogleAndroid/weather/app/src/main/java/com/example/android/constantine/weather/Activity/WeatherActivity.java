@@ -34,10 +34,10 @@ public class WeatherActivity extends Activity {
         initFields();
 
         if (getIntent() != null) {
-            list_item_date.setText(getIntent().getStringExtra(WeatherFieldsEnum.LIST_ITEM_DATE.name()));
-            temperature = getIntent().getDoubleExtra(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name(), defaultValue);
+            list_item_date.setText(getIntent().getStringExtra(WeatherFieldsEnum.DATE.getName()));
+            temperature = getIntent().getDoubleExtra(WeatherFieldsEnum.TEMPERATURE.getName(), defaultValue);
             list_item_temperature.setText(temperature.toString());
-            humidity = getIntent().getDoubleExtra(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name(), defaultValue);
+            humidity = getIntent().getDoubleExtra(WeatherFieldsEnum.HUMIDITY.getName(), defaultValue);
             list_item_humidity.setText(humidity.toString());
         }
 
@@ -47,9 +47,9 @@ public class WeatherActivity extends Activity {
                 // создаем неявный intent
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_DATE.name(), list_item_date.getText().toString());
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name(), list_item_humidity.getText().toString());
-                intent.putExtra(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name(), list_item_temperature.getText().toString());
+                intent.putExtra(WeatherFieldsEnum.DATE.getName(), list_item_date.getText().toString());
+                intent.putExtra(WeatherFieldsEnum.HUMIDITY.getName(), list_item_humidity.getText().toString());
+                intent.putExtra(WeatherFieldsEnum.TEMPERATURE.getName(), list_item_temperature.getText().toString());
                 startActivity(Intent.createChooser(intent, "Share text"));
             }
         });
@@ -66,16 +66,16 @@ public class WeatherActivity extends Activity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        list_item_date.setText(savedInstanceState.getString(WeatherFieldsEnum.LIST_ITEM_DATE.name()));
-        list_item_temperature.setText(savedInstanceState.getString(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name()));
-        list_item_humidity.setText(savedInstanceState.getString(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name()));
+        list_item_date.setText(savedInstanceState.getString(WeatherFieldsEnum.DATE.getName()));
+        list_item_temperature.setText(savedInstanceState.getString(WeatherFieldsEnum.TEMPERATURE.getName()));
+        list_item_humidity.setText(savedInstanceState.getString(WeatherFieldsEnum.HUMIDITY.getName()));
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(WeatherFieldsEnum.LIST_ITEM_DATE.name(), list_item_date.getText().toString());
-        outState.putString(WeatherFieldsEnum.LIST_ITEM_HUMIDITY.name(), list_item_humidity.getText().toString());
-        outState.putString(WeatherFieldsEnum.LIST_ITEM_TEMPERATURE.name(), list_item_temperature.getText().toString());
+        outState.putString(WeatherFieldsEnum.DATE.getName(), list_item_date.getText().toString());
+        outState.putString(WeatherFieldsEnum.HUMIDITY.getName(), list_item_humidity.getText().toString());
+        outState.putString(WeatherFieldsEnum.TEMPERATURE.getName(), list_item_temperature.getText().toString());
     }
 }
