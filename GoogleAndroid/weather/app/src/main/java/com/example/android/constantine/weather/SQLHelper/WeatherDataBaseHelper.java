@@ -15,14 +15,16 @@ public class WeatherDataBaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = WeatherDataBaseHelper.class.getSimpleName();
     private static final int DATABASE_VERSION = 1;
-    private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
-            WeatherDBUtilsEnum.TABLE_NAME + "( " + WeatherDBUtilsEnum.UID +
-            " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            WeatherFieldsEnum.DATE + " VARCHAR(255), " +
-            WeatherFieldsEnum.TEMPERATURE + " DOUBLE, " +
-            WeatherFieldsEnum.HUMIDITY + " DOUBLE);";
-    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + WeatherDBUtilsEnum.TABLE_NAME;
 
+    private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
+            WeatherDBUtilsEnum.TABLE_NAME.getName() + "( " +
+            WeatherDBUtilsEnum.UID.getName() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            WeatherFieldsEnum.DATE.getName() + " VARCHAR(255), " +
+            WeatherFieldsEnum.TEMPERATURE.getName() + " DOUBLE, " +
+            WeatherFieldsEnum.HUMIDITY.getName() + " DOUBLE);";
+
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " +
+            WeatherDBUtilsEnum.TABLE_NAME.getName();
 
     public WeatherDataBaseHelper(Context context) {
         super(context, WeatherDBUtilsEnum.DATABASE_NAME.getName(), null, DATABASE_VERSION);

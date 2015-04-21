@@ -1,19 +1,24 @@
 package com.example.android.constantine.weather.Loaders;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.android.constantine.weather.Adapter.WeatherWeekAdapter;
 import com.example.android.constantine.weather.Api.IWeather;
 import com.example.android.constantine.weather.Pojo.Weather;
+import com.example.android.constantine.weather.SQLHelper.WeatherDBUtils;
 
 import retrofit.RestAdapter;
 
 public class RestWeather {
 
+    private Weather weather;
+    private WeatherDBUtils weatherDBUtils;
+    private Context context;
     private WeatherWeekAdapter adapter;
 
-    public RestWeather(WeatherWeekAdapter adapter) {
-        this.adapter = adapter;
+    public RestWeather(Context context) {
+        this.context = context;
     }
 
     public void startAsyncWeather() {
@@ -32,8 +37,20 @@ public class RestWeather {
         }
 
         @Override
-        protected void onPostExecute(Weather weather) {
-            adapter.callBackWeather(weather);
+        protected void onPostExecute(Weather w) {
+            weather = w;
+            weatherDBUtils = new WeatherDBUtils(context);
+            weatherDBUtils.addDataToWeatherDB(w);
+            adapter = new WeatherWeekAdapter(context, weatherDBUtils.getAllItems(), true);
+            adapter.callBackWeather();
         }
+    }
+
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public WeatherWeekAdapter getAdapter() {
+        return adapter;
     }
 }
