@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="training">тренировка</string>
+    <string name="graph">график</string>
+    <string name="exercise">упражнение</string>
+</resources>

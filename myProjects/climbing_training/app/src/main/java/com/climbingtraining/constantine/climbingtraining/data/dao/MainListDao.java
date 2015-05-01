@@ -19,19 +19,40 @@ public class MainListDao<MainListDto, Integer> extends BaseDaoImpl<MainListDto, 
         super(connectionSource, dataClass);
     }
 
-    public List<MainListDto> getWeatherList() throws SQLException {
+    /**
+     * Вернуть все записи из главного списка.
+     * @return
+     * @throws SQLException
+     */
+    public List<MainListDto> getMainList() throws SQLException {
         return mainListDao.queryForAll();
     }
 
-    public void deleteWeatherAtId(int id) throws SQLException {
+    /**
+     * Удалить запись в главном списке по его id.
+     * @param id
+     * @throws SQLException
+     */
+    public void deleteMainListItemAtId(int id) throws SQLException {
         mainListDao.deleteById(id);
     }
 
-    public MainListDto getWeatherById(int id) throws SQLException {
+    /**
+     * Вернуть запись из списка по его id.
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    public MainListDto getMainListItemById(int id) throws SQLException {
         return (MainListDto) mainListDao.queryForId(id);
     }
 
-    public void addWeather(MainListDto mainListDto) throws SQLException {
+    /**
+     * Добавить пункт в список.
+     * @param mainListDto
+     * @throws SQLException
+     */
+    public void addMainListItem(MainListDto mainListDto) throws SQLException {
         mainListDao.create(mainListDto);
     }
 
@@ -41,4 +62,6 @@ public class MainListDao<MainListDto, Integer> extends BaseDaoImpl<MainListDto, 
         PreparedQuery<MainListDto> preparedQuery = queryBuilder.prepare();
         return preparedQuery;
     }
+
+
 }
