@@ -1,4 +1,4 @@
-package com.example.android.constantine.weather.Pojo;
+package com.example.android.constantine.weather.pojo;
 
 import com.google.gson.annotations.SerializedName;
 

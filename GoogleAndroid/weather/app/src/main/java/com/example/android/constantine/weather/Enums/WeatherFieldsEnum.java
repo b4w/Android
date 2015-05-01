@@ -1,4 +1,4 @@
-package com.example.android.constantine.weather.Enums;
+package com.example.android.constantine.weather.enums;
 
 /**
  * Created by KonstantinSysoev on 16.04.15.

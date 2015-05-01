@@ -1,4 +1,4 @@
-package com.example.android.constantine.weather.Activity;
+package com.example.android.constantine.weather.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.constantine.weather.Enums.WeatherFieldsEnum;
+import com.example.android.constantine.weather.enums.WeatherFieldsEnum;
 import com.example.android.constantine.weather.R;
 
 /**

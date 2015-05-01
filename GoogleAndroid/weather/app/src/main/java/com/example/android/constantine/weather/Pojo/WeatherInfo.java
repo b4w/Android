@@ -1,4 +1,4 @@
-package com.example.android.constantine.weather.Pojo;
+package com.example.android.constantine.weather.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -47,6 +47,10 @@ public class WeatherInfo {
         private String description;
         @SerializedName("icon")
         private String icon;
+
+        public String getIcon() {
+            return icon;
+        }
     }
 
     private class Main {
@@ -86,5 +90,9 @@ public class WeatherInfo {
 
     public String getDt_txt() {
         return dt_txt;
+    }
+
+    public String getIcon() {
+        return weather.get(0).getIcon();
     }
 }
