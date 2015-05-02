@@ -3,4 +3,10 @@
     <string name="training">тренировка</string>
     <string name="graph">график</string>
     <string name="exercise">упражнение</string>
+
+    <string name="category">категория</string>
+    <string name="type_of_exercise">вид упражнения</string>
+    <string name="equipment">оборудование</string>
+    <string name="comment">комментарий</string>
+
 </resources>

@@ -1,11 +1,13 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,12 +25,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ORM_LOADER_ID = 5;
 
     private ListView mainLayoutListView;
+    private ImageView mainLayoutLogo;
+    private Toolbar mainLayoutToolbar;
+    private int parallaxImageHeight;
+
     private MainListAdapter mainListAdapter;
     private MainListUtils mainListUtils;
 
@@ -36,6 +42,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.main_layout_toolbar));
 
         // библиотека для работы с БД в браузере
         Stetho.initialize(
@@ -49,7 +57,6 @@ public class MainActivity extends Activity {
         mainListUtils = new MainListUtils();
 
         initMainList();
-//        initTrainings();
         setListOnClick();
 
     }
@@ -59,6 +66,9 @@ public class MainActivity extends Activity {
         mainListUtils.initMainListDB(this, IMainListDto.DATABASE_NAME, IMainListDto.DATABASE_VERSION);
 
         List<MainList> mainLists = new ArrayList<>();
+        mainLists.add(new MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
+        mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
+        mainLists.add(new MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
         mainLists.add(new MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
         mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
         mainLists.add(new MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
@@ -87,13 +97,13 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = null;
                 switch (position) {
-                    case IMainListDto.SHEET_ITEM_TRAINING :
+                    case IMainListDto.SHEET_ITEM_TRAINING:
                         intent = new Intent(getApplicationContext(), TrainingsActivity.class);
                         break;
-                    case IMainListDto.SHEET_ITEM_EXERCISE :
-//                        intent = new Intent(getApplicationContext(), TrainingsActivity.class);
+                    case IMainListDto.SHEET_ITEM_EXERCISE:
+                        intent = new Intent(getApplicationContext(), ExercisesActivity.class);
                         break;
-                    case IMainListDto.SHEET_ITEM_GRAPH :
+                    case IMainListDto.SHEET_ITEM_GRAPH:
 //                        intent = new Intent(getApplicationContext(), TrainingsActivity.class);
                         break;
                 }

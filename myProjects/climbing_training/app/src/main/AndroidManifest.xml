@@ -23,6 +23,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ExercisesActivity">
+            <intent-filter>
+                <action android:name="ExercisesActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

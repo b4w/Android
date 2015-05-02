@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Climbing training</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="category">category</string>
+    <string name="type_of_exercise">type of exercise</string>
+    <string name="equipment">equipment</string>
+    <string name="comment">comment</string>
+    <string name="exercise">exercise</string>
+    <string name="graph">graph</string>
+    <string name="training">training</string>
+
 </resources>

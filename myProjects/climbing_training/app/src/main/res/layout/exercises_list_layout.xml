@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/exercises_list_layout_image"
+        android:layout_width="130dp"
+        android:layout_height="130dp"/>
+
+    <TextView
+        android:id="@+id/exercises_list_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+
+    <RatingBar
+        android:id="@+id/exercises_list_layout_rating"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/exercises_list_layout_name_category"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/exercises_list_layout_name"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+
+    <TextView
+        android:id="@+id/exercises_list_layout_type_exercise"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/exercises_list_layout_name_category"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+
+    <TextView
+        android:id="@+id/exercises_list_layout_equipment"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/exercises_list_layout_type_exercise"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+
+    <TextView
+        android:id="@+id/exercises_list_layout_comment"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/exercises_list_layout_equipment"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+
+</RelativeLayout>

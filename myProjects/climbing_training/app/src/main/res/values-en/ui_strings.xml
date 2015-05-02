@@ -3,4 +3,10 @@
     <string name="training">training</string>
     <string name="graph">graph</string>
     <string name="exercise">exercise</string>
+    
+    <string name="category">category</string>
+    <string name="type_of_exercise">type of exercise</string>
+    <string name="equipment">equipment</string>
+    <string name="comment">comment</string>
+
 </resources>
