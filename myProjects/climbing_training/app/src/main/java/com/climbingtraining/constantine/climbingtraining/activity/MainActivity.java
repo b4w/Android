@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,9 +30,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int ORM_LOADER_ID = 5;
 
     private ListView mainLayoutListView;
-    private ImageView mainLayoutLogo;
-    private Toolbar mainLayoutToolbar;
-    private int parallaxImageHeight;
+    private Toolbar toolbar;
 
     private MainListAdapter mainListAdapter;
     private MainListUtils mainListUtils;
@@ -42,8 +39,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-
-        setSupportActionBar((Toolbar) findViewById(R.id.main_layout_toolbar));
 
         // библиотека для работы с БД в браузере
         Stetho.initialize(
@@ -55,6 +50,12 @@ public class MainActivity extends ActionBarActivity {
                         .build());
 
         mainListUtils = new MainListUtils();
+
+        toolbar = (Toolbar) findViewById(R.id.main_layout_toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         initMainList();
         setListOnClick();
@@ -104,7 +105,7 @@ public class MainActivity extends ActionBarActivity {
                         intent = new Intent(getApplicationContext(), ExercisesActivity.class);
                         break;
                     case IMainListDto.SHEET_ITEM_GRAPH:
-//                        intent = new Intent(getApplicationContext(), TrainingsActivity.class);
+                        intent = new Intent(getApplicationContext(), GraphActivity.class);
                         break;
                 }
                 if (intent != null) {

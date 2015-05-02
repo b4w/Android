@@ -1,7 +1,24 @@
 <resources>
 
-    <!--Отключение actionBar, т.к. будем использовать Toolbar-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="AppTheme.Base"/>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">@color/text_icon</item>
+        <!-- need API 21 -->
+        <!--<item name="android:colorPrimary">@color/primary_color</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/dark_primary_color</item>-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <!--Style for button "+" where Layout - RelativeLayout-->
+    <style name="button_plus_style">
+        <!-- need API 17 -->
+        <!--<item name="android:layout_alignParentRight">true</item>-->
+        <!--<item name="android:layout_alignParentEnd">true</item>-->
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:src">@drawable/icon_plus</item>
     </style>
 
 </resources>

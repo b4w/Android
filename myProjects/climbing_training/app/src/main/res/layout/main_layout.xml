@@ -5,13 +5,9 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/main_layout_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        layout="@layout/toolbar"/>
 
     <ImageView
         android:id="@+id/main_layout_logo"

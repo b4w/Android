@@ -1,12 +1,14 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.TrainingsListAdapter;
 import com.climbingtraining.constantine.climbingtraining.pojo.Trainings;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,18 +17,28 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 01.05.15.
  */
-public class TrainingsActivity extends Activity {
+public class TrainingsActivity extends ActionBarActivity {
 
     private static final String TAG = TrainingsActivity.class.getSimpleName();
 
     private ListView trainingsLayoutListView;
+    private FloatingActionButton trainingsLayoutFab;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trainings_layout);
 
+        toolbar = (Toolbar) findViewById(R.id.trainings_layout_toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        trainingsLayoutFab = (FloatingActionButton) findViewById(R.id.trainings_layout_fab);
         trainingsLayoutListView = (ListView) findViewById(R.id.trainings_layout_list_view);
+        trainingsLayoutFab.attachToListView(trainingsLayoutListView);
 
         TrainingsListAdapter trainingsListAdapter = new TrainingsListAdapter(this, newDataSet());
         trainingsLayoutListView.setAdapter(trainingsListAdapter);

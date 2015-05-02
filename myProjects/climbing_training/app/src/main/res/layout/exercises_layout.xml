@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/exercises_layout_toolbar"
+        layout="@layout/toolbar"/>
 
     <ExpandableListView
         android:id="@+id/exercises_layout_exlist_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/exercises_layout_toolbar"
         android:indicatorLeft="250dp"
-        android:indicatorRight="300dp"/>
+        android:indicatorRight="300dp" />
 
-</LinearLayout>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/exercises_layout_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_colorPressed="@color/light_accent_color"
+        fab:fab_colorRipple="@color/light_accent_color"
+        android:layout_alignBottom="@+id/exercises_layout_exlist_view"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        style="@style/button_plus_style"/>
+
+</RelativeLayout>
