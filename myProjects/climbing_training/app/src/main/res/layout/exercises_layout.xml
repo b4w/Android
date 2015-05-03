@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/exercises_layout_toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
-    <ExpandableListView
-        android:id="@+id/exercises_layout_exlist_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/exercises_layout_toolbar"
-        android:indicatorLeft="250dp"
-        android:indicatorRight="300dp" />
-
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/exercises_layout_fab"
+    <fragment
+        android:id="@+id/exercises_fragment"
+        android:name="com.climbingtraining.constantine.climbingtraining.fragments.ExercisesFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fab:fab_colorNormal="@color/accent_color"
-        fab:fab_colorPressed="@color/light_accent_color"
-        fab:fab_colorRipple="@color/light_accent_color"
-        android:layout_alignBottom="@+id/exercises_layout_exlist_view"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        style="@style/button_plus_style"/>
+        android:layout_below="@+id/exercises_layout_toolbar"
+        tools:layout="@layout/fragment_exercises" />
 
 </RelativeLayout>

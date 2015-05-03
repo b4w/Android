@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/graph_layout_toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
-    <ListView
-        android:id="@+id/graph_layout_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/graph_layout_toolbar"/>
-
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/graph_layout_fab"
+    <fragment
+        android:id="@+id/graph_fragment"
+        android:name="com.climbingtraining.constantine.climbingtraining.fragments.GraphFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fab:fab_colorNormal="@color/accent_color"
-        fab:fab_colorPressed="@color/light_accent_color"
-        fab:fab_colorRipple="@color/light_accent_color"
-        android:layout_alignBottom="@+id/graph_layout_list_view"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        style="@style/button_plus_style"/>
+        android:layout_below="@id/graph_layout_toolbar"
+        tools:layout="@layout/fragment_graph" />
 
 </RelativeLayout>
