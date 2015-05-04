@@ -1,6 +1,7 @@
 package com.climbingtraining.constantine.climbingtraining.data.dao;
 
-import com.j256.ormlite.dao.BaseDaoImpl;
+import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
+import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
@@ -11,12 +12,12 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 29.04.15.
  */
-public class MainListDao<MainListDto, Integer> extends BaseDaoImpl<MainListDto, Integer> {
+public class MainListDao extends CommonDao<MainList, Integer> {
 
     private MainListDao mainListDao;
 
-    public MainListDao(ConnectionSource connectionSource, Class<MainListDto> dataClass) throws SQLException {
-        super(connectionSource, dataClass);
+    public MainListDao(ConnectionSource connectionSource) throws SQLException {
+        super(connectionSource, MainList.class);
     }
 
     /**
@@ -24,7 +25,7 @@ public class MainListDao<MainListDto, Integer> extends BaseDaoImpl<MainListDto, 
      * @return
      * @throws SQLException
      */
-    public List<MainListDto> getMainList() throws SQLException {
+    public List<MainList> getMainList() throws SQLException {
         return mainListDao.queryForAll();
     }
 
@@ -43,24 +44,28 @@ public class MainListDao<MainListDto, Integer> extends BaseDaoImpl<MainListDto, 
      * @return
      * @throws SQLException
      */
-    public MainListDto getMainListItemById(int id) throws SQLException {
-        return (MainListDto) mainListDao.queryForId(id);
+    public MainList getMainListItemById(int id) throws SQLException {
+        return (MainList) mainListDao.queryForId(id);
     }
 
     /**
      * Добавить пункт в список.
-     * @param mainListDto
+     * @param mainList
      * @throws SQLException
      */
-    public void addMainListItem(MainListDto mainListDto) throws SQLException {
-        mainListDao.create(mainListDto);
+    public void addMainListItem(MainList mainList) throws SQLException {
+        mainListDao.create(mainList);
     }
 
     public PreparedQuery getTestQuery() throws SQLException {
-        QueryBuilder<MainListDto, Integer> queryBuilder = queryBuilder();
+        QueryBuilder<MainList, Integer> queryBuilder = queryBuilder();
 //        queryBuilder.where()
-        PreparedQuery<MainListDto> preparedQuery = queryBuilder.prepare();
+        PreparedQuery<MainList> preparedQuery = queryBuilder.prepare();
         return preparedQuery;
+    }
+
+    public List<MainList> searchByName(String name) throws SQLException {
+        return queryBuilder().where().like(MainList.COLUMN_NAME_TITLE, name + "%").query();
     }
 
 

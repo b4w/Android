@@ -1,5 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,11 @@ public class TrainingsActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        TrainingsFragment trainingsFragment = (TrainingsFragment) getFragmentManager().findFragmentById(R.id.trainings_fragment);
+        // load trainings fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        TrainingsFragment trainingsFragment = TrainingsFragment.newInstance();
+        fragmentManager.beginTransaction()
+                .replace(R.id.trainings_container, trainingsFragment)
+                .commit();
     }
 }

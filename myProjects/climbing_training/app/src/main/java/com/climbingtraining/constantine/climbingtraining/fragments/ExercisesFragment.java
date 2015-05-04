@@ -1,5 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,10 +32,27 @@ public class ExercisesFragment extends Fragment {
     private FloatingActionButton exerciseBtn;
     private FloatingActionButton typeExerciseBtn;
 
+    private IExercisesFragmentCallBack exercisesCallBack;
+
+    public static ExercisesFragment newInstance() {
+        ExercisesFragment fragment = new ExercisesFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         exercisesListAdapter = new ExercisesListAdapter(getActivity(), initData());
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            exercisesCallBack = (IExercisesFragmentCallBack) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement IExercisesFragmentCallBack.");
+        }
     }
 
     @Override
@@ -50,6 +68,36 @@ public class ExercisesFragment extends Fragment {
         typeExerciseBtn = (FloatingActionButton) getActivity().findViewById(R.id.fragment_exercises_type_of_exercise_btn);
 
         exercisesLayoutExlistView.setAdapter(exercisesListAdapter);
+
+        categoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exercisesCallBack.createNewCategory();
+            }
+        });
+
+        equipmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exercisesCallBack.createNewEquipment();
+            }
+        });
+
+        exerciseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exercisesCallBack.createNewExercise();
+            }
+        });
+
+        typeExerciseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exercisesCallBack.createNewTypeExercise();
+            }
+        });
+
+
     }
 
     @Nullable
@@ -74,5 +122,14 @@ public class ExercisesFragment extends Fragment {
         result.add(child1);
         result.add(child2);
         return result;
+    }
+
+
+//    interface for onClick(); action button and create new fragments
+    public static interface IExercisesFragmentCallBack {
+        void createNewCategory();
+        void createNewEquipment();
+        void createNewExercise();
+        void createNewTypeExercise();
     }
 }

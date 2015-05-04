@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
@@ -26,6 +25,11 @@ public class GraphFragment extends Fragment {
 
     private List<String> tmpList;
     private ArrayAdapter<String> tmpAdapter;
+
+    public static GraphFragment newInstance() {
+        GraphFragment fragment = new GraphFragment();
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

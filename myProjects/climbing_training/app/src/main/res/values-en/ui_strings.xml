@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="training">training</string>
-    <string name="graph">graph</string>
-    <string name="exercise">exercise</string>
+    <string name="training">Training</string>
+    <string name="graph">Graph</string>
+    <string name="exercise">Exercise</string>
     
-    <string name="category">category</string>
-    <string name="type_of_exercise">type of exercise</string>
-    <string name="equipment">equipment</string>
-    <string name="comment">comment</string>
+    <string name="category">Category</string>
+    <string name="type_of_exercise">Type of exercise</string>
+    <string name="equipment">Equipment</string>
+    <string name="comment">Comment</string>
+
+    <string name="name">Name</string>
+    <string name="add_the_image">Add the image</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -28,6 +28,11 @@ public class TrainingsFragment extends Fragment {
     private List<Trainings> tmpList;
     private TrainingsListAdapter trainingsListAdapter;
 
+    public static TrainingsFragment newInstance() {
+        TrainingsFragment fragment = new TrainingsFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

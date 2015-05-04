@@ -1,14 +1,19 @@
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.Base"/>
+    <style name="AppTheme" parent="AppTheme.Base" />
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/primary_text</item>
         <!-- need API 21 -->
         <!--<item name="android:colorPrimary">@color/primary_color</item>-->
         <!--<item name="android:colorPrimaryDark">@color/dark_primary_color</item>-->
+
         <item name="android:colorBackground">@color/text_icon</item>
-        <item name="android:textColor">@color/secondary_text</item>
+
+        <!--android:fontFamily="sans-serif"           // roboto regular-->
+        <!--android:fontFamily="sans-serif-light"     // roboto light-->
+        <!--android:fontFamily="sans-serif-condensed" // roboto condensed-->
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
     </style>
@@ -19,4 +24,10 @@
         <item name="android:textColor">#fafafa</item>
     </style>
 
+
+    <!-- style for item main list -->
+    <style name="ItemMainList">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
 </resources>

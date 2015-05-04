@@ -1,5 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +27,11 @@ public class GraphActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        GraphFragment graphFragment = (GraphFragment) getFragmentManager().findFragmentById(R.id.graph_fragment);
-
+        // load graph fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        GraphFragment graphFragment = GraphFragment.newInstance();
+        fragmentManager.beginTransaction()
+                .replace(R.id.graph_container, graphFragment)
+                .commit();
     }
 }

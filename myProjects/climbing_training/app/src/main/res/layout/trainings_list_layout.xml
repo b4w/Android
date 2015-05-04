@@ -1,43 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ItemMainList"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/trainings_list_layout_icon"
-        android:layout_width="130dp"
-        android:layout_height="130dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <CheckBox
-        android:id="@+id/trainings_layout_like"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/trainings_list_layout_date"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/trainings_list_layout_icon"
-        android:layout_toEndOf="@+id/trainings_list_layout_icon" />
+        android:layout_toEndOf="@+id/trainings_list_layout_icon">
 
-    <TextView
-        android:id="@+id/trainings_list_layout_exercises"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/trainings_list_layout_date"
-        android:layout_toRightOf="@+id/trainings_list_layout_icon"
-        android:layout_toEndOf="@+id/trainings_list_layout_icon" />
+        <CheckBox
+            android:id="@+id/trainings_layout_like"
+            android:layout_width="16dp"
+            android:layout_height="16dp"/>
 
-    <TextView
-        android:id="@+id/trainings_list_layout_comments"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/trainings_list_layout_exercises"
-        android:layout_toRightOf="@+id/trainings_list_layout_icon"
-        android:layout_toEndOf="@+id/trainings_list_layout_icon" />
+        <TextView
+            android:id="@+id/trainings_list_layout_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
+        <TextView
+            android:id="@+id/trainings_list_layout_exercises"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/trainings_list_layout_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 </RelativeLayout>

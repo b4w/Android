@@ -1,59 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ItemMainList"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/exercises_list_layout_image"
-        android:layout_width="130dp"
-        android:layout_height="130dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true" />
 
-    <TextView
-        android:id="@+id/exercises_list_layout_name"
+    <LinearLayout
+        android:id="@+id/exercises_list_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
         android:layout_toEndOf="@+id/exercises_list_layout_image"
-        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+        android:layout_toRightOf="@+id/exercises_list_layout_image"
+        android:orientation="vertical">
 
-    <RatingBar
-        android:id="@+id/exercises_list_layout_rating"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"/>
+        <RatingBar
+            android:id="@+id/exercises_list_layout_rating"
+            android:layout_width="50dp"
+            android:layout_height="16dp" />
 
-    <TextView
-        android:id="@+id/exercises_list_layout_name_category"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/exercises_list_layout_name"
-        android:layout_toEndOf="@+id/exercises_list_layout_image"
-        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+        <TextView
+            android:id="@+id/exercises_list_layout_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/exercises_list_layout_type_exercise"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/exercises_list_layout_name_category"
-        android:layout_toEndOf="@+id/exercises_list_layout_image"
-        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+        <TextView
+            android:id="@+id/exercises_list_layout_name_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/exercises_list_layout_equipment"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/exercises_list_layout_type_exercise"
-        android:layout_toEndOf="@+id/exercises_list_layout_image"
-        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+        <TextView
+            android:id="@+id/exercises_list_layout_type_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/exercises_list_layout_comment"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/exercises_list_layout_equipment"
-        android:layout_toEndOf="@+id/exercises_list_layout_image"
-        android:layout_toRightOf="@+id/exercises_list_layout_image"/>
+        <TextView
+            android:id="@+id/exercises_list_layout_equipment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/exercises_list_layout_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </RelativeLayout>

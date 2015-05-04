@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="training">тренировка</string>
-    <string name="graph">график</string>
-    <string name="exercise">упражнение</string>
+    <string name="training">Тренировка</string>
+    <string name="graph">График</string>
+    <string name="exercise">Упражнение</string>
 
-    <string name="category">категория</string>
-    <string name="type_of_exercise">вид упражнения</string>
-    <string name="equipment">оборудование</string>
-    <string name="comment">комментарий</string>
+    <string name="category">Категория</string>
+    <string name="type_of_exercise">Вид упражнения</string>
+    <string name="equipment">Оборудование</string>
+    <string name="comment">Комментарий</string>
+
+    <string name="name">Название</string>
+    <string name="add_the_image">Добавить изображение</string>
+
+    <string name="ok">Применить</string>
+    <string name="cancel">Отмена</string>
 
 </resources>

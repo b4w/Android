@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description">description</string>
+    <string name="successfully_added">Data are successfully added</string>
+    <string name="error_added">Error when adding data</string>
+</resources>

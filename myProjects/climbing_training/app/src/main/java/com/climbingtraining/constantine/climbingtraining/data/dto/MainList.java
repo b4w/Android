@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by KonstantinSysoev on 29.04.15.
  */
 @DatabaseTable(tableName = "main_list")
-public class MainListDto implements IMainListDto {
+public class MainList implements ICommonEntities {
 
     @DatabaseField(generatedId = true, columnName = COLUMN_NAME_ID)
     private int id;
@@ -21,14 +21,22 @@ public class MainListDto implements IMainListDto {
     @DatabaseField(columnName = COLUMN_NAME_TEXT)
     private String text;
 
-    public MainListDto() {
+    public MainList() {
         // need for ormLite
     }
 
-    public MainListDto(int logo, String title, String text) {
+    public MainList(int logo, String title, String text) {
         this.logo = logo;
         this.title = title;
         this.text = text;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getLogo() {

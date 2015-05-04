@@ -3,10 +3,9 @@ package com.climbingtraining.constantine.climbingtraining.data.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.climbingtraining.constantine.climbingtraining.data.OrmHelper;
+import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.climbingtraining.constantine.climbingtraining.data.dao.MainListDao;
-import com.climbingtraining.constantine.climbingtraining.data.dto.MainListDto;
-import com.climbingtraining.constantine.climbingtraining.pojo.MainList;
+import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -30,7 +29,7 @@ public class MainListUtils {
         ormHelper = new OrmHelper(context, databaseName, databaseVersion);
         ormHelper.clearDatabase();
         try {
-            mainListDao = new MainListDao(ormHelper.getConnectionSource(), MainListDto.class);
+            mainListDao = new MainListDao(ormHelper.getConnectionSource());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,11 +41,11 @@ public class MainListUtils {
      *
      * @param mainLists
      */
-    public void fillDataMainList(List<MainList> mainLists) {
+    public void fillDataMainList(List<com.climbingtraining.constantine.climbingtraining.pojo.MainList> mainLists) {
         Log.i(TAG, "fillDataMainList() started");
-        for (MainList item : mainLists) {
+        for (com.climbingtraining.constantine.climbingtraining.pojo.MainList item : mainLists) {
             try {
-                mainListDao.create(new MainListDto(item.getLogo(), item.getTitle(), item.getText()));
+                mainListDao.create(new MainList(item.getLogo(), item.getTitle(), item.getText()));
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -13,10 +13,9 @@ import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.MainListAdapter;
+import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.util.MainListUtils;
-import com.climbingtraining.constantine.climbingtraining.data.dto.IMainListDto;
-import com.climbingtraining.constantine.climbingtraining.data.dto.MainListDto;
-import com.climbingtraining.constantine.climbingtraining.pojo.MainList;
+import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
 import com.facebook.stetho.Stetho;
 import com.j256.ormlite.android.loadercallback.OrmCursorLoaderCallback;
 
@@ -64,15 +63,15 @@ public class MainActivity extends ActionBarActivity {
 
     private void initMainList() {
         Log.i(TAG, "initMainList() stated");
-        mainListUtils.initMainListDB(this, IMainListDto.DATABASE_NAME, IMainListDto.DATABASE_VERSION);
+        mainListUtils.initMainListDB(this, ICommonEntities.MAIN_LIST_DATABASE_NAME, ICommonEntities.MAIN_LIST_DATABASE_VERSION);
 
-        List<MainList> mainLists = new ArrayList<>();
-        mainLists.add(new MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
-        mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
-        mainLists.add(new MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
-        mainLists.add(new MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
-        mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
-        mainLists.add(new MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
+        List<com.climbingtraining.constantine.climbingtraining.pojo.MainList> mainLists = new ArrayList<>();
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
 
         mainListUtils.fillDataMainList(mainLists);
 
@@ -83,8 +82,8 @@ public class MainActivity extends ActionBarActivity {
 
         try {
             // ставим "callBack" на список
-            OrmCursorLoaderCallback<MainListDto, Integer> ormCursorLoaderCallback =
-                    new OrmCursorLoaderCallback<MainListDto, Integer>(this, mainListUtils.getMainListDao(), mainListUtils.getMainListDao().getTestQuery(), mainListAdapter);
+            OrmCursorLoaderCallback<MainList, Integer> ormCursorLoaderCallback =
+                    new OrmCursorLoaderCallback<MainList, Integer>(this, mainListUtils.getMainListDao(), mainListUtils.getMainListDao().getTestQuery(), mainListAdapter);
             getLoaderManager().initLoader(ORM_LOADER_ID, null, ormCursorLoaderCallback);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,13 +97,13 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = null;
                 switch (position) {
-                    case IMainListDto.SHEET_ITEM_TRAINING:
+                    case ICommonEntities.SHEET_ITEM_TRAINING:
                         intent = new Intent(getApplicationContext(), TrainingsActivity.class);
                         break;
-                    case IMainListDto.SHEET_ITEM_EXERCISE:
+                    case ICommonEntities.SHEET_ITEM_EXERCISE:
                         intent = new Intent(getApplicationContext(), ExercisesActivity.class);
                         break;
-                    case IMainListDto.SHEET_ITEM_GRAPH:
+                    case ICommonEntities.SHEET_ITEM_GRAPH:
                         intent = new Intent(getApplicationContext(), GraphActivity.class);
                         break;
                 }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="false" />
+    <value-preview-text-wrapping value="true" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -344,7 +344,7 @@
         <focus-result value="false" />
       </statement-execution>
       <statement-execution>
-        <execution-timeout value="20" />
+        <execution-timeout value="30" />
         <debug-execution-timeout value="600" />
         <parameter-history-size value="10" />
       </statement-execution>
@@ -421,4 +421,3 @@
     <execution-variables />
   </component>
 </project>
-
