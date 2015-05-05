@@ -7,4 +7,7 @@ public interface ICommonOrmHelper {
 
     int MAIN_LIST_DAO_NUMBER = 0;
     int CATEGORY_DAO_NUMBER = 1;
+    int EQUIPMENT_DAO_NUMBER = 2;
+    int EXERCISE_DAO_NUMBER = 3;
+    int TYPE_EXERCISE_DAO_NUMBER = 4;
 }

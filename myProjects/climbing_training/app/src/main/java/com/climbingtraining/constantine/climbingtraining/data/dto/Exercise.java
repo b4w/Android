@@ -1,5 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.data.dto;
 
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -8,11 +9,17 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "exercises")
 public class Exercise extends AbstractEntity {
 
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private Category category;
+
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private Equipment equipment;
+
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private TypeExercise typeExercise;
 
     public Exercise() {
+//        need for ormlite
     }
 
     public Exercise(String name, int image, String description, String comment, Category category, Equipment equipment, TypeExercise typeExercise) {

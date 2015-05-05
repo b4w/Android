@@ -14,10 +14,22 @@ public interface ICommonEntities {
     String COLUMN_NAME_LOGO = "logo";
     String COLUMN_NAME_TITLE = "title";
     String COLUMN_NAME_TEXT = "text";
+    String COLUMN_NAME_CATEGORY = "category";
+    String COLUMN_NAME_EQUIPMENT = "equipment";
+    String COLUMN_NAME_TYPE_EXERCISE = "type_exercise";
 
 //  --  DB NAMES --
     String CATEGORIES_DATABASE_NAME = "categories";
     int CATEGORIES_DATABASE_VERSION = 1;
+
+    String EQUIPMENTS_DATABASE_NAME = "equipments";
+    int EQUIPMENTS_DATABASE_VERSION = 1;
+
+    String TYPE_EXERCISES_DATABASE_NAME = "type_exercises";
+    int TYPE_EXERCISES_DATABASE_VERSION = 1;
+
+    String EXERCISES_DATABASE_NAME = "exercises";
+    int EXERCISE_DATABASE_VERSION = 1;
 
     String MAIN_LIST_DATABASE_NAME = "main_list";
     int MAIN_LIST_DATABASE_VERSION = 1;

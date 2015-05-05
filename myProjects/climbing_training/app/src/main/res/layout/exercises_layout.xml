@@ -36,6 +36,11 @@
                 android:id="@+id/exercises_container_three"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@+id/exercises_container_four"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </ScrollView>

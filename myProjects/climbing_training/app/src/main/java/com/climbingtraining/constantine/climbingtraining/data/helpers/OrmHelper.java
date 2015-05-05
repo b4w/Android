@@ -8,7 +8,10 @@ import android.util.SparseArray;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dao.CategoryDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
+import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -27,7 +30,10 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper implements ICommonOrmHelp
 
     private Class[] classes = {
             MainList.class,
-            Category.class
+            Category.class,
+            Equipment.class,
+            Exercise.class,
+            TypeExercise.class
     };
 
     /**
@@ -144,6 +150,12 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper implements ICommonOrmHelp
             return getDaoByNum(Category.class, CATEGORY_DAO_NUMBER);
         } else if (classInstance.equals(MainList.class)) {
             return getDaoByNum(MainList.class, MAIN_LIST_DAO_NUMBER);
+        } else if (classInstance.equals(Equipment.class)) {
+            return getDaoByNum(Equipment.class, EQUIPMENT_DAO_NUMBER);
+        } else if (classInstance.equals(Exercise.class)) {
+            return getDaoByNum(Exercise.class, EXERCISE_DAO_NUMBER);
+        } else if (classInstance.equals(TypeExercise.class)) {
+            return getDaoByNum(TypeExercise.class, TYPE_EXERCISE_DAO_NUMBER);
         }
         return null;
     }
