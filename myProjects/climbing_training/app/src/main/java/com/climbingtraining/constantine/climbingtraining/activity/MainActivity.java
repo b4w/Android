@@ -69,9 +69,7 @@ public class MainActivity extends ActionBarActivity {
         mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
         mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
         mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
+        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.categories), "Какой-то текст про категории"));
 
         mainListUtils.fillDataMainList(mainLists);
 
@@ -105,6 +103,9 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     case ICommonEntities.SHEET_ITEM_GRAPH:
                         intent = new Intent(getApplicationContext(), GraphActivity.class);
+                        break;
+                    case ICommonEntities.SHEET_CATEGORY:
+                        intent = new Intent(getApplicationContext(), CategoryActivity.class);
                         break;
                 }
                 if (intent != null) {

@@ -33,4 +33,6 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.getbase:floatingactionbutton:1.9.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

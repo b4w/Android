@@ -8,7 +8,15 @@
         android:id="@+id/fragment_load_image_image"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/loading"
+        android:src="@drawable/add_image"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/fragment_load_image_search"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/fragment_load_image_image"
+        android:hint="@string/search"/>
 
 </RelativeLayout>

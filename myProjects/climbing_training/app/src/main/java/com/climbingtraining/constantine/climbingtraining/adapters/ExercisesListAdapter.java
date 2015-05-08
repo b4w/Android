@@ -2,6 +2,10 @@ package com.climbingtraining.constantine.climbingtraining.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.pojo.Exercises;
 
+import java.io.File;
 import java.util.List;
 
 /**
