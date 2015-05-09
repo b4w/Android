@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.climbingtraining.constantine.climbingtraining.R;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
 
 /**
  * Created by KonstantinSysoev on 03.05.15.
@@ -32,15 +33,29 @@ public class DescriptionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_description, container, false);
+        if (getArguments() != null) {
+            name = getArguments().getString(CategoryActivity.NAME);
+            description = getArguments().getString(CategoryActivity.DESCRIPTION);
+            comment = getArguments().getString(CategoryActivity.COMMENT);
+        }
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         nameEditText = (EditText) getActivity().findViewById(R.id.fragment_description_name_edit_text);
         descriptionEditText = (EditText) getActivity().findViewById(R.id.fragment_description_description_edit_text);
         commentEditText = (EditText) getActivity().findViewById(R.id.fragment_description_comment_edit_text);
+
+        updateFields();
+    }
+
+    private void updateFields() {
+        nameEditText.setText(name);
+        descriptionEditText.setText(description);
+        commentEditText.setText(comment);
     }
 
     // GET & SET

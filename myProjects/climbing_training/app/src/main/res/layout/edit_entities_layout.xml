@@ -8,17 +8,19 @@
         android:id="@+id/category_layout_toolbar"
         layout="@layout/toolbar" />
 
-    <com.climbingtraining.constantine.climbingtraining.utils.SlidingTabLayout
-        android:id="@+id/tabs"
+    <FrameLayout
+        android:id="@+id/edit_entities_container_one"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary_color"
-        android:elevation="2dp" />
+        android:layout_height="wrap_content" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <FrameLayout
+        android:id="@+id/edit_entities_container_two"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"></android.support.v4.view.ViewPager>
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/edit_entities_container_three"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

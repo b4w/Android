@@ -71,6 +71,9 @@ public class LoadImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_load_image, container, false);
+        if (getArguments() != null) {
+            String imagePath = getArguments().getString("imageManeAndPath");
+        }
         return view;
     }
 

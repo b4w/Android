@@ -126,7 +126,7 @@ public class ExercisesFragment extends Fragment {
 
 
 //    interface for onClick(); action button and create new fragments
-    public static interface IExercisesFragmentCallBack {
+    public interface IExercisesFragmentCallBack {
         void createNewCategory();
         void createNewEquipment();
         void createNewExercise();
