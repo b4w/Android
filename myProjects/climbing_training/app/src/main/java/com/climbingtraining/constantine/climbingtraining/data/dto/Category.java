@@ -12,7 +12,11 @@ public class Category extends AbstractEntity {
 //        need for OrmLite
     }
 
-    public Category(String name, int image, String description, String comment) {
-        super(name, image, description, comment);
+    public Category(String name, String imagePath, String description, String comment) {
+        super(name, imagePath, description, comment);
+    }
+
+    public Category(int id, String name, String imagePath, String description, String comment) {
+        super(id, name, imagePath, description, comment);
     }
 }

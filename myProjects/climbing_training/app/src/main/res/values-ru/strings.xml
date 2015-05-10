@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="description">описание</string>
-    <string name="successfully_added">Данные успешно добавлены</string>
+    <string name="data_successfully_added">Данные успешно добавлены</string>
+    <string name="successfully_added">успешно добавлена</string>
     <string name="error_added">Ошибка при добавлении данных</string>
+
+    <string name="saving_image_sd">Сохранение изображения невозможно,  SD карта не доступна</string>
+    <string name="text_comment">Текст комментария</string>
+    <string name="text_description">Текст описания</string>
 </resources>

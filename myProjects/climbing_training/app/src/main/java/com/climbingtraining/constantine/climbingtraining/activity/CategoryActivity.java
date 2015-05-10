@@ -1,6 +1,5 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -13,10 +12,7 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.climbingtraining.constantine.climbingtraining.fragments.CategoryFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.DescriptionFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.EquipmentsFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.LoadImageFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.OkCancelFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TypesExercisesFragment;
 import com.climbingtraining.constantine.climbingtraining.utils.SlidingTabLayout;
 
@@ -30,6 +26,8 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public final static String NAME = "name";
     public final static String DESCRIPTION = "description";
     public final static String COMMENT = "comment";
+    public final static String ENTITY = "entity";
+    public final static String ENTITY_ID = "entityId";
 
     private Toolbar toolbar;
     private ViewPager pager;
@@ -75,10 +73,19 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public void editCategory(Category category) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
 //        TODO переделать на Bundle
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(category.getImage()));
+        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(category.getImagePath()));
         intent.putExtra(NAME, category.getName());
         intent.putExtra(DESCRIPTION, category.getDescription());
         intent.putExtra(COMMENT, category.getComment());
+        intent.putExtra(ENTITY, category.getClass().getSimpleName());
+        intent.putExtra(ENTITY_ID, category.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void createNewCategory() {
+        Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
+        intent.putExtra(ENTITY, Category.class.getSimpleName());
         startActivity(intent);
     }
 
@@ -86,10 +93,19 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public void editEquipment(Equipment equipment) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
 //        TODO переделать на Bundle
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(equipment.getImage()));
+        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(equipment.getImagePath()));
         intent.putExtra(NAME, equipment.getName());
         intent.putExtra(DESCRIPTION, equipment.getDescription());
         intent.putExtra(COMMENT, equipment.getComment());
+        intent.putExtra(ENTITY, equipment.getClass().getSimpleName());
+        intent.putExtra(ENTITY_ID, equipment.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void createNewEquipment() {
+        Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
+        intent.putExtra(ENTITY, Equipment.class.getSimpleName());
         startActivity(intent);
     }
 
@@ -97,10 +113,19 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public void editTypeExercise(TypeExercise typeExercise) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
 //        TODO переделать на Bundle
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(typeExercise.getImage()));
+        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(typeExercise.getImagePath()));
         intent.putExtra(NAME, typeExercise.getName());
         intent.putExtra(DESCRIPTION, typeExercise.getDescription());
         intent.putExtra(COMMENT, typeExercise.getComment());
+        intent.putExtra(ENTITY, typeExercise.getClass().getSimpleName());
+        intent.putExtra(ENTITY_ID, typeExercise.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void createNewTypeExercise() {
+        Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
+        intent.putExtra(ENTITY, TypeExercise.class.getSimpleName());
         startActivity(intent);
     }
 }

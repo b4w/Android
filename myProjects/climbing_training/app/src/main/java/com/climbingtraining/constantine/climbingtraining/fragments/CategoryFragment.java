@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.CategoryListAdapter;
@@ -20,6 +19,7 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.j256.ormlite.support.ConnectionSource;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -41,6 +41,7 @@ public class CategoryFragment extends Fragment {
     private CategoryListAdapter categoryListAdapter;
     private ListView fragmentCategoryList;
     private ICategoryFragmentCallBack callBack;
+    private FloatingActionButton fragmentCategoryFloatButton;
 
     private OrmHelper ormHelper;
     private ConnectionSource connectionSource;
@@ -60,19 +61,15 @@ public class CategoryFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        initDB();
-        categories = getAllCategories();
-        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
+
+        initDB();
+        categories = getAllCategories();
+        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
+
         return view;
     }
 
@@ -84,6 +81,15 @@ public class CategoryFragment extends Fragment {
         fragmentCategoryDescription = (TextView) getActivity().findViewById(R.id.category_list_layout_description);
         fragmentCategoryComments = (TextView) getActivity().findViewById(R.id.category_list_layout_comments);
         fragmentCategoryList = (ListView) getActivity().findViewById(R.id.fragment_category_list);
+        fragmentCategoryFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_category_float_button);
+        fragmentCategoryFloatButton.attachToListView(fragmentCategoryList);
+
+        fragmentCategoryFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.createNewCategory();
+            }
+        });
 
         fragmentCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -94,6 +100,15 @@ public class CategoryFragment extends Fragment {
         });
 
         fragmentCategoryList.setAdapter(categoryListAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initDB();
+        categories = getAllCategories();
+        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
     }
 
     private void initDB() {
@@ -118,7 +133,9 @@ public class CategoryFragment extends Fragment {
         return result != null ? result : Collections.<Category>emptyList();
     }
 
+
     public interface ICategoryFragmentCallBack {
         void editCategory(Category category);
+        void createNewCategory();
     }
 }

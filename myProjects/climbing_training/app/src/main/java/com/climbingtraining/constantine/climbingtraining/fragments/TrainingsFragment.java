@@ -11,7 +11,6 @@ import android.widget.ListView;
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.TrainingsListAdapter;
 import com.climbingtraining.constantine.climbingtraining.pojo.Trainings;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +22,6 @@ import java.util.List;
 public class TrainingsFragment extends Fragment {
 
     private ListView trainingsLayoutListView;
-    private FloatingActionsMenu trainingsLayoutActionsMenu;
 
     private List<Trainings> tmpList;
     private TrainingsListAdapter trainingsListAdapter;
@@ -45,7 +43,6 @@ public class TrainingsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        trainingsLayoutActionsMenu = (FloatingActionsMenu) getActivity().findViewById(R.id.fragment_trainings_actions_menu);
         trainingsLayoutListView = (ListView) getActivity().findViewById(R.id.fragment_trainings_list_view);
 
         trainingsLayoutListView.setAdapter(trainingsListAdapter);

@@ -4,21 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.pojo.Exercises;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -30,10 +25,10 @@ public class ExercisesListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private List<List<Exercises>> exercises;
+    private List<List<Exercise>> exercises;
     private Resources resources;
 
-    public ExercisesListAdapter(Context context, List<List<Exercises>> exercises) {
+    public ExercisesListAdapter(Context context, List<List<Exercise>> exercises) {
         this.context = context;
         this.exercises = exercises;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -121,8 +116,8 @@ public class ExercisesListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView groupName = (TextView) convertView.findViewById(R.id.exercises_group_layout_name);
-        Exercises exercises = (Exercises)getChild(groupPosition, 0);
-        groupName.setText(exercises != null ? exercises.getNameCategory() : "");
+        Exercise exercises = (Exercise)getChild(groupPosition, 0);
+        groupName.setText(exercises != null ? exercises.getCategory().getName() : "");
 
         return convertView;
     }
@@ -133,26 +128,30 @@ public class ExercisesListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.exercises_list_layout, null);
         }
 
-        Exercises exercises = (Exercises) getChild(groupPosition, childPosition);
+        Exercise exercises = (Exercise) getChild(groupPosition, childPosition);
 
-//        TODO разобраться с хранением и доставать данные с карточки
         ImageView image = (ImageView) convertView.findViewById(R.id.exercises_list_layout_image);
-        image.setImageResource(exercises.getImage());
+
+        if (!exercises.getImagePath().isEmpty()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(exercises.getImagePath());
+            image.setImageBitmap(myBitmap);
+        }
 
         TextView name = (TextView) convertView.findViewById(R.id.exercises_list_layout_name);
         name.setText(exercises.getName());
 
         TextView nameCategory = (TextView) convertView.findViewById(R.id.exercises_list_layout_name_category);
-        nameCategory.setText(resources.getString(R.string.category) + ": " + exercises.getNameCategory());
+        nameCategory.setText(resources.getString(R.string.category) + ": " + exercises.getCategory().getName());
 
         TextView typeExercise = (TextView) convertView.findViewById(R.id.exercises_list_layout_type_exercise);
-        typeExercise.setText(resources.getString(R.string.type_of_exercise) + ": " + exercises.getTypeExercise());
+        typeExercise.setText(resources.getString(R.string.type_of_exercise) + ": " + exercises.getTypeExercise().getName());
 
         TextView equipment = (TextView) convertView.findViewById(R.id.exercises_list_layout_equipment);
-        equipment.setText(resources.getString(R.string.equipment) + ": " + exercises.getEquipment());
+        equipment.setText(resources.getString(R.string.equipment) + ": " + exercises.getEquipment().getName());
 
-        RatingBar rating = (RatingBar) convertView.findViewById(R.id.exercises_list_layout_rating);
-        rating.setRating(exercises.getRating());
+//        TODO добавить RatongBar в entity
+//        RatingBar rating = (RatingBar) convertView.findViewById(R.id.exercises_list_layout_rating);
+//        rating.setRating();
 
         TextView comment = (TextView) convertView.findViewById(R.id.exercises_list_layout_comment);
         comment.setText(resources.getString(R.string.comment) + ": " + exercises.getComment());

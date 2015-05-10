@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="description">description</string>
-    <string name="successfully_added">Data are successfully added</string>
+    <string name="data_successfully_added">Data are successfully added</string>
+    <string name="successfully_added">are successfully added</string>
     <string name="error_added">Error when adding data</string>
+
+    <string name="saving_image_sd">Saving of the image is impossible, SD a card isn\'t available</string>
+    <string name="text_comment">Text of the comment</string>
+    <string name="text_description">Text of the description</string>
 </resources>

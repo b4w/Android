@@ -11,58 +11,21 @@
         android:indicatorLeft="250dp"
         android:indicatorRight="300dp" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/fragment_exercises_actions_menu"
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fragment_exercises_float_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/icon_plus"
+        fab:fab_colorNormal="@color/light_accent_color"
+        fab:fab_colorPressed="@color/accent_color"
+        fab:fab_colorRipple="@color/accent_color"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        fab:fab_addButtonColorNormal="@color/accent_color"
-        fab:fab_addButtonColorPressed="@color/light_accent_color"
-        fab:fab_addButtonPlusIconColor="@color/text_icon"
-        fab:fab_labelStyle="@style/menu_label_style">
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_exercises_category_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/accent_color"
-            fab:fab_colorPressed="@color/light_accent_color"
-            fab:fab_icon="@drawable/icon_plus"
-            fab:fab_size="normal"
-            fab:fab_title="@string/category" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_exercises_exercise_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/accent_color"
-            fab:fab_colorPressed="@color/light_accent_color"
-            fab:fab_icon="@drawable/icon_plus"
-            fab:fab_size="normal"
-            fab:fab_title="@string/exercise" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_exercises_type_of_exercise_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/accent_color"
-            fab:fab_colorPressed="@color/light_accent_color"
-            fab:fab_icon="@drawable/icon_plus"
-            fab:fab_size="normal"
-            fab:fab_title="@string/type_of_exercise" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_exercises_equipment_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/accent_color"
-            fab:fab_colorPressed="@color/light_accent_color"
-            fab:fab_icon="@drawable/icon_plus"
-            fab:fab_size="normal"
-            fab:fab_title="@string/equipment" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

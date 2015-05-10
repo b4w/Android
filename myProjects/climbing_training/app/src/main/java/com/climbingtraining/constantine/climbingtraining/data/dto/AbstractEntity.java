@@ -14,7 +14,7 @@ public abstract class AbstractEntity implements ICommonEntities {
     private String name;
 
     @DatabaseField(columnName = COLUMN_NAME_IMAGE)
-    private int image;
+    private String imagePath;
 
     @DatabaseField(columnName = COLUMN_NAME_DESCRIPTION)
     private String description;
@@ -26,9 +26,17 @@ public abstract class AbstractEntity implements ICommonEntities {
 //        need for ormlite
     }
 
-    public AbstractEntity(String name, int image, String description, String comment) {
+    public AbstractEntity(String name, String imagePath, String description, String comment) {
         this.name = name;
-        this.image = image;
+        this.imagePath = imagePath;
+        this.description = description;
+        this.comment = comment;
+    }
+
+    public AbstractEntity(int id, String name, String imagePath, String description, String comment) {
+        this.id = id;
+        this.name = name;
+        this.imagePath = imagePath;
         this.description = description;
         this.comment = comment;
     }
@@ -49,12 +57,12 @@ public abstract class AbstractEntity implements ICommonEntities {
         this.name = name;
     }
 
-    public int getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getDescription() {

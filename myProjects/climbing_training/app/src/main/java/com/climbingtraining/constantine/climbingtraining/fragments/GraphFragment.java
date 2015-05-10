@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.List;
 public class GraphFragment extends Fragment {
 
     private ListView graphLayoutListView;
-    private FloatingActionsMenu graphLayoutActionsMenu;
 
     private List<String> tmpList;
     private ArrayAdapter<String> tmpAdapter;
@@ -48,7 +46,6 @@ public class GraphFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         graphLayoutListView = (ListView) getActivity().findViewById(R.id.fragment_graph_list_view);
-        graphLayoutActionsMenu = (FloatingActionsMenu) getActivity().findViewById(R.id.fragment_graph_actions_menu);
 
         graphLayoutListView.setAdapter(tmpAdapter);
 

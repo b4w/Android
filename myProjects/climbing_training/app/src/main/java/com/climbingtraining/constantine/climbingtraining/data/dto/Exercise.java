@@ -22,8 +22,8 @@ public class Exercise extends AbstractEntity {
 //        need for ormlite
     }
 
-    public Exercise(String name, int image, String description, String comment, Category category, Equipment equipment, TypeExercise typeExercise) {
-        super(name, image, description, comment);
+    public Exercise(String name, String imagePath, String description, String comment, Category category, Equipment equipment, TypeExercise typeExercise) {
+        super(name, imagePath, description, comment);
         this.category = category;
         this.equipment = equipment;
         this.typeExercise = typeExercise;

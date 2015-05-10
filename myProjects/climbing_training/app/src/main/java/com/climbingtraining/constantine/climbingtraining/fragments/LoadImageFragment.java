@@ -1,9 +1,9 @@
 package com.climbingtraining.constantine.climbingtraining.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,11 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
 import com.google.gson.annotations.SerializedName;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -59,8 +59,7 @@ public class LoadImageFragment extends Fragment {
     static final int GALLERY_REQUEST = 1;
 
     private ImageView fragmentLoadImageImage;
-    private EditText fragmentLoadImageSearch;
-    private String searchString;
+    private String imageNameAndPath;
 
     public static LoadImageFragment newInstance() {
         LoadImageFragment fragment = new LoadImageFragment();
@@ -72,7 +71,7 @@ public class LoadImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_load_image, container, false);
         if (getArguments() != null) {
-            String imagePath = getArguments().getString("imageManeAndPath");
+            imageNameAndPath = getArguments().getString(CategoryActivity.IMAGE_NAME_AND_PATH);
         }
         return view;
     }
@@ -82,20 +81,20 @@ public class LoadImageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         fragmentLoadImageImage = (ImageView) getActivity().findViewById(R.id.fragment_load_image_image);
-        fragmentLoadImageSearch = (EditText) getActivity().findViewById(R.id.fragment_load_image_search);
+
+        if (imageNameAndPath != null && !imageNameAndPath.isEmpty()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imageNameAndPath);
+            fragmentLoadImageImage.setImageBitmap(myBitmap);
+        }
+
         fragmentLoadImageImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                searchString = fragmentLoadImageSearch.getText().toString();
-                if (searchString.isEmpty()) {
-                    loadImageFromGallery();
+                loadImageFromGallery();
 //                    Toast.makeText(getActivity(), "Поле для поиска пустое", Toast.LENGTH_SHORT).show();
-                } else {
 //                    TranslateYandex translateYandex = new TranslateYandex();
 //                    translateYandex.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    loadImageFromInternet();
-                }
+//                    loadImageFromInternet();
             }
         });
     }
@@ -129,6 +128,13 @@ public class LoadImageFragment extends Fragment {
         startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
     }
 
+    /**
+     * Выбираем изображение из галереи телефона и сохраняем в наш ImageView.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -166,7 +172,7 @@ public class LoadImageFragment extends Fragment {
             return;
         }
         // название файла
-        String imageNameForSDCard = "category_image_" + searchString + ".jpg";
+        String imageNameForSDCard = "category_image.jpg";
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
         // добавляем свой каталог к пути
@@ -201,7 +207,8 @@ public class LoadImageFragment extends Fragment {
 
             Map<String, String> map = new HashMap<>();
             map.put("lang", "en");
-            map.put("text", searchString);
+//            TODO
+//            map.put("text", searchString);
             map.put("key", YANDEX_KEY);
 
             ITranslateText iTranslateText = translateAdapter.create(ITranslateText.class);
@@ -234,6 +241,11 @@ public class LoadImageFragment extends Fragment {
             super.onPostExecute(s);
 
         }
+    }
+
+    //    GET & SET
+    public ImageView getFragmentLoadImageImage() {
+        return fragmentLoadImageImage;
     }
 
     private interface IRestGetty {

@@ -1,6 +1,8 @@
 package com.climbingtraining.constantine.climbingtraining.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +62,12 @@ public class TypesExercisesListAdapter extends BaseAdapter {
 
         TypeExercise typeExercise = (TypeExercise) getItem(position);
         viewHolder.idCategory = typeExercise.getId();
-        viewHolder.image.setImageResource(typeExercise.getImage()); // подтягивание изображения с карты памяти?
+
+        if (!typeExercise.getImagePath().isEmpty()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(typeExercise.getImagePath());
+            viewHolder.image.setImageBitmap(myBitmap);
+        }
+
         viewHolder.title.setText(typeExercise.getName());
         viewHolder.description.setText(typeExercise.getDescription());
         viewHolder.comments.setText(typeExercise.getComment());

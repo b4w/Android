@@ -19,6 +19,7 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntitie
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.j256.ormlite.support.ConnectionSource;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class TypesExercisesFragment extends Fragment {
     private TypesExercisesListAdapter typesExercisesListAdapter;
     private ListView fragmentTypesExercisesList;
     private ITypesExercisesFragmentCallBack callBack;
+    private FloatingActionButton fragmentTypesExercisesFloatButton;
 
     private OrmHelper ormHelper;
     private ConnectionSource connectionSource;
@@ -83,6 +85,15 @@ public class TypesExercisesFragment extends Fragment {
         typesExercisesListLayoutDescription = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_description);
         typesExercisesListLayoutComments = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_comments);
         fragmentTypesExercisesList = (ListView) getActivity().findViewById(R.id.fragment_types_exercises_list);
+        fragmentTypesExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_types_exercises_float_button);
+        fragmentTypesExercisesFloatButton.attachToListView(fragmentTypesExercisesList);
+
+        fragmentTypesExercisesFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.createNewTypeExercise();
+            }
+        });
 
         fragmentTypesExercisesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,5 +130,6 @@ public class TypesExercisesFragment extends Fragment {
 
     public interface ITypesExercisesFragmentCallBack {
         void editTypeExercise(TypeExercise typeExercise);
+        void createNewTypeExercise();
     }
 }

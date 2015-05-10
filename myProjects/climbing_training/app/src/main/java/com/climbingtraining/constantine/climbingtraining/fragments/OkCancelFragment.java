@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.climbingtraining.constantine.climbingtraining.R;
+import com.climbingtraining.constantine.climbingtraining.data.dto.AbstractEntity;
 
 /**
  * Created by KonstantinSysoev on 03.05.15.

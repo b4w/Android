@@ -12,7 +12,7 @@ public class TypeExercise extends AbstractEntity {
 //        need for OrmLite
     }
 
-    public TypeExercise(String name, int image, String description, String comment) {
-        super(name, image, description, comment);
+    public TypeExercise(String name, String imagePath, String description, String comment) {
+        super(name, imagePath, description, comment);
     }
 }

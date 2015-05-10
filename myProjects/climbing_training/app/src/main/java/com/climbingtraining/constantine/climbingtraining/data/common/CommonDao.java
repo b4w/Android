@@ -1,8 +1,11 @@
 package com.climbingtraining.constantine.climbingtraining.data.common;
 
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
+import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -58,5 +61,12 @@ public class CommonDao<T, ID> extends BaseDaoImpl<T, ID> {
     public int deleteAll() throws SQLException {
         DeleteBuilder<T, ID> deleteBuilder = this.deleteBuilder();
         return deleteBuilder.delete();
+    }
+
+    public PreparedQuery getTestQuery() throws SQLException {
+        QueryBuilder<T, ID> queryBuilder = queryBuilder();
+//        queryBuilder.where()
+        PreparedQuery<T> preparedQuery = queryBuilder.prepare();
+        return preparedQuery;
     }
 }

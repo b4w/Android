@@ -153,11 +153,23 @@ public class SectionsExerciseFragment extends Fragment {
         return choseCategory;
     }
 
+    public void setChoseCategory(Category choseCategory) {
+        this.choseCategory = choseCategory;
+    }
+
     public Equipment getChoseEquipment() {
         return choseEquipment;
     }
 
+    public void setChoseEquipment(Equipment choseEquipment) {
+        this.choseEquipment = choseEquipment;
+    }
+
     public TypeExercise getChoseTypeExercise() {
         return choseTypeExercise;
+    }
+
+    public void setChoseTypeExercise(TypeExercise choseTypeExercise) {
+        this.choseTypeExercise = choseTypeExercise;
     }
 }

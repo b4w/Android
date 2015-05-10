@@ -19,6 +19,7 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.j256.ormlite.support.ConnectionSource;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class EquipmentsFragment extends Fragment {
     private EquipmentsListAdapter equipmentsListAdapter;
     private ListView fragmentEquipmentsList;
     private IEquipmentsFragmentCallBack callBack;
+    private FloatingActionButton fragmentEquipmentsFloatButton;
 
     private OrmHelper ormHelper;
     private ConnectionSource connectionSource;
@@ -83,6 +85,15 @@ public class EquipmentsFragment extends Fragment {
         fragmentEquipmentsDescription = (TextView) getActivity().findViewById(R.id.equipments_list_layout_description);
         fragmentEquipmentsComments = (TextView) getActivity().findViewById(R.id.equipments_list_layout_comments);
         fragmentEquipmentsList = (ListView) getActivity().findViewById(R.id.fragment_equipments_list);
+        fragmentEquipmentsFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_equipments_float_button);
+        fragmentEquipmentsFloatButton.attachToListView(fragmentEquipmentsList);
+
+        fragmentEquipmentsFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.createNewEquipment();
+            }
+        });
 
         fragmentEquipmentsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,5 +130,6 @@ public class EquipmentsFragment extends Fragment {
 
     public interface IEquipmentsFragmentCallBack {
         void editEquipment(Equipment equipment);
+        void createNewEquipment();
     }
 }

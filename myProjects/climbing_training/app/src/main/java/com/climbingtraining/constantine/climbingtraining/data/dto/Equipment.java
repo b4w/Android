@@ -12,7 +12,7 @@ public class Equipment extends AbstractEntity {
 //        need for OrmLite
     }
 
-    public Equipment(String name, int image, String description, String comment) {
-        super(name, image, description, comment);
+    public Equipment(String name, String imagePath, String description, String comment) {
+        super(name, imagePath, description, comment);
     }
 }
