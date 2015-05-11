@@ -91,7 +91,7 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
 
     @Override
     public void editExercise(Exercise exercise) {
-
+        initFragments(exercise);
     }
 
     @Override
@@ -116,7 +116,8 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
         Bundle bundle = new Bundle();
 
         LoadImageFragment loadImageFragment = LoadImageFragment.newInstance();
-        bundle.putString(CategoryActivity.IMAGE_NAME_AND_PATH, imageNameAndPath);
+        bundle.putString(CategoryActivity.IMAGE_NAME_AND_PATH, exercise.getImagePath());
+        loadImageFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.exercises_container_one, loadImageFragment, LoadImageFragment.class.getSimpleName());
 
         SectionsExerciseFragment sectionsExerciseFragment = SectionsExerciseFragment.newInstance();
@@ -125,11 +126,13 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
 //      TODO переделать !!!
         updateSectionsExercise();
         sectionsExerciseFragment.setCategories(categories);
-        sectionsExerciseFragment.setChoseCategory(exercise.getCategory());
         sectionsExerciseFragment.setEquipments(equipments);
-        sectionsExerciseFragment.setChoseEquipment(exercise.getEquipment());
         sectionsExerciseFragment.setTypeExercise(typeExercises);
-        sectionsExerciseFragment.setChoseTypeExercise(exercise.getTypeExercise());
+
+        bundle.putInt(CategoryActivity.CATEGORIES_ID, exercise.getCategory().getId());
+        bundle.putInt(CategoryActivity.EQUIPMENTS_ID, exercise.getEquipment().getId());
+        bundle.putInt(CategoryActivity.TYPE_EXERCISES_ID, exercise.getTypeExercise().getId());
+        sectionsExerciseFragment.setArguments(bundle);
 
         DescriptionFragment descriptionFragment = DescriptionFragment.newInstance();
         fragmentTransaction.add(R.id.exercises_container_three, descriptionFragment, DescriptionFragment.class.getSimpleName());
@@ -137,6 +140,7 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
         bundle.putString(CategoryActivity.NAME, exercise.getName());
         bundle.putString(CategoryActivity.DESCRIPTION, exercise.getDescription());
         bundle.putString(CategoryActivity.COMMENT, exercise.getComment());
+        descriptionFragment.setArguments(bundle);
 
         OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
         fragmentTransaction.add(R.id.exercises_container_four, okCancelFragment, OkCancelFragment.class.getSimpleName());

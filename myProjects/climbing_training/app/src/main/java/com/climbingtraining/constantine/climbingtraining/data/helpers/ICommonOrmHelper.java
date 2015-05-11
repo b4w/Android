@@ -10,4 +10,6 @@ public interface ICommonOrmHelper {
     int EQUIPMENT_DAO_NUMBER = 2;
     int EXERCISE_DAO_NUMBER = 3;
     int TYPE_EXERCISE_DAO_NUMBER = 4;
+    int TRAINING_DAO_NUMBER = 5;
+    int ACCOUNTING_QUANTITY_DAO_NUMBER = 6;
 }

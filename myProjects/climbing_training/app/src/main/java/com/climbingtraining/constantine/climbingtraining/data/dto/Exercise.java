@@ -52,4 +52,29 @@ public class Exercise extends AbstractEntity {
     public void setTypeExercise(TypeExercise typeExercise) {
         this.typeExercise = typeExercise;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Exercise exercise = (Exercise) o;
+
+        if (category != null ? !category.equals(exercise.category) : exercise.category != null)
+            return false;
+        if (equipment != null ? !equipment.equals(exercise.equipment) : exercise.equipment != null)
+            return false;
+        return !(typeExercise != null ? !typeExercise.equals(exercise.typeExercise) : exercise.typeExercise != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
+        result = 31 * result + (typeExercise != null ? typeExercise.hashCode() : 0);
+        return result;
+    }
 }

@@ -19,5 +19,20 @@
     <string name="save">Сохранить</string>
     
     <string name="categories">Категории</string>
+    <string name="date">Дата</string>
+
+    <string name="add_exercise">Добавить упражнение</string>
+    <string name="choose_exercise">Выбрать упражнение</string>
+    <string name="number_approaches">Количество подходов</string>
+    <string name="number_time_approach">Количество раз за подход</string>
+    <string name="additional_weight">Дополнительный вес</string>
+    <string name="measurement_measure">Мера измерения</string>
+    <string name="distance">Дистанция</string>
+
+    <string name="time">Время</string>
+    <string name="determine_date">Установить дату</string>
+    <string name="choose_date">Выберите дату</string>
+    <string name="ready">Готово</string>
+
 
 </resources>

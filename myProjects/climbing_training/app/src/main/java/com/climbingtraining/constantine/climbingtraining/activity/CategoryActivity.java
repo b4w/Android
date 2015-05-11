@@ -28,6 +28,13 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public final static String COMMENT = "comment";
     public final static String ENTITY = "entity";
     public final static String ENTITY_ID = "entityId";
+    public final static String CATEGORIES_ID = "categoriesId";
+    public final static String EQUIPMENTS_ID = "equipmentsId";
+    public final static String TYPE_EXERCISES_ID = "typeExercisesId";
+    public final static String CATEGORIES_NAME = "categoriesName";
+    public final static String EQUIPMENTS_NAME = "equipmentsName";
+    public final static String TYPE_EXERCISES_NAME = "typeExercisesName";
+
 
     private Toolbar toolbar;
     private ViewPager pager;

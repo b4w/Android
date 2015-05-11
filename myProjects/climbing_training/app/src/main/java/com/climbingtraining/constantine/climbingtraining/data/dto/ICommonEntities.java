@@ -17,6 +17,16 @@ public interface ICommonEntities {
     String COLUMN_NAME_CATEGORY = "category";
     String COLUMN_NAME_EQUIPMENT = "equipment";
     String COLUMN_NAME_TYPE_EXERCISE = "type_exercise";
+    String COLUMN_NAME_NUMBER_APPROACHES = "number_approaches";
+    String COLUMN_NAME_NUMBER_TIME_APPROACH = "number_time_approach";
+    String COLUMN_NAME_ADDITIONAL_WEIGHT = "additional_weight";
+    String COLUMN_NAME_MEASUREMENT_MEASURE = "measurement_measure";
+    String COLUMN_NAME_DISTANCE = "distance";
+    String COLUMN_NAME_TIME_BEGIN = "time_begin";
+    String COLUMN_NAME_TIME_END = "time_end";
+    String COLUMN_NAME_DATE = "date";
+    String COLUMN_NAME_PHYSICAL_TRAINING = "physical_training";
+    String COLUMN_NAME_PHYSICAL_TRAINING_IMAGE_PATH = "physical_training_image_path";
 
 //  --  DB NAMES --
     String CATEGORIES_DATABASE_NAME = "categories";
@@ -30,6 +40,12 @@ public interface ICommonEntities {
 
     String EXERCISES_DATABASE_NAME = "exercises";
     int EXERCISE_DATABASE_VERSION = 2;
+
+    String TRAINING_DATABASE_NAME = "trainings";
+    int TRAINING_DATABASE_VERSION = 1;
+
+    String ACCOUNTING_QUANTITY_DATABASE_NAME = "accounting_quantities";
+    int ACCOUNTING_QUANTITY_DATABASE_VERSION = 1;
 
     String MAIN_LIST_DATABASE_NAME = "main_list";
     int MAIN_LIST_DATABASE_VERSION = 1;

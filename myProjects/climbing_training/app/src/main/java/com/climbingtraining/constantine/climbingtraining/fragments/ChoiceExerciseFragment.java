@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
@@ -17,8 +16,6 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.j256.ormlite.support.ConnectionSource;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,87 +23,63 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by KonstantinSysoev on 03.05.15.
+ * Created by KonstantinSysoev on 11.05.15.
  */
-public class ExercisesFragment extends Fragment {
+public class ChoiceExerciseFragment extends Fragment {
 
-    private ExpandableListView exercisesLayoutExlistView;
+    private ExpandableListView fragmentChoiceExercisesExlistView;
+    private IChoiceExercisesFragmentCallBack callBack;
     private ExercisesListAdapter exercisesListAdapter;
-    private FloatingActionButton fragmentExercisesFloatButton;
 
     private OrmHelper ormHelperExercise;
-    //    private ConnectionSource connectionSourceExercise;
     private CommonDao commonDaoExercise;
 
     private OrmHelper ormHelperCategory;
-    //    private ConnectionSource connectionSourceCategory;
     private CommonDao commonDaoCategory;
 
     private List<Exercise> exercises;
     private List<Category> categories;
 
-    private IExercisesFragmentCallBack exercisesCallBack;
-
-    public static ExercisesFragment newInstance() {
-        ExercisesFragment fragment = new ExercisesFragment();
+    public static ChoiceExerciseFragment newInstance() {
+        ChoiceExerciseFragment fragment = new ChoiceExerciseFragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        exercisesListAdapter = new ExercisesListAdapter(getActivity(), initData());
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            exercisesCallBack = (IExercisesFragmentCallBack) activity;
+            callBack = (IChoiceExercisesFragmentCallBack) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement IExercisesFragmentCallBack.");
+            throw new ClassCastException("Activity must implement IChoiceExercisesFragmentCallBack.");
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        exercisesLayoutExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_exercises_exlist_view);
-        fragmentExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_exercises_float_button);
-        fragmentExercisesFloatButton.attachToListView(exercisesLayoutExlistView);
-
-        exercisesLayoutExlistView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Exercise exercise = (Exercise) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-                exercisesCallBack.editExercise(exercise);
-                return false;
-            }
-        });
-
-        fragmentExercisesFloatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exercisesCallBack.createNewExercise();
-            }
-        });
-
-        exercisesLayoutExlistView.setAdapter(exercisesListAdapter);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_exercises, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_choice_exercise, container, false);
         initDB();
         exercises = getAllExercises();
         categories = getAllCategory();
-
         exercisesListAdapter = new ExercisesListAdapter(getActivity(), initData());
-
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        fragmentChoiceExercisesExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_choice_exercises_exlist_view);
+
+        fragmentChoiceExercisesExlistView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Exercise exercise = (Exercise) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
+                callBack.chooseExercise(exercise);
+                return false;
+            }
+        });
+        fragmentChoiceExercisesExlistView.setAdapter(exercisesListAdapter);
     }
 
     private void initDB() {
@@ -131,6 +104,7 @@ public class ExercisesFragment extends Fragment {
         }
         return result != null ? result : Collections.<Exercise>emptyList();
     }
+
 
     private List<Category> getAllCategory() {
         List<Category> result = null;
@@ -164,10 +138,7 @@ public class ExercisesFragment extends Fragment {
         return parent;
     }
 
-    //    interface for onClick(); action button and create new fragments
-    public interface IExercisesFragmentCallBack {
-        void createNewExercise();
-
-        void editExercise(Exercise exercise);
+    public interface IChoiceExercisesFragmentCallBack {
+        void chooseExercise(Exercise exercise);
     }
 }

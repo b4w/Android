@@ -62,11 +62,4 @@ public class CommonDao<T, ID> extends BaseDaoImpl<T, ID> {
         DeleteBuilder<T, ID> deleteBuilder = this.deleteBuilder();
         return deleteBuilder.delete();
     }
-
-    public PreparedQuery getTestQuery() throws SQLException {
-        QueryBuilder<T, ID> queryBuilder = queryBuilder();
-//        queryBuilder.where()
-        PreparedQuery<T> preparedQuery = queryBuilder.prepare();
-        return preparedQuery;
-    }
 }

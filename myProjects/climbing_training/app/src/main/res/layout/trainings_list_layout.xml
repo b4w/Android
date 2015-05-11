@@ -21,10 +21,10 @@
         android:layout_toRightOf="@+id/trainings_list_layout_icon"
         android:layout_toEndOf="@+id/trainings_list_layout_icon">
 
-        <CheckBox
-            android:id="@+id/trainings_layout_like"
-            android:layout_width="16dp"
-            android:layout_height="16dp"/>
+        <!--<CheckBox-->
+            <!--android:id="@+id/trainings_layout_like"-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"/>-->
 
         <TextView
             android:id="@+id/trainings_list_layout_date"

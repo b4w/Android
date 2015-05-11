@@ -8,4 +8,6 @@
     <string name="saving_image_sd">Saving of the image is impossible, SD a card isn\'t available</string>
     <string name="text_comment">Text of the comment</string>
     <string name="text_description">Text of the description</string>
+
+    <string name="option_temporarily">Sorry, this option is temporarily not realized</string>
 </resources>

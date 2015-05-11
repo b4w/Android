@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.climbingtraining.constantine.climbingtraining.R;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
@@ -53,7 +54,11 @@ public class SectionsExerciseFragment extends Fragment {
         spinnerCategory = (Spinner) getActivity().findViewById(R.id.fragment_sections_spinner_category);
         spinnerTypeExercise = (Spinner) getActivity().findViewById(R.id.fragment_sections_spinner_type_exercise);
         spinnerEquipment = (Spinner) getActivity().findViewById(R.id.fragment_sections_spinner_equipment);
+
         updateData();
+        if (getArguments() != null) {
+            initValues(getArguments());
+        }
 
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -90,6 +95,27 @@ public class SectionsExerciseFragment extends Fragment {
 
             }
         });
+
+
+    }
+
+    private void initValues(Bundle bundle) {
+//        TODO переделать на  array.getPosition()
+        for (int i = 0; i < equipments.size(); i++) {
+            if (equipments.get(i).getId() == bundle.getInt(CategoryActivity.EQUIPMENTS_ID)) {
+                spinnerEquipment.setSelection(i);
+            }
+        }
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getId() == bundle.getInt(CategoryActivity.CATEGORIES_ID)) {
+                spinnerCategory.setSelection(i);
+            }
+        }
+        for (int i = 0; i < typeExercise.size(); i++) {
+            if (typeExercise.get(i).getId() == bundle.getInt(CategoryActivity.TYPE_EXERCISES_ID)) {
+                spinnerTypeExercise.setSelection(i);
+            }
+        }
     }
 
     private void updateData() {
@@ -153,23 +179,11 @@ public class SectionsExerciseFragment extends Fragment {
         return choseCategory;
     }
 
-    public void setChoseCategory(Category choseCategory) {
-        this.choseCategory = choseCategory;
-    }
-
     public Equipment getChoseEquipment() {
         return choseEquipment;
     }
 
-    public void setChoseEquipment(Equipment choseEquipment) {
-        this.choseEquipment = choseEquipment;
-    }
-
     public TypeExercise getChoseTypeExercise() {
         return choseTypeExercise;
-    }
-
-    public void setChoseTypeExercise(TypeExercise choseTypeExercise) {
-        this.choseTypeExercise = choseTypeExercise;
     }
 }

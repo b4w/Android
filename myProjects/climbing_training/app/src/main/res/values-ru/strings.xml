@@ -8,4 +8,6 @@
     <string name="saving_image_sd">Сохранение изображения невозможно,  SD карта не доступна</string>
     <string name="text_comment">Текст комментария</string>
     <string name="text_description">Текст описания</string>
+    
+    <string name="option_temporarily">Извините, данная опция временно не реализована</string>
 </resources>

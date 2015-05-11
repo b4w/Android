@@ -5,15 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.pojo.Trainings;
+import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuantity;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,11 +25,11 @@ public class TrainingsListAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private List<Trainings> trainingsArrayList;
+    private List<Training> trainings;
 
-    public TrainingsListAdapter(Context context, List<Trainings> trainingsArrayList) {
+    public TrainingsListAdapter(Context context, List<Training> trainings) {
         this.context = context;
-        this.trainingsArrayList = trainingsArrayList;
+        this.trainings = trainings;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -40,7 +39,7 @@ public class TrainingsListAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return trainingsArrayList.size();
+        return trainings.size();
     }
 
     /**
@@ -50,7 +49,7 @@ public class TrainingsListAdapter extends BaseAdapter {
      */
     @Override
     public Object getItem(int position) {
-        return trainingsArrayList.get(position);
+        return trainings.get(position);
     }
 
     /**
@@ -69,8 +68,8 @@ public class TrainingsListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.trainings_list_layout, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.icon = (ImageView) convertView.findViewById(R.id.trainings_list_layout_icon);
-            viewHolder.like = (CheckBox) convertView.findViewById(R.id.trainings_layout_like);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.trainings_list_layout_icon);
+//            viewHolder.like = (CheckBox) convertView.findViewById(R.id.trainings_layout_like);
             viewHolder.date = (TextView) convertView.findViewById(R.id.trainings_list_layout_date);
             viewHolder.exercises = (TextView) convertView.findViewById(R.id.trainings_list_layout_exercises);
             viewHolder.comments = (TextView) convertView.findViewById(R.id.trainings_list_layout_comments);
@@ -79,20 +78,23 @@ public class TrainingsListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Trainings training = (Trainings) getItem(position);
-        viewHolder.icon.setImageResource(training.getIcon());
-        viewHolder.like.setChecked(training.isLike());
-        viewHolder.date.setText(sdf.format(training.getDate()));
-        viewHolder.exercises.setText(training.getExercises().toString());
-        viewHolder.comments.setText(training.getComments());
+        Training training = (Training) getItem(position);
+
+        viewHolder.date.setText(training.getDate() != null ? sdf.format(training.getDate()) : "");
+        viewHolder.imageView.setImageResource(R.drawable.ofp);
+
+        StringBuilder sb = new StringBuilder();
+        for(AccountingQuantity item : training.getQuantities()) {
+            sb.append(item.getExercise().getName());
+        }
+        viewHolder.exercises.setText(sb.toString());
+        viewHolder.comments.setText(training.getComment());
 
         return convertView;
     }
 
     static class ViewHolder {
-//        public int idTraining;
-        public ImageView icon;
-        public CheckBox like;
+        public ImageView imageView;
         public TextView date;
         public TextView exercises;
         public TextView comments;
