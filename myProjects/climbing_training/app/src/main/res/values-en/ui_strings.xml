@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="training">Training</string>
+    <string name="trainings">Trainings</string>
+    <string name="graph">Graph</string>
+    <string name="exercise">Exercise</string>
+    <string name="exercises">Exercises</string>
+    
+    <string name="category">Category</string>
+    <string name="type_of_exercise">Type of exercise</string>
+    <string name="equipment">Equipment</string>
+    <string name="comment">Comment</string>
+
+    <string name="name">Name</string>
+    <string name="add_the_image">Add the image</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="search">Search</string>
+    <string name="save">Save</string>
+
+    <string name="categories">Category</string>
+    <string name="date">Date</string>
+
+    <string name="add_exercise">To add exercise</string>
+    <string name="choose_exercise">To choose exercise</string>
+    <string name="number_approaches">Number of approaches</string>
+    <string name="number_time_approach">Number of times for approach</string>
+    <string name="additional_weight">Additional weight</string>
+    <string name="measurement_measure">Measurement measure</string>
+    <string name="distance">Distance</string>
+
+    <string name="time">Time</string>
+    <string name="determine_date">To determine date</string>
+    <string name="choose_date">Choose date</string>
+    <string name="ready">Ready</string>
+
+
+</resources>

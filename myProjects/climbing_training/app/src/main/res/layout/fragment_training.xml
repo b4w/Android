@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ItemMainList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fragment_training_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_training_date_text_view">
+
+        <ListView
+            android:id="@+id/fragment_training_list"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/fragment_training_add_exercise_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/scroll"
+        android:text="@string/add_exercise" />
+
+    <Spinner
+        android:id="@+id/fragment_training_spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/fragment_training_add_exercise_btn" />
+
+    <EditText
+        android:id="@+id/fragment_training_description_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_training_spinner_category"
+        android:hint="@string/text_description"
+        android:minHeight="48dp"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/fragment_training_comment_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_training_description_edit_text"
+        android:hint="@string/text_comment"
+        android:minHeight="48dp"
+        android:textSize="20sp" />
+
+</RelativeLayout>

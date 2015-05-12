@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ItemMainList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/exercises_list_layout_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:descendantFocusability="blocksDescendants"/>
+
+    <LinearLayout
+        android:id="@+id/exercises_list_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_toEndOf="@+id/exercises_list_layout_image"
+        android:layout_toRightOf="@+id/exercises_list_layout_image"
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants">
+
+        <RatingBar
+            android:id="@+id/exercises_list_layout_rating"
+            android:layout_width="50dp"
+            android:layout_height="16dp"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/exercises_list_layout_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/exercises_list_layout_name_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/exercises_list_layout_type_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/exercises_list_layout_equipment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/exercises_list_layout_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+    </LinearLayout>
+</RelativeLayout>
