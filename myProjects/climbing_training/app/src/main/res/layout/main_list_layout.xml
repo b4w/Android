@@ -7,31 +7,22 @@
 
     <ImageView
         android:id="@+id/main_list_layout_logo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true" />
 
-    <LinearLayout
-        android:id="@+id/main_list_linear_layout"
+    <TextView
+        android:id="@+id/main_list_layout_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="16dp"
+        android:layout_height="100dp"
+        android:textSize="25sp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
         android:layout_centerVertical="true"
+        android:background="@color/text_icon"
         android:layout_toRightOf="@+id/main_list_layout_logo"
-        android:layout_toEndOf="@+id/main_list_layout_logo">
+        android:layout_toEndOf="@+id/main_list_layout_logo" />
 
-        <TextView
-            android:id="@+id/main_list_layout_title"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
-        <TextView
-            android:id="@+id/main_list_layout_text"
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
-
-    </LinearLayout>
 </RelativeLayout>

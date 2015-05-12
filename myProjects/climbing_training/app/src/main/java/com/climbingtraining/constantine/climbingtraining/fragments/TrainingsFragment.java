@@ -13,13 +13,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.adapters.AccountingQuantitiesAdapter;
 import com.climbingtraining.constantine.climbingtraining.adapters.TrainingsListAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.climbingtraining.constantine.climbingtraining.pojo.Trainings;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;

@@ -4,35 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.MainListAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
-import com.climbingtraining.constantine.climbingtraining.data.util.MainListUtils;
-import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
+import com.climbingtraining.constantine.climbingtraining.pojo.MainList;
 import com.facebook.stetho.Stetho;
-import com.j256.ormlite.android.loadercallback.OrmCursorLoaderCallback;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int ORM_LOADER_ID = 5;
 
-    private ListView mainLayoutListView;
     private Toolbar toolbar;
+    private ListView mainLayoutListView;
 
-    private MainListAdapter mainListAdapter;
-    private MainListUtils mainListUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,49 +40,14 @@ public class MainActivity extends ActionBarActivity {
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        mainListUtils = new MainListUtils();
-
         toolbar = (Toolbar) findViewById(R.id.main_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         }
 
-        initMainList();
-        setListOnClick();
-
-    }
-
-    private void initMainList() {
-        Log.i(TAG, "initMainList() stated");
-        mainListUtils.initMainListDB(this, ICommonEntities.MAIN_LIST_DATABASE_NAME, ICommonEntities.MAIN_LIST_DATABASE_VERSION);
-
-        List<com.climbingtraining.constantine.climbingtraining.pojo.MainList> mainLists = new ArrayList<>();
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.training, getString(R.string.training), "Какой-то текст про тренировки"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.exercise), "Какой-то текст про упражнения"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.graph, getString(R.string.graph), "Какой-то текст про графики"));
-        mainLists.add(new com.climbingtraining.constantine.climbingtraining.pojo.MainList(R.drawable.exercise, getString(R.string.categories), "Какой-то текст про категории"));
-
-        mainListUtils.fillDataMainList(mainLists);
-
-        // инициализация главного списка
         mainLayoutListView = (ListView) findViewById(R.id.main_layout_list_view);
-        mainListAdapter = new MainListAdapter(this);
-        ((AdapterView<ListAdapter>) mainLayoutListView).setAdapter(mainListAdapter);
 
-        try {
-            // ставим "callBack" на список
-            OrmCursorLoaderCallback<MainList, Integer> ormCursorLoaderCallback =
-                    new OrmCursorLoaderCallback<MainList, Integer>(this, mainListUtils.getMainListDao(), mainListUtils.getMainListDao().getTestQuery(), mainListAdapter);
-            getLoaderManager().initLoader(ORM_LOADER_ID, null, ormCursorLoaderCallback);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, "initMainList() done");
-    }
-
-    public void setListOnClick() {
         mainLayoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -101,9 +58,6 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     case ICommonEntities.SHEET_ITEM_EXERCISE:
                         intent = new Intent(getApplicationContext(), ExercisesActivity.class);
-                        break;
-                    case ICommonEntities.SHEET_ITEM_GRAPH:
-                        intent = new Intent(getApplicationContext(), GraphActivity.class);
                         break;
                     case ICommonEntities.SHEET_CATEGORY:
                         intent = new Intent(getApplicationContext(), CategoryActivity.class);
@@ -116,5 +70,16 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
+
+        MainListAdapter adapter = new MainListAdapter(this, initMainList());
+        mainLayoutListView.setAdapter(adapter);
+    }
+
+    private List<MainList> initMainList() {
+        List<MainList> mainLists = new ArrayList<>();
+        mainLists.add(new MainList(R.drawable.training, getString(R.string.trainings), ""));
+        mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercises), ""));
+        mainLists.add(new MainList(R.drawable.graph, getString(R.string.category), ""));
+        return mainLists;
     }
 }

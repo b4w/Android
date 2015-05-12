@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="training">Training</string>
+    <string name="trainings">Trainings</string>
     <string name="graph">Graph</string>
     <string name="exercise">Exercise</string>
+    <string name="exercises">Exercises</string>
     
     <string name="category">Category</string>
     <string name="type_of_exercise">Type of exercise</string>

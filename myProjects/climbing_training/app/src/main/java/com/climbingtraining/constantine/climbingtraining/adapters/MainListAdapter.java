@@ -1,52 +1,59 @@
 package com.climbingtraining.constantine.climbingtraining.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.data.dto.MainList;
-import com.j256.ormlite.android.apptools.OrmLiteCursorAdapter;
+import com.climbingtraining.constantine.climbingtraining.pojo.MainList;
+
+import java.util.List;
 
 /**
  * Created by KonstantinSysoev on 29.04.15.
  */
-public class MainListAdapter extends OrmLiteCursorAdapter<MainList, View> {
+public class MainListAdapter extends BaseAdapter {
 
-    private final static String TAG = MainListAdapter.class.getSimpleName();
-    private final LayoutInflater inflater;
+    private Context context;
+    private LayoutInflater layoutInflater;
+    private List<MainList> mainLists;
 
-    public MainListAdapter(Context context) {
-        super(context);
-        inflater = LayoutInflater.from(context);
+    public MainListAdapter(Context context, List<MainList> mainLists) {
+        this.context = context;
+        this.mainLists = mainLists;
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
-    public void bindView(View view, Context context, MainList mainList) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.logo.setImageResource(mainList.getLogo());
-        holder.title.setText(mainList.getTitle());
-        holder.text.setText(mainList.getText());
+    public int getCount() {
+        return mainLists.size();
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        ViewHolder holder = new ViewHolder();
-        final View view = inflater.inflate(R.layout.main_list_layout, parent, false);
-        holder.logo = (ImageView) view.findViewById(R.id.main_list_layout_logo);
-        holder.title = (TextView) view.findViewById(R.id.main_list_layout_title);
-        holder.text = (TextView) view.findViewById(R.id.main_list_layout_text);
-        view.setTag(holder);
-        return view;
+    public Object getItem(int position) {
+        return mainLists.get(position);
     }
 
-    static class ViewHolder {
-        public ImageView logo;
-        public TextView title;
-        public TextView text;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = layoutInflater.inflate(R.layout.main_list_layout, null);
+        }
+        MainList mainList = (MainList) getItem(position);
+        ImageView image = (ImageView) convertView.findViewById(R.id.main_list_layout_logo);
+        image.setImageResource(mainList.getLogo());
+        TextView title = (TextView) convertView.findViewById(R.id.main_list_layout_title);
+        title.setText(mainList.getTitle());
+        return convertView;
     }
 }

@@ -21,7 +21,7 @@
     <!-- background color for add button "plus" -->
     <style name="menu_label_style">
         <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">#fafafa</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
 

@@ -63,7 +63,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
         // true - фиксированные вкладки
-        tabs.setDistributeEvenly(false);
+        tabs.setDistributeEvenly(true);
 
         // выбор цвета полосы под выбранным табом
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {

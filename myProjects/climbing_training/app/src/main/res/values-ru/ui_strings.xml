@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="training">Тренировка</string>
+    <string name="trainings">Тренировки</string>
     <string name="graph">График</string>
     <string name="exercise">Упражнение</string>
+    <string name="exercises">Упражнения</string>
 
     <string name="category">Категория</string>
     <string name="type_of_exercise">Вид упражнения</string>

@@ -52,6 +52,5 @@ public interface ICommonEntities {
 
     int SHEET_ITEM_TRAINING = 0;
     int SHEET_ITEM_EXERCISE = 1;
-    int SHEET_ITEM_GRAPH = 2;
-    int SHEET_CATEGORY = 3;
+    int SHEET_CATEGORY = 2;
 }
