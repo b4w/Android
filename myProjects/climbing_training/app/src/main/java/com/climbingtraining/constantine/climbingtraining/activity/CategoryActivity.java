@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.ViewPagerAdapter;
@@ -51,8 +52,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            TODO разобраться с title
-            toolbar.setTitle(getString(R.string.categories));
+            getSupportActionBar().setTitle(getString(R.string.categories));
         }
 
         CharSequence titles[] = {getString(R.string.category), getString(R.string.equipment), getString(R.string.type_of_exercise)};
@@ -69,7 +69,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.text_icon);
+                return getResources().getColor(R.color.dark_primary_color);
             }
         });
 
@@ -77,9 +77,17 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void editCategory(Category category) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Bundle
+//        TODO переделать на Parcelable
         intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(category.getImagePath()));
         intent.putExtra(NAME, category.getName());
         intent.putExtra(DESCRIPTION, category.getDescription());
@@ -99,7 +107,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     @Override
     public void editEquipment(Equipment equipment) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Bundle
+//        TODO переделать на Parcelable
         intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(equipment.getImagePath()));
         intent.putExtra(NAME, equipment.getName());
         intent.putExtra(DESCRIPTION, equipment.getDescription());
@@ -119,7 +127,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     @Override
     public void editTypeExercise(TypeExercise typeExercise) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Bundle
+//        TODO переделать на Parcelable
         intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(typeExercise.getImagePath()));
         intent.putExtra(NAME, typeExercise.getName());
         intent.putExtra(DESCRIPTION, typeExercise.getDescription());

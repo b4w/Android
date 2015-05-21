@@ -10,6 +10,8 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -58,12 +60,22 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_entities_layout);
 
-        toolbar = (Toolbar) findViewById(R.id.graph_layout_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.edit_entities_layout_toolbar);
+
+        initializeFields();
+        initializeToolbar();
+        loadFragments();
+    }
+
+    private void initializeToolbar() {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getString(R.string.edit) + " " + entityName);
         }
+    }
 
+    private void initializeFields() {
         Intent intent = getIntent();
         imageNameAndPath = intent.getStringExtra(CategoryActivity.IMAGE_NAME_AND_PATH);
         name = intent.getStringExtra(CategoryActivity.NAME);
@@ -71,8 +83,20 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
         comment = intent.getStringExtra(CategoryActivity.COMMENT);
         entityName = intent.getStringExtra(CategoryActivity.ENTITY);
         entityId = intent.getIntExtra(CategoryActivity.ENTITY_ID, entityId);
+    }
 
-        loadFragments();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_edit_entity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

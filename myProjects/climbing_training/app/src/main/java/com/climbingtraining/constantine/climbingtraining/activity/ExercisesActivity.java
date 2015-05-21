@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -69,8 +71,8 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
         toolbar = (Toolbar) findViewById(R.id.exercises_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setTitle("Exercises");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.exercises);
         }
 
         // load exercises fragment
@@ -83,10 +85,24 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void createNewExercise() {
         Log.d(TAG, "createNewExercise() started");
         loadFragments();
         Log.d(TAG, "createNewExercise() done");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_edit_entity, menu);
+        return true;
     }
 
     @Override

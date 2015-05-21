@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     style="@style/ItemMainList"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/text_icon">
 
     <Button
         android:id="@+id/fragment_ok_cancel_ok_btn"

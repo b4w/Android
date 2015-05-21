@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ItemMainList"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/text_icon">
 
     <ImageView
         android:id="@+id/trainings_list_layout_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -29,17 +31,21 @@
         <TextView
             android:id="@+id/trainings_list_layout_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/trainings_list_layout_exercises"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/trainings_list_layout_comments"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"/>
 
     </LinearLayout>
 </RelativeLayout>

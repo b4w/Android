@@ -2,6 +2,7 @@
     package="com.climbingtraining.constantine.climbingtraining">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -45,6 +46,12 @@
             <intent-filter>
                 <action android:name="EditEntitiesActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.SettingsActivity">
+            <intent-filter>
+                <action android:name="SettingsActivity" />
+                <category android:name="ANDROID.INTENT.CATEGORY.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

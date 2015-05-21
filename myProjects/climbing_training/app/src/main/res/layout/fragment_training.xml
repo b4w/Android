@@ -2,13 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ItemMainList"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/text_icon">
+
+    <TextView
+        android:id="@+id/fragment_training_date"
+        android:layout_width="80dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:paddingTop="5dp"
+        android:text="@string/date"/>
 
     <TextView
         android:id="@+id/fragment_training_date_text_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:paddingTop="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/fragment_training_date"
+        android:layout_toEndOf="@+id/fragment_training_date" />
 
     <ScrollView
         android:id="@+id/scroll"
@@ -26,6 +40,7 @@
     <Button
         android:id="@+id/fragment_training_add_exercise_btn"
         android:layout_width="match_parent"
+        android:layout_marginTop="100dp"
         android:layout_height="48dp"
         android:layout_below="@+id/scroll"
         android:text="@string/add_exercise" />

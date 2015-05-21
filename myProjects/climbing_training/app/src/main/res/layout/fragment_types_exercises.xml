@@ -9,7 +9,8 @@
     <ListView
         android:id="@+id/fragment_types_exercises_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"/>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fragment_types_exercises_float_button"
@@ -17,9 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:src="@drawable/icon_plus"
-        fab:fab_colorNormal="@color/light_accent_color"
-        fab:fab_colorPressed="@color/accent_color"
-        fab:fab_colorRipple="@color/accent_color"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_colorPressed="@color/light_accent_color"
+        fab:fab_colorRipple="@color/light_accent_color"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
