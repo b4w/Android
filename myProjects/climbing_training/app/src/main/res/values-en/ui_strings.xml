@@ -36,5 +36,14 @@
     <string name="choose_date">Choose date</string>
     <string name="ready">Ready</string>
 
+    <!--Navigation items for drow menu-->
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="about">About application</string>
+    <!--done-->
+
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+
 
 </resources>

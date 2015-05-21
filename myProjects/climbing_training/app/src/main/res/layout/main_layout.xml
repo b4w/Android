@@ -12,12 +12,14 @@
     <ImageView
         android:id="@+id/main_layout_logo"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="196dp"
         android:src="@drawable/logo" />
 
     <ListView
         android:id="@+id/main_layout_list_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
 </LinearLayout>

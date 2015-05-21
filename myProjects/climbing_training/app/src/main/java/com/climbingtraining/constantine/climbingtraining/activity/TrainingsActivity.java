@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
@@ -47,6 +48,7 @@ public class TrainingsActivity extends ActionBarActivity implements TrainingsFra
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.trainings);
         }
 
         // load trainings fragment
@@ -55,6 +57,14 @@ public class TrainingsActivity extends ActionBarActivity implements TrainingsFra
         fragmentManager.beginTransaction()
                 .replace(R.id.trainings_container_one, trainingsFragment)
                 .commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

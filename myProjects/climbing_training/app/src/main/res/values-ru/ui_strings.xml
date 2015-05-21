@@ -36,5 +36,13 @@
     <string name="choose_date">Выберите дату</string>
     <string name="ready">Готово</string>
 
+    <!--Navigation items for drow menu-->
+    <string name="home">На главную</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О приложении</string>
+    <!--done-->
+
+    <string name="share">Share</string>
+    <string name="delete">Удалить</string>
 
 </resources>

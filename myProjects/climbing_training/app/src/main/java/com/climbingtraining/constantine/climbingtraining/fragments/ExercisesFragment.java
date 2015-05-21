@@ -153,7 +153,7 @@ public class ExercisesFragment extends Fragment {
         for (Category category : categories) {
             child = new ArrayList<>();
             for (Exercise exercise : exercises) {
-                if (category.equals(exercise.getCategory())) {
+                if (category.getId() == exercise.getCategory().getId()) {
                     child.add(exercise);
                 }
             }

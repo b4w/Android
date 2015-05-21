@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    style="@style/ItemMainList"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/fragment_category_list"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -16,9 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:src="@drawable/icon_plus"
-        fab:fab_colorNormal="@color/light_accent_color"
-        fab:fab_colorPressed="@color/accent_color"
-        fab:fab_colorRipple="@color/accent_color"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_colorPressed="@color/light_accent_color"
+        fab:fab_colorRipple="@color/light_accent_color"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

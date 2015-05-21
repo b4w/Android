@@ -10,4 +10,7 @@
     <string name="text_description">Text of the description</string>
 
     <string name="option_temporarily">Sorry, this option is temporarily not realized</string>
+
+    <string name="error">Error</string>
+    <string name="edit">Edit</string>
 </resources>
