@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -64,8 +66,8 @@ public class TypesExercisesListAdapter extends BaseAdapter {
         viewHolder.idCategory = typeExercise.getId();
 
         if (!typeExercise.getImagePath().isEmpty()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(typeExercise.getImagePath());
-            viewHolder.image.setImageBitmap(myBitmap);
+            File file = new File(typeExercise.getImagePath());
+            Picasso.with(context).load(file).into(viewHolder.image);
         }
 
         viewHolder.title.setText(typeExercise.getName());

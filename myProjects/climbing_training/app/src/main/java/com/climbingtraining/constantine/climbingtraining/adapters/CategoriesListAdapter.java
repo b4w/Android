@@ -12,19 +12,21 @@ import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * Created by KonstantinSysoev on 09.05.15.
  */
-public class CategoryListAdapter extends BaseAdapter {
+public class CategoriesListAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
     private List<Category> categories;
 
-    public CategoryListAdapter(Context context, List<Category> categories) {
+    public CategoriesListAdapter(Context context, List<Category> categories) {
         this.context = context;
         this.categories = categories;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,8 +66,8 @@ public class CategoryListAdapter extends BaseAdapter {
         viewHolder.idCategory = category.getId();
 
         if (!category.getImagePath().isEmpty()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(category.getImagePath());
-            viewHolder.image.setImageBitmap(myBitmap);
+            File file = new File(category.getImagePath());
+            Picasso.with(context).load(file).into(viewHolder.image);
         }
 
         viewHolder.title.setText(category.getName());

@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class TypesExercisesFragment extends Fragment {
 
-    private final static String TAG = CategoryFragment.class.getSimpleName();
+    private final static String TAG = CategoriesFragment.class.getSimpleName();
 
     private ImageView imageView;
     private TextView typesExercisesListLayoutTitle;

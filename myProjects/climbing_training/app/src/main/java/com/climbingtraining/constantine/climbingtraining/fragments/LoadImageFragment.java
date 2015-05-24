@@ -19,28 +19,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoriesActivity;
 import com.google.gson.annotations.SerializedName;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import retrofit.RestAdapter;
-import retrofit.http.HEAD;
-import retrofit.http.Header;
-import retrofit.http.Headers;
 import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -71,7 +64,7 @@ public class LoadImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_load_image, container, false);
         if (getArguments() != null) {
-            imageNameAndPath = getArguments().getString(CategoryActivity.IMAGE_NAME_AND_PATH);
+            imageNameAndPath = getArguments().getString(CategoriesActivity.IMAGE_NAME_AND_PATH);
         }
         return view;
     }

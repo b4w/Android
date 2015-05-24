@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 02.05.15.
  */
-public class ExercisesActivity extends ActionBarActivity implements ExercisesFragment.IExercisesFragmentCallBack,
+public class ExercisesActivity extends AppCompatActivity implements ExercisesFragment.IExercisesFragmentCallBack,
         OkCancelFragment.IOkCancelFragmentCallBack {
 
     private final static String TAG = ExercisesActivity.class.getSimpleName();
@@ -132,7 +132,7 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
         Bundle bundle = new Bundle();
 
         LoadImageFragment loadImageFragment = LoadImageFragment.newInstance();
-        bundle.putString(CategoryActivity.IMAGE_NAME_AND_PATH, exercise.getImagePath());
+        bundle.putString(CategoriesActivity.IMAGE_NAME_AND_PATH, exercise.getImagePath());
         loadImageFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.exercises_container_one, loadImageFragment, LoadImageFragment.class.getSimpleName());
 
@@ -145,17 +145,17 @@ public class ExercisesActivity extends ActionBarActivity implements ExercisesFra
         sectionsExerciseFragment.setEquipments(equipments);
         sectionsExerciseFragment.setTypeExercise(typeExercises);
 
-        bundle.putInt(CategoryActivity.CATEGORIES_ID, exercise.getCategory().getId());
-        bundle.putInt(CategoryActivity.EQUIPMENTS_ID, exercise.getEquipment().getId());
-        bundle.putInt(CategoryActivity.TYPE_EXERCISES_ID, exercise.getTypeExercise().getId());
+        bundle.putInt(CategoriesActivity.CATEGORIES_ID, exercise.getCategory().getId());
+        bundle.putInt(CategoriesActivity.EQUIPMENTS_ID, exercise.getEquipment().getId());
+        bundle.putInt(CategoriesActivity.TYPE_EXERCISES_ID, exercise.getTypeExercise().getId());
         sectionsExerciseFragment.setArguments(bundle);
 
         DescriptionFragment descriptionFragment = DescriptionFragment.newInstance();
         fragmentTransaction.add(R.id.exercises_container_three, descriptionFragment, DescriptionFragment.class.getSimpleName());
 
-        bundle.putString(CategoryActivity.NAME, exercise.getName());
-        bundle.putString(CategoryActivity.DESCRIPTION, exercise.getDescription());
-        bundle.putString(CategoryActivity.COMMENT, exercise.getComment());
+        bundle.putString(CategoriesActivity.NAME, exercise.getName());
+        bundle.putString(CategoriesActivity.DESCRIPTION, exercise.getDescription());
+        bundle.putString(CategoriesActivity.COMMENT, exercise.getComment());
         descriptionFragment.setArguments(bundle);
 
         OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
