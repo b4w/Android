@@ -1,18 +1,17 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
@@ -23,9 +22,11 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.climbingtraining.constantine.climbingtraining.fragments.DescriptionFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.LoadImageFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.OkCancelFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.AbstractCategoriesFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.CategoryFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.EquipmentFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.TypeExerciseFragment;
+import com.climbingtraining.constantine.climbingtraining.pojo.CategoriesParcelable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,20 +37,18 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 09.05.15.
  */
-public class EditEntitiesActivity extends ActionBarActivity implements OkCancelFragment.IOkCancelFragmentCallBack {
+public class EditEntitiesActivity extends AppCompatActivity implements AbstractCategoriesFragment.IAbstractFragmentCallBack {
 
     private final static String TAG = EditEntitiesActivity.class.getSimpleName();
-    public final static String DIR_SD = "/Climbing_training/images/category/";
+    public final static String DIR_SD = "/Climbing training/images/categories/";
 
     private Toolbar toolbar;
 
     private String imageNameAndPath;
-    private String name;
-    private String description;
-    private String comment;
     private String entityName;
-    private int entityId;
     private String imageNameForSDCard;
+
+    private CategoriesParcelable categoriesParcelable;
 
     private OrmHelper ormHelper;
     private AbstractEntity entity;
@@ -76,13 +75,16 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
     }
 
     private void initializeFields() {
-        Intent intent = getIntent();
-        imageNameAndPath = intent.getStringExtra(CategoryActivity.IMAGE_NAME_AND_PATH);
-        name = intent.getStringExtra(CategoryActivity.NAME);
-        description = intent.getStringExtra(CategoryActivity.DESCRIPTION);
-        comment = intent.getStringExtra(CategoryActivity.COMMENT);
-        entityName = intent.getStringExtra(CategoryActivity.ENTITY);
-        entityId = intent.getIntExtra(CategoryActivity.ENTITY_ID, entityId);
+        categoriesParcelable = getIntent().getParcelableExtra(CategoriesActivity.CATEGORIES_PARCELABLE);
+        // редактирование сущности
+        if (categoriesParcelable != null) {
+            imageNameAndPath = categoriesParcelable.getImageNameAndPath();
+            entityName = categoriesParcelable.getEntity();
+        }
+        // создание новой сущности
+        else {
+            entityName = getIntent().getStringExtra(CategoriesActivity.ENTITY);
+        }
     }
 
     @Override
@@ -100,78 +102,64 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
     }
 
     @Override
-    public void clickOkBtn() {
+    public void saveEntity(AbstractEntity abstractEntity, Drawable drawable) {
+        initDBConnection(abstractEntity);
 
-        initDBConnection();
-
-//        TODO переделать, т.к. фрагментов уже может не быть
-        FragmentManager fragmentManager = getFragmentManager();
-        DescriptionFragment descriptionFragment = (DescriptionFragment)
-                fragmentManager.findFragmentByTag(DescriptionFragment.class.getSimpleName());
-
-        LoadImageFragment loadImageFragment = (LoadImageFragment)
-                fragmentManager.findFragmentByTag(LoadImageFragment.class.getSimpleName());
-
-        if(!saveImageToSDCard(loadImageFragment.getFragmentLoadImageImage(), descriptionFragment.getName())) {
+        if (!saveImageToSDCard(drawable)) {
             Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
         }
 
-//        TODO передавать entity, а не поля, т.к. потом создаем new Entity();
-        entity.setId(entityId);
-        entity.setName(descriptionFragment.getName());
         entity.setImagePath(imageNameAndPath != null ? imageNameAndPath : "");
-        entity.setDescription(descriptionFragment.getDescription());
-        entity.setComment(descriptionFragment.getComment());
-
         saveDataToDB();
+//        TODO Переделать возврат на categories
         backToCategory();
     }
 
     @Override
-    public void clickCancelBnt() {
+    public void cancel() {
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
     }
 
-    private void initDBConnection() {
-
-        if (entityName.equals(Category.class.getSimpleName())) {
+    private void initDBConnection(AbstractEntity abstractEntity) {
+        if (abstractEntity.getClass().equals(Category.class)) {
             ormHelper = new OrmHelper(this, ICommonEntities.CATEGORIES_DATABASE_NAME,
                     ICommonEntities.CATEGORIES_DATABASE_VERSION);
-            entity = new Category();
-        } else if (entityName.equals(Equipment.class.getSimpleName())) {
+        } else if (abstractEntity.getClass().equals(Equipment.class)) {
             ormHelper = new OrmHelper(this, ICommonEntities.EQUIPMENTS_DATABASE_NAME,
                     ICommonEntities.EQUIPMENTS_DATABASE_VERSION);
-            entity = new Equipment();
         } else {
             ormHelper = new OrmHelper(this, ICommonEntities.TYPE_EXERCISES_DATABASE_NAME,
                     ICommonEntities.TYPE_EXERCISES_DATABASE_VERSION);
-            entity = new TypeExercise();
         }
+        entity = abstractEntity;
     }
 
     private void loadFragments() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-        LoadImageFragment loadImageFragment = LoadImageFragment.newInstance();
-        Bundle bundle = new Bundle();
-//        TODO не забыть изменить на путь к файлу + сделать общий интерфейс для полей
-        bundle.putString(CategoryActivity.IMAGE_NAME_AND_PATH, imageNameAndPath);
-        loadImageFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.edit_entities_container_one, loadImageFragment, LoadImageFragment.class.getSimpleName());
+        AbstractCategoriesFragment fragment = null;
+        Bundle bundle;
 
-        DescriptionFragment descriptionFragment = DescriptionFragment.newInstance();
-        bundle.putString(CategoryActivity.NAME, name);
-        bundle.putString(CategoryActivity.DESCRIPTION, description);
-        bundle.putString(CategoryActivity.COMMENT, comment);
-        descriptionFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.edit_entities_container_two, descriptionFragment, DescriptionFragment.class.getSimpleName());
+        if (entityName.equals(Category.class.getSimpleName())) {
+            fragment = CategoryFragment.newInstance();
+        } else if (entityName.equals(Equipment.class.getSimpleName())) {
+            fragment = EquipmentFragment.newInstance();
+        } else if (entityName.equals(TypeExercise.class.getSimpleName())) {
+            fragment = TypeExerciseFragment.newInstance();
+        }
 
-        OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
-        fragmentTransaction.add(R.id.edit_entities_container_three, okCancelFragment, OkCancelFragment.class.getSimpleName());
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(DescriptionFragment.class.getSimpleName());
+        if (fragment != null) {
+            // передаем данные, если редактируем сущность
+            if (categoriesParcelable != null) {
+                bundle = new Bundle();
+                bundle.putParcelable(CategoriesActivity.CATEGORIES_PARCELABLE, categoriesParcelable);
+                fragment.setArguments(bundle);
+            }
+            fragmentTransaction.replace(R.id.edit_entities_container, fragment, fragment.getClass().getSimpleName());
+            // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
+            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        }
         fragmentTransaction.commit();
     }
 
@@ -206,22 +194,21 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
         }
     }
 
-    private boolean saveImageToSDCard(ImageView imageView, String entityTitle) {
-        BitmapDrawable btmpDr = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bmp = btmpDr.getBitmap();
+    private boolean saveImageToSDCard(Drawable drawable) {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bmp = bitmapDrawable.getBitmap();
 
         // проверяем доступность cd
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Log.d(TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
             return false;
         }
         // название файла
-        imageNameForSDCard = entityTitle + ".jpg";
+        imageNameForSDCard = entity.getName() + ".jpg";
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
         // добавляем свой каталог к пути
-        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
+        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD + "/" + entity.getClass().getSimpleName());
         // создаем каталог
         sdPath.mkdirs();
         // формируем объект File, который содержит путь к файлу
@@ -244,7 +231,7 @@ public class EditEntitiesActivity extends ActionBarActivity implements OkCancelF
     }
 
     private void backToCategory() {
-        Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+        Intent intent = new Intent(getApplicationContext(), CategoriesActivity.class);
         startActivity(intent);
     }
 }

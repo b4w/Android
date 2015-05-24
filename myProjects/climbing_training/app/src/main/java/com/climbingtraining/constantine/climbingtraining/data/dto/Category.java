@@ -16,7 +16,7 @@ public class Category extends AbstractEntity {
         super(name, imagePath, description, comment);
     }
 
-    public Category(int id, String name, String imagePath, String description, String comment) {
+    public Category(Integer id, String name, String imagePath, String description, String comment) {
         super(id, name, imagePath, description, comment);
     }
 }

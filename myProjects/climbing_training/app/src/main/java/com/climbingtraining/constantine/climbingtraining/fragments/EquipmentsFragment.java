@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 08.05.15.
  */
-public class EquipmentsFragment extends Fragment {
+public class    EquipmentsFragment extends Fragment {
 
     private final static String TAG = EquipmentsFragment.class.getSimpleName();
 
@@ -88,6 +88,12 @@ public class EquipmentsFragment extends Fragment {
         fragmentEquipmentsFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_equipments_float_button);
         fragmentEquipmentsFloatButton.attachToListView(fragmentEquipmentsList);
 
+        initializeListeners();
+
+        fragmentEquipmentsList.setAdapter(equipmentsListAdapter);
+    }
+
+    private void initializeListeners() {
         fragmentEquipmentsFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,8 +108,6 @@ public class EquipmentsFragment extends Fragment {
                 callBack.editEquipment(equipment);
             }
         });
-
-        fragmentEquipmentsList.setAdapter(equipmentsListAdapter);
     }
 
     private void initDB() {

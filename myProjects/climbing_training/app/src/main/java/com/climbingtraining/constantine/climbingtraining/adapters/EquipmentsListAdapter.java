@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -64,8 +66,8 @@ public class EquipmentsListAdapter extends BaseAdapter {
         viewHolder.idCategory = equipment.getId();
 
         if (!equipment.getImagePath().isEmpty()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(equipment.getImagePath());
-            viewHolder.image.setImageBitmap(myBitmap);
+            File file = new File(equipment.getImagePath());
+            Picasso.with(context).load(file).into(viewHolder.image);
         }
 
         viewHolder.title.setText(equipment.getName());

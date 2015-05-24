@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.adapters.CategoryListAdapter;
+import com.climbingtraining.constantine.climbingtraining.adapters.CategoriesListAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 08.05.15.
  */
-public class CategoryFragment extends Fragment {
+public class CategoriesFragment extends Fragment {
 
-    private final static String TAG = CategoryFragment.class.getSimpleName();
+    private final static String TAG = CategoriesFragment.class.getSimpleName();
 
     private ImageView imageView;
     private TextView fragmentCategoryTitle;
@@ -38,7 +38,7 @@ public class CategoryFragment extends Fragment {
     private TextView fragmentCategoryComments;
 
     private List<Category> categories;
-    private CategoryListAdapter categoryListAdapter;
+    private CategoriesListAdapter categoriesListAdapter;
     private ListView fragmentCategoryList;
     private ICategoryFragmentCallBack callBack;
     private FloatingActionButton fragmentCategoryFloatButton;
@@ -47,8 +47,8 @@ public class CategoryFragment extends Fragment {
     private ConnectionSource connectionSource;
     private CommonDao commonDao;
 
-    public static CategoryFragment newInstance() {
-        return new CategoryFragment();
+    public static CategoriesFragment newInstance() {
+        return new CategoriesFragment();
     }
 
     @Override
@@ -64,11 +64,11 @@ public class CategoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_category, container, false);
+        View view = inflater.inflate(R.layout.fragment_categories, container, false);
 
         initDB();
         categories = getAllCategories();
-        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
+        categoriesListAdapter = new CategoriesListAdapter(getActivity(), categories);
 
         return view;
     }
@@ -84,6 +84,12 @@ public class CategoryFragment extends Fragment {
         fragmentCategoryFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_category_float_button);
         fragmentCategoryFloatButton.attachToListView(fragmentCategoryList);
 
+        loadListeners();
+
+        fragmentCategoryList.setAdapter(categoriesListAdapter);
+    }
+
+    private void loadListeners() {
         fragmentCategoryFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,8 +104,6 @@ public class CategoryFragment extends Fragment {
                 callBack.editCategory(category);
             }
         });
-
-        fragmentCategoryList.setAdapter(categoryListAdapter);
     }
 
     @Override
@@ -108,7 +112,7 @@ public class CategoryFragment extends Fragment {
 
         initDB();
         categories = getAllCategories();
-        categoryListAdapter = new CategoryListAdapter(getActivity(), categories);
+        categoriesListAdapter.notifyDataSetChanged();
     }
 
     private void initDB() {

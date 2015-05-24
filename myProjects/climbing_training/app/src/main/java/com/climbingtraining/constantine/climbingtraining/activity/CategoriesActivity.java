@@ -3,8 +3,9 @@ package com.climbingtraining.constantine.climbingtraining.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.climbingtraining.constantine.climbingtraining.R;
@@ -12,16 +13,19 @@ import com.climbingtraining.constantine.climbingtraining.adapters.ViewPagerAdapt
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
-import com.climbingtraining.constantine.climbingtraining.fragments.CategoryFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.EquipmentsFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TypesExercisesFragment;
+import com.climbingtraining.constantine.climbingtraining.pojo.CategoriesParcelable;
 import com.climbingtraining.constantine.climbingtraining.utils.SlidingTabLayout;
 
 /**
  * Created by KonstantinSysoev on 08.05.15.
  */
-public class CategoryActivity extends ActionBarActivity implements CategoryFragment.ICategoryFragmentCallBack,
+public class CategoriesActivity extends AppCompatActivity implements CategoriesFragment.ICategoryFragmentCallBack,
         EquipmentsFragment.IEquipmentsFragmentCallBack, TypesExercisesFragment.ITypesExercisesFragmentCallBack {
+
+    private final String TAG = Category.class.getSimpleName();
 
     public final static String IMAGE_NAME_AND_PATH = "imageNameAndPath";
     public final static String NAME = "name";
@@ -29,6 +33,8 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     public final static String COMMENT = "comment";
     public final static String ENTITY = "entity";
     public final static String ENTITY_ID = "entityId";
+
+    public final static String CATEGORIES_PARCELABLE = "categoriesParcelable";
     public final static String CATEGORIES_ID = "categoriesId";
     public final static String EQUIPMENTS_ID = "equipmentsId";
     public final static String TYPE_EXERCISES_ID = "typeExercisesId";
@@ -49,12 +55,23 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
         setContentView(R.layout.category_layout);
 
         toolbar = (Toolbar) findViewById(R.id.category_layout_toolbar);
+
+        initializeToolbar();
+        initializeTabs();
+    }
+
+    private void initializeToolbar() {
+        Log.d(TAG, "initializeToolbar() start");
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.categories));
         }
+        Log.d(TAG, "initializeToolbar() done");
+    }
 
+    private void initializeTabs() {
+        Log.d(TAG, "initializeTabs() start");
         CharSequence titles[] = {getString(R.string.category), getString(R.string.equipment), getString(R.string.type_of_exercise)};
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), titles, numbOfTabs);
 
@@ -74,6 +91,7 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
         });
 
         tabs.setViewPager(pager);
+        Log.d(TAG, "initializeTabs() done");
     }
 
     @Override
@@ -87,13 +105,13 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     @Override
     public void editCategory(Category category) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Parcelable
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(category.getImagePath()));
-        intent.putExtra(NAME, category.getName());
-        intent.putExtra(DESCRIPTION, category.getDescription());
-        intent.putExtra(COMMENT, category.getComment());
-        intent.putExtra(ENTITY, category.getClass().getSimpleName());
-        intent.putExtra(ENTITY_ID, category.getId());
+        intent.putExtra(CATEGORIES_PARCELABLE,
+                new CategoriesParcelable(String.valueOf(category.getImagePath()),
+                        category.getName(),
+                        category.getDescription(),
+                        category.getComment(),
+                        category.getClass().getSimpleName(),
+                        category.getId()));
         startActivity(intent);
     }
 
@@ -107,13 +125,13 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     @Override
     public void editEquipment(Equipment equipment) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Parcelable
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(equipment.getImagePath()));
-        intent.putExtra(NAME, equipment.getName());
-        intent.putExtra(DESCRIPTION, equipment.getDescription());
-        intent.putExtra(COMMENT, equipment.getComment());
-        intent.putExtra(ENTITY, equipment.getClass().getSimpleName());
-        intent.putExtra(ENTITY_ID, equipment.getId());
+        intent.putExtra(CATEGORIES_PARCELABLE,
+                new CategoriesParcelable(String.valueOf(equipment.getImagePath()),
+                        equipment.getName(),
+                        equipment.getDescription(),
+                        equipment.getComment(),
+                        equipment.getClass().getSimpleName(),
+                        equipment.getId()));
         startActivity(intent);
     }
 
@@ -127,13 +145,13 @@ public class CategoryActivity extends ActionBarActivity implements CategoryFragm
     @Override
     public void editTypeExercise(TypeExercise typeExercise) {
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
-//        TODO переделать на Parcelable
-        intent.putExtra(IMAGE_NAME_AND_PATH, String.valueOf(typeExercise.getImagePath()));
-        intent.putExtra(NAME, typeExercise.getName());
-        intent.putExtra(DESCRIPTION, typeExercise.getDescription());
-        intent.putExtra(COMMENT, typeExercise.getComment());
-        intent.putExtra(ENTITY, typeExercise.getClass().getSimpleName());
-        intent.putExtra(ENTITY_ID, typeExercise.getId());
+        intent.putExtra(CATEGORIES_PARCELABLE,
+                new CategoriesParcelable(String.valueOf(typeExercise.getImagePath()),
+                        typeExercise.getName(),
+                        typeExercise.getDescription(),
+                        typeExercise.getComment(),
+                        typeExercise.getClass().getSimpleName(),
+                        typeExercise.getId()));
         startActivity(intent);
     }
 

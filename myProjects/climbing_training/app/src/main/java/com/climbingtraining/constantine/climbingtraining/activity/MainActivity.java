@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(getApplicationContext(), ExercisesActivity.class);
                         break;
                     case ICommonEntities.SHEET_CATEGORY:
-                        intent = new Intent(getApplicationContext(), CategoryActivity.class);
+                        intent = new Intent(getApplicationContext(), CategoriesActivity.class);
                         break;
                 }
                 if (intent != null) {

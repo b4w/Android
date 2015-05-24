@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoriesActivity;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Equipment;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
@@ -102,17 +102,17 @@ public class SectionsExerciseFragment extends Fragment {
     private void initValues(Bundle bundle) {
 //        TODO переделать на  array.getPosition()
         for (int i = 0; i < equipments.size(); i++) {
-            if (equipments.get(i).getId() == bundle.getInt(CategoryActivity.EQUIPMENTS_ID)) {
+            if (equipments.get(i).getId() == bundle.getInt(CategoriesActivity.EQUIPMENTS_ID)) {
                 spinnerEquipment.setSelection(i);
             }
         }
         for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getId() == bundle.getInt(CategoryActivity.CATEGORIES_ID)) {
+            if (categories.get(i).getId() == bundle.getInt(CategoriesActivity.CATEGORIES_ID)) {
                 spinnerCategory.setSelection(i);
             }
         }
         for (int i = 0; i < typeExercise.size(); i++) {
-            if (typeExercise.get(i).getId() == bundle.getInt(CategoryActivity.TYPE_EXERCISES_ID)) {
+            if (typeExercise.get(i).getId() == bundle.getInt(CategoriesActivity.TYPE_EXERCISES_ID)) {
                 spinnerTypeExercise.setSelection(i);
             }
         }

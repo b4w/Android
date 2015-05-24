@@ -17,7 +17,7 @@ import java.util.List;
 public class Training implements ICommonEntities {
 
     @DatabaseField(generatedId = true, columnName = COLUMN_NAME_ID)
-    private int id;
+    private Integer id;
 
     @DatabaseField(columnName = COLUMN_NAME_DATE)
     private Date date;
@@ -51,11 +51,11 @@ public class Training implements ICommonEntities {
         this.quantities = quantities;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -114,7 +114,7 @@ public class Training implements ICommonEntities {
 
         Training training = (Training) o;
 
-        if (id != training.id) return false;
+        if (id != null ? !id.equals(training.id) : training.id != null) return false;
         if (date != null ? !date.equals(training.date) : training.date != null) return false;
         if (physicalTraining != training.physicalTraining) return false;
         if (physicalTrainingImagePath != null ? !physicalTrainingImagePath.equals(training.physicalTrainingImagePath) : training.physicalTrainingImagePath != null)
@@ -129,7 +129,7 @@ public class Training implements ICommonEntities {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (physicalTraining != null ? physicalTraining.hashCode() : 0);
         result = 31 * result + (physicalTrainingImagePath != null ? physicalTrainingImagePath.hashCode() : 0);

@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.activity.CategoryActivity;
+import com.climbingtraining.constantine.climbingtraining.activity.CategoriesActivity;
 import com.climbingtraining.constantine.climbingtraining.adapters.AccountingQuantitiesAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuantity;
@@ -75,7 +75,7 @@ public class TrainingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_training, container, false);
         if (getArguments() != null) {
             initDB();
-            training = getTrainingById(getArguments().getInt(CategoryActivity.ENTITY_ID));
+            training = getTrainingById(getArguments().getInt(CategoriesActivity.ENTITY_ID));
         }
         return view;
     }

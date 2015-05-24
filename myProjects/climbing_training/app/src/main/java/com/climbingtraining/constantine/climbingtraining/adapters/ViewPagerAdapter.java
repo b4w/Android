@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.climbingtraining.constantine.climbingtraining.fragments.CategoryFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.EquipmentsFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TypesExercisesFragment;
 
@@ -28,7 +28,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         if (position == 0) {
-            return CategoryFragment.newInstance();
+            return CategoriesFragment.newInstance();
         } else if (position == 1){
             return EquipmentsFragment.newInstance();
         } else {

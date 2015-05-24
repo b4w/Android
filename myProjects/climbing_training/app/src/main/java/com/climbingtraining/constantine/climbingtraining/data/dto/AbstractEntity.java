@@ -8,7 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 public abstract class AbstractEntity implements ICommonEntities {
 
     @DatabaseField(generatedId = true, columnName = COLUMN_NAME_ID)
-    private int id;
+    private Integer id;
 
     @DatabaseField(columnName = COLUMN_NAME_NAME)
     private String name;
@@ -41,11 +41,11 @@ public abstract class AbstractEntity implements ICommonEntities {
         this.comment = comment;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractEntity implements ICommonEntities {
 
         AbstractEntity that = (AbstractEntity) o;
 
-        if (id != that.id) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (imagePath != null ? !imagePath.equals(that.imagePath) : that.imagePath != null)
             return false;
@@ -100,7 +100,7 @@ public abstract class AbstractEntity implements ICommonEntities {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
