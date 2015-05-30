@@ -17,7 +17,7 @@ import java.io.IOException;
 public class TypeExerciseFragment extends AbstractCategoriesFragment {
 
     private static final String TAG = TypeExerciseFragment.class.getSimpleName();
-    static final int GALLERY_TYPE_EXERCISE_REQUEST = 4;
+    private static final int GALLERY_TYPE_EXERCISE_REQUEST = 4;
 
     public static TypeExerciseFragment newInstance() {
         return new TypeExerciseFragment();

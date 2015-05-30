@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
@@ -23,11 +23,9 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.climbingtraining.constantine.climbingtraining.fragments.DescriptionFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.ExerciseFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.ExercisesFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.LoadImageFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.OkCancelFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.SectionsExerciseFragment;
+import com.climbingtraining.constantine.climbingtraining.pojo.ExerciseParcelable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,16 +37,17 @@ import java.util.List;
  * Created by KonstantinSysoev on 02.05.15.
  */
 public class ExercisesActivity extends AppCompatActivity implements ExercisesFragment.IExercisesFragmentCallBack,
-        OkCancelFragment.IOkCancelFragmentCallBack {
+        ExerciseFragment.IExerciseFragmentCallBack {
 
     private final static String TAG = ExercisesActivity.class.getSimpleName();
-    public final static String DIR_SD = "/Climbing_training/images/exercises/";
+    public final static String EXERCISE_PARCELABLE = "exerciseParcelable";
+    public final static String DIR_SD = "/Climbing training/images/exercises/";
 
     private Toolbar toolbar;
     private ExercisesFragment exercisesFragment;
 
     private OrmHelper ormHelper;
-    private Exercise exercise;
+    private Exercise entity;
     private CommonDao commonDao;
 
     private String imageNameForSDCard;
@@ -69,19 +68,9 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         setContentView(R.layout.exercises_layout);
 
         toolbar = (Toolbar) findViewById(R.id.exercises_layout_toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.exercises);
-        }
 
-        // load exercises fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        exercisesFragment = ExercisesFragment.newInstance();
-        Log.i(TAG, "Create new fragment - Exercises fragment");
-        fragmentManager.beginTransaction()
-                .replace(R.id.exercises_container, exercisesFragment)
-                .commit();
+        initializeToolbar();
+        initializeExercisesFragment();
     }
 
     @Override
@@ -92,10 +81,13 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Создаем новое упражнение.
+     */
     @Override
     public void createNewExercise() {
         Log.d(TAG, "createNewExercise() started");
-        loadFragments();
+        loadFragmentExercise();
         Log.d(TAG, "createNewExercise() done");
     }
 
@@ -105,142 +97,128 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         return true;
     }
 
+    /**
+     * Открываем упражнение на редактирование.
+     * @param exercise
+     */
     @Override
     public void editExercise(Exercise exercise) {
+        Log.d(TAG, "editExercise() start");
         initFragments(exercise);
+        Log.d(TAG, "editExercise() done");
     }
 
+    /**
+     * Сохраняем упражнение.
+     * @param exercise
+     * @param drawable
+     */
     @Override
-    public void clickOkBtn() {
-        initDBConnection();
-        updateExercise();
+    public void saveExercise(Exercise exercise, Drawable drawable) {
+        initDBConnection(exercise);
+        if (!saveImageToSDCard(drawable)) {
+            Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
+        }
+        entity.setImagePath(imageNameAndPath != null ? imageNameAndPath : "");
         saveDataToDB();
-        getFragmentManager().popBackStack();
+        //TODO ???
+        onBackPressed();
+//        getFragmentManager().popBackStack();
     }
 
     @Override
-    public void clickCancelBnt() {
+    public void cancel() {
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
     }
 
-    private void initFragments(Exercise exercise) {
-        Log.i(TAG, "loadFragments() started");
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.detach(exercisesFragment);
-        Bundle bundle = new Bundle();
-
-        LoadImageFragment loadImageFragment = LoadImageFragment.newInstance();
-        bundle.putString(CategoriesActivity.IMAGE_NAME_AND_PATH, exercise.getImagePath());
-        loadImageFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.exercises_container_one, loadImageFragment, LoadImageFragment.class.getSimpleName());
-
-        SectionsExerciseFragment sectionsExerciseFragment = SectionsExerciseFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_two, sectionsExerciseFragment, SectionsExerciseFragment.class.getSimpleName());
-
-//      TODO переделать !!!
-        updateSectionsExercise();
-        sectionsExerciseFragment.setCategories(categories);
-        sectionsExerciseFragment.setEquipments(equipments);
-        sectionsExerciseFragment.setTypeExercise(typeExercises);
-
-        bundle.putInt(CategoriesActivity.CATEGORIES_ID, exercise.getCategory().getId());
-        bundle.putInt(CategoriesActivity.EQUIPMENTS_ID, exercise.getEquipment().getId());
-        bundle.putInt(CategoriesActivity.TYPE_EXERCISES_ID, exercise.getTypeExercise().getId());
-        sectionsExerciseFragment.setArguments(bundle);
-
-        DescriptionFragment descriptionFragment = DescriptionFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_three, descriptionFragment, DescriptionFragment.class.getSimpleName());
-
-        bundle.putString(CategoriesActivity.NAME, exercise.getName());
-        bundle.putString(CategoriesActivity.DESCRIPTION, exercise.getDescription());
-        bundle.putString(CategoriesActivity.COMMENT, exercise.getComment());
-        descriptionFragment.setArguments(bundle);
-
-        OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_four, okCancelFragment, OkCancelFragment.class.getSimpleName());
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(DescriptionFragment.class.getSimpleName());
-
-        fragmentTransaction.commit();
-        Log.i(TAG, "loadFragments() done");
-    }
-
-    private void loadFragments() {
-        Log.i(TAG, "loadFragments() started");
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.detach(exercisesFragment);
-
-        LoadImageFragment loadImageFragment = LoadImageFragment.newInstance();
-        fragmentTransaction.replace(R.id.exercises_container_one, loadImageFragment, LoadImageFragment.class.getSimpleName());
-
-        SectionsExerciseFragment sectionsExerciseFragment = SectionsExerciseFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_two, sectionsExerciseFragment, SectionsExerciseFragment.class.getSimpleName());
-
-//      TODO переделать !!!
-        updateSectionsExercise();
-        sectionsExerciseFragment.setCategories(categories);
-        sectionsExerciseFragment.setEquipments(equipments);
-        sectionsExerciseFragment.setTypeExercise(typeExercises);
-
-        DescriptionFragment descriptionFragment = DescriptionFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_three, descriptionFragment, DescriptionFragment.class.getSimpleName());
-
-        OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
-        fragmentTransaction.add(R.id.exercises_container_four, okCancelFragment, OkCancelFragment.class.getSimpleName());
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(DescriptionFragment.class.getSimpleName());
-
-        fragmentTransaction.commit();
-        Log.i(TAG, "loadFragments() done");
-    }
-
-    private void updateExercise() {
-        Log.i(TAG, "updateExercise() started");
-        FragmentManager fragmentManager = getFragmentManager();
-        DescriptionFragment descriptionFragment = (DescriptionFragment)
-                fragmentManager.findFragmentByTag(DescriptionFragment.class.getSimpleName());
-
-        LoadImageFragment loadImageFragment = (LoadImageFragment)
-                fragmentManager.findFragmentByTag(LoadImageFragment.class.getSimpleName());
-
-        SectionsExerciseFragment sectionsExerciseFragment = (SectionsExerciseFragment)
-                fragmentManager.findFragmentByTag(SectionsExerciseFragment.class.getSimpleName());
-
-//        TODO Сделать сохранение изображения после успешного добавления данных в БД
-        if (!saveImageToSDCard(loadImageFragment.getFragmentLoadImageImage(), descriptionFragment.getName())) {
-            Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
+    private void initializeToolbar() {
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.exercises);
         }
+    }
 
-        exercise = new Exercise();
-        exercise.setId(entityId);
-        exercise.setName(descriptionFragment.getName());
-        exercise.setImagePath(imageNameAndPath != null ? imageNameAndPath : "");
-        exercise.setDescription(descriptionFragment.getDescription());
-        exercise.setComment(descriptionFragment.getComment());
-        exercise.setCategory(sectionsExerciseFragment.getChoseCategory());
-        exercise.setEquipment(sectionsExerciseFragment.getChoseEquipment());
-        exercise.setTypeExercise(sectionsExerciseFragment.getChoseTypeExercise());
+    /**
+     * Начальная инициализация фрагмента Упражнения.
+     */
+    private void initializeExercisesFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        exercisesFragment = ExercisesFragment.newInstance();
+        Log.d(TAG, "Create new fragment - Exercises fragment");
+        fragmentManager.beginTransaction()
+                .replace(R.id.exercises_container, exercisesFragment)
+                .addToBackStack(ExercisesFragment.class.getSimpleName())
+                .commit();
+    }
 
-        Log.i(TAG, "updateExercise() done");
+    private void initFragments(Exercise exercise) {
+        Log.d(TAG, "loadFragments() started");
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        ExerciseFragment fragment = ExerciseFragment.newInstance();
+        fragmentTransaction.replace(R.id.exercises_container, fragment, ExerciseFragment.class.getSimpleName());
+
+//      TODO переделать !!!
+        updateSectionsExercise();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXERCISE_PARCELABLE,
+                new ExerciseParcelable(exercise.getImagePath(),
+                        exercise.getName(),
+                        exercise.getDescription(),
+                        exercise.getComment(),
+                        exercise.getId(),
+                        exercise.getCategory().getId(),
+                        exercise.getEquipment().getId(),
+                        exercise.getTypeExercise().getId(),
+                        categories,
+                        equipments,
+                        typeExercises));
+
+        fragment.setArguments(bundle);
+
+        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
+        fragmentTransaction.addToBackStack(ExerciseFragment.class.getSimpleName());
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "loadFragments() done");
+    }
+
+    private void loadFragmentExercise() {
+        Log.d(TAG, "loadFragmentExercise() started");
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        ExerciseFragment fragment = ExerciseFragment.newInstance();
+        fragmentTransaction.replace(R.id.exercises_container, fragment, ExerciseFragment.class.getSimpleName());
+
+//      TODO переделать !!!
+        updateSectionsExercise();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXERCISE_PARCELABLE, new ExerciseParcelable(categories, equipments, typeExercises));
+
+        fragment.setArguments(bundle);
+        fragmentTransaction.addToBackStack(ExerciseFragment.class.getSimpleName());
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "loadFragmentExercise() done");
     }
 
     private void saveDataToDB() {
-        if (exercise != null && ormHelper != null) {
+        if (entity != null && ormHelper != null) {
             try {
                 commonDao = ormHelper.getDaoByClass(Exercise.class);
                 if (commonDao != null) {
 
                     // записываем или обновляем данные в БД
-                    ormHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
-                    ormHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
-                    ormHelper.getDaoByClass(TypeExercise.class).createOrUpdate(exercise.getTypeExercise());
+                    ormHelper.getDaoByClass(Category.class).createOrUpdate(entity.getCategory());
+                    ormHelper.getDaoByClass(Equipment.class).createOrUpdate(entity.getEquipment());
+                    ormHelper.getDaoByClass(TypeExercise.class).createOrUpdate(entity.getTypeExercise());
 
-                    commonDao.createOrUpdate(exercise);
+                    commonDao.createOrUpdate(entity);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -248,9 +226,9 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
 
             try {
                 // проверяем добавилась запись или нет
-                List<AbstractEntity> result = commonDao.queryBuilder().where().like(ICommonEntities.COLUMN_NAME_NAME, exercise.getName() + "%").query();
+                List<AbstractEntity> result = commonDao.queryBuilder().where().like(ICommonEntities.COLUMN_NAME_NAME, entity.getName() + "%").query();
                 if (result != null && !result.isEmpty()) {
-                    Toast.makeText(this, exercise.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, entity.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, getString(R.string.error_added), Toast.LENGTH_SHORT).show();
                 }
@@ -264,22 +242,21 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         }
     }
 
-    private boolean saveImageToSDCard(ImageView imageView, String entityTitle) {
-        BitmapDrawable btmpDr = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bmp = btmpDr.getBitmap();
+    private boolean saveImageToSDCard(Drawable drawable) {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bmp = bitmapDrawable.getBitmap();
 
         // проверяем доступность cd
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Log.d(TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
             return false;
         }
         // название файла
-        imageNameForSDCard = entityTitle + ".jpg";
+        imageNameForSDCard = entity.getName() + ".jpg";
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
         // добавляем свой каталог к пути
-        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
+        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD + "/" + entity.getClass().getSimpleName());
         // создаем каталог
         sdPath.mkdirs();
         // формируем объект File, который содержит путь к файлу
@@ -301,19 +278,24 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         return true;
     }
 
-    private void initDBConnection() {
+    private void initDBConnection(Exercise exercise) {
         ormHelper = new OrmHelper(this, ICommonEntities.EXERCISES_DATABASE_NAME,
                 ICommonEntities.EXERCISE_DATABASE_VERSION);
+        entity = exercise;
     }
 
+    /**
+     * Обновляем все категории, типы упражнений и оборудование для выбора в новом упражнении.
+     */
     private void updateSectionsExercise() {
-
+        Log.d(TAG, "updateSectionsExercise() start");
         ormHelper = new OrmHelper(this, ICommonEntities.CATEGORIES_DATABASE_NAME,
                 ICommonEntities.CATEGORIES_DATABASE_VERSION);
         try {
             CommonDao commonDao = ormHelper.getDaoByClass(Category.class);
             if (commonDao != null) {
                 categories = commonDao.queryForAll();
+                Log.d(TAG, "Categories size = " + categories.size());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -325,6 +307,7 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
             CommonDao commonDao = ormHelper.getDaoByClass(Equipment.class);
             if (commonDao != null) {
                 equipments = commonDao.queryForAll();
+                Log.d(TAG, "Equipments size = " + equipments.size());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -336,10 +319,12 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
             CommonDao commonDao = ormHelper.getDaoByClass(TypeExercise.class);
             if (commonDao != null) {
                 typeExercises = commonDao.queryForAll();
+                Log.d(TAG, "TypeExercises size = " + typeExercises.size());
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         ormHelper.close();
+        Log.d(TAG, "updateSectionsExercise() done");
     }
 }

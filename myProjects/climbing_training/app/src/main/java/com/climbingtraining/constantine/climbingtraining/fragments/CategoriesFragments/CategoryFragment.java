@@ -17,7 +17,7 @@ import java.io.IOException;
 public class CategoryFragment extends AbstractCategoriesFragment {
 
     private final static String TAG = CategoryFragment.class.getSimpleName();
-    static final int GALLERY_CATEGORY_REQUEST = 2;
+    private static final int GALLERY_CATEGORY_REQUEST = 2;
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
