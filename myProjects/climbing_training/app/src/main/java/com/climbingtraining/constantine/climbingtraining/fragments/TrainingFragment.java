@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.activity.CategoriesActivity;
@@ -39,14 +41,16 @@ import java.util.Locale;
 public class TrainingFragment extends Fragment {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy");
+    private final static String TAG = TrainingFragment.class.getSimpleName();
 
-    private TextView fragmentTrainingDateTextView;
-    private Spinner fragmentTrainingSpinnerCategory;
-    private Button fragmentTrainingAddExerciseBtn;
+    private TextView date;
+    private Button addExerciseBtn;
     private ITrainingFragmentCallBack callBack;
-    private ListView fragmentTrainingList;
-    private TextView fragmentTrainingDescriptionEditText;
-    private TextView fragmentTrainingCommentEditText;
+    private ListView trainingList;
+    private TextView description;
+    private TextView comment;
+    private Button saveBtn;
+    private Button cancelBtn;
 
     private List<AccountingQuantity> accountingQuantities;
     private AccountingQuantitiesAdapter accountingQuantitiesAdapter;
@@ -73,6 +77,7 @@ public class TrainingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_training, container, false);
+        // Если открыли на редактирование, то загружаем все данные по упражнениям
         if (getArguments() != null) {
             initDB();
             training = getTrainingById(getArguments().getInt(CategoriesActivity.ENTITY_ID));
@@ -84,33 +89,52 @@ public class TrainingFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        fragmentTrainingDateTextView = (TextView) getActivity().findViewById(R.id.fragment_training_date_text_view);
-        fragmentTrainingDateTextView.setText(getString(R.string.determine_date));
-        fragmentTrainingSpinnerCategory = (Spinner) getActivity().findViewById(R.id.fragment_training_spinner_category);
-        fragmentTrainingAddExerciseBtn = (Button) getActivity().findViewById(R.id.fragment_training_add_exercise_btn);
-        fragmentTrainingList = (ListView) getActivity().findViewById(R.id.fragment_training_list);
-        fragmentTrainingDescriptionEditText = (TextView) getActivity().findViewById(R.id.fragment_training_description_edit_text);
-        fragmentTrainingCommentEditText = (TextView) getActivity().findViewById(R.id.fragment_training_comment_edit_text);
+        initXmlFields();
+        loadListeners();
+        updateAccountingQuantities();
+    }
 
-//        if (training != null) {
-//            initFields();
-//        }
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
+        date = (TextView) getActivity().findViewById(R.id.fragment_training_date_text_view);
+        date.setText(getString(R.string.determine_date));
+        addExerciseBtn = (Button) getActivity().findViewById(R.id.fragment_training_add_exercise_btn);
+        trainingList = (ListView) getActivity().findViewById(R.id.fragment_training_list);
+        description = (TextView) getActivity().findViewById(R.id.fragment_training_description_edit_text);
+        comment = (TextView) getActivity().findViewById(R.id.fragment_training_comment_edit_text);
+        saveBtn = (Button) getActivity().findViewById(R.id.fragment_training_save_btn);
+        cancelBtn = (Button) getActivity().findViewById(R.id.fragment_training_cancel_btn);
+        Log.d(TAG, "initXmlFields() done");
+    }
 
-        fragmentTrainingAddExerciseBtn.setOnClickListener(new View.OnClickListener() {
+    private void loadListeners() {
+        // добавление учета количества для упражнения
+        addExerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callBack.createNewAccountingQuantity();
             }
         });
-
-        updateSpinner();
-        updateAccountingQuantities();
-
-        fragmentTrainingDateTextView.setOnClickListener(new View.OnClickListener() {
+        // выбор даты
+        date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment dateDialog = new DatePicker();
                 dateDialog.show(getFragmentManager(), "datePicker");
+            }
+        });
+        // сохраняем тренировку
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.saveTraining(getCreatedTraining());
+            }
+        });
+        // отмена сохранения тренировки
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.cancel();
             }
         });
     }
@@ -118,7 +142,7 @@ public class TrainingFragment extends Fragment {
     private void updateAccountingQuantities() {
         if (accountingQuantities != null) {
             accountingQuantitiesAdapter = new AccountingQuantitiesAdapter(getActivity(), accountingQuantities);
-            fragmentTrainingList.setAdapter(accountingQuantitiesAdapter);
+            trainingList.setAdapter(accountingQuantitiesAdapter);
         }
     }
 
@@ -132,6 +156,23 @@ public class TrainingFragment extends Fragment {
         }
     }
 
+    private Training getCreatedTraining() {
+        Training training = new Training();
+        Date dateTraining;
+//        try {
+//            dateTraining = sdf.parse(date.getText().toString());
+//        } catch (ParseException e) {
+//            throw new NumberFormatException();
+//        }
+        training.setDate(new Date());
+        // TODO: Разобраться с изображением
+        training.setPhysicalTrainingImagePath("");
+        training.setDescription(description.getText().toString());
+        training.setComment(comment.getText().toString());
+        training.setQuantities(accountingQuantities);
+        return training;
+    }
+
     private Training getTrainingById(int trainingId) {
         Training result = null;
         try {
@@ -142,35 +183,11 @@ public class TrainingFragment extends Fragment {
         return result;
     }
 
-    private void updateSpinner() {
-//        TODO сделать свой адаптер c преферансом и куртизанками!
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, PhysicalTraining.getNameByLocale(Locale.getDefault()));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        fragmentTrainingSpinnerCategory.setAdapter(arrayAdapter);
-    }
-
     public void addAccountingQuantities(AccountingQuantity accountingQuantity) {
         if (accountingQuantities == null) {
             accountingQuantities = new ArrayList<>();
         }
         accountingQuantities.add(accountingQuantity);
-    }
-
-//    private void initFields() {
-//        fragmentTrainingDateTextView.setText(training.getDate() != null ? sdf.format(training.getDate()) : "");
-//        initSpinnerCategory();
-//        accountingQuantities = (List)training.getQuantities();
-//        fragmentTrainingDescriptionEditText.setText(training.getDescription());
-//        fragmentTrainingCommentEditText.setText(training.getComment());
-//    }
-
-    private void initSpinnerCategory() {
-        for (PhysicalTraining item : PhysicalTraining.values()) {
-            if (item.equals(training.getPhysicalTraining())) {
-                fragmentTrainingSpinnerCategory.setSelection(item.ordinal());
-            }
-        }
     }
 
 //    GET & SET
@@ -182,28 +199,24 @@ public class TrainingFragment extends Fragment {
     public Date getTrainingDate() {
         Date date = null;
         try {
-            date = sdf.parse(fragmentTrainingDateTextView.getText().toString());
+            date = sdf.parse(this.date.getText().toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return date;
     }
 
-    public PhysicalTraining getPhysicalTraining() {
-        return PhysicalTraining.getPhysicalTrainingByName((String) fragmentTrainingSpinnerCategory.getSelectedItem());
-    }
-
     public String getDescription() {
-        return fragmentTrainingDescriptionEditText.getText().toString();
+        return description.getText().toString();
     }
 
     public String getComment() {
-        return fragmentTrainingCommentEditText.getText().toString();
+        return comment.getText().toString();
     }
 
     public interface ITrainingFragmentCallBack {
         void createNewAccountingQuantity();
-
-//        void editAccountingQuantity(AccountingQuantity quantity);
+        void saveTraining(Training training);
+        void cancel();
     }
 }

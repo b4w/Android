@@ -9,15 +9,9 @@
         layout="@layout/toolbar" />
 
     <FrameLayout
-        android:id="@+id/trainings_container_one"
+        android:id="@+id/trainings_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/trainings_layout_toolbar" />
-
-    <FrameLayout
-        android:id="@+id/trainings_container_two"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/trainings_container_one" />
 
 </RelativeLayout>

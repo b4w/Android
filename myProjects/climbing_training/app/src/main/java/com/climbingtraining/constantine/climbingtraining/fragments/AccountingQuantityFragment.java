@@ -2,9 +2,9 @@ package com.climbingtraining.constantine.climbingtraining.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +16,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.climbingtraining.constantine.climbingtraining.R;
+import com.climbingtraining.constantine.climbingtraining.activity.TrainingsActivity;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuantity;
-import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.climbingtraining.constantine.climbingtraining.enums.MeasurementMeasure;
 import com.climbingtraining.constantine.climbingtraining.enums.PhysicalTraining;
-import com.j256.ormlite.support.ConnectionSource;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Locale;
 
@@ -34,25 +35,28 @@ import java.util.Locale;
  */
 public class AccountingQuantityFragment extends Fragment {
 
-    private Button fragmentAccountingButtonOk;
-    private Button fragmentAccountingButtonCancel;
-    private Button fragmentAccountingQuantityChooseExercise;
+    private final String TAG = AccountingQuantityFragment.class.getSimpleName();
 
-    private ImageView fragmentAqImage;
-    private TextView fragmentAqName;
-    private TextView fragmentAqNameCategory;
-    private TextView fragmentAqTypeExercise;
-    private TextView fragmentAqEquipment;
-    private TextView fragmentAqComment;
-    private TextView fragmentAccountingQuantityDescription;
-    private TextView fragmentAccountingQuantityComment;
+    private Button saveBtn;
+    private Button cancelBtn;
+    private Button chooseExerciseBtn;
 
-    private TextView fragmentAccountingQuantityName;
-    private EditText numberApproaches;
-    private EditText numberTimeApproach;
-    private EditText additionalWeight;
-    private Spinner spinnerMeasurementMeasure;
-    private EditText quantityDistance;
+    private ImageView exerciseImageIv;
+    private TextView exerciseNameTv;
+    private TextView exerciseCategoryTv;
+    private TextView exerciseTypeExerciseTv;
+    private TextView exerciseEquipmentTv;
+    private TextView exerciseCommentTv;
+
+    private TextView descriptionTv;
+    private TextView commentTv;
+    private TextView nameTv;
+    private EditText numberApproachesEt;
+    private EditText numberTimeApproachEt;
+    private EditText additionalWeightEt;
+    private Spinner measurementMeasureSp;
+    private Spinner physicalTrainingSp;
+    private EditText quantityDistanceEt;
 
     private String imagePath;
     private String name;
@@ -60,7 +64,9 @@ public class AccountingQuantityFragment extends Fragment {
     private String typeExercise;
     private String equipment;
     private String comment;
+
     private int exerciseId;
+    private Exercise exercise;
 
     private IAccountingQuantityFragmentCallBack callBack;
 
@@ -88,87 +94,117 @@ public class AccountingQuantityFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        loadListeners();
+        initMeasurementMeasureSpinner();
+        initCategoryExerciseSpinner();
+        updateExerciseFields();
+    }
 
-        fragmentAccountingButtonOk = (Button) getActivity().findViewById(R.id.fragment_accounting_button_ok);
-        fragmentAccountingButtonCancel = (Button) getActivity().findViewById(R.id.fragment_accounting_button_cancel);
-        fragmentAccountingQuantityChooseExercise = (Button) getActivity()
-                .findViewById(R.id.fragment_accounting_quantity_choose_exercise);
-        fragmentAccountingQuantityName = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_name);
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
+        saveBtn = (Button) getActivity().findViewById(R.id.fragment_accounting_button_ok);
+        cancelBtn = (Button) getActivity().findViewById(R.id.fragment_accounting_button_cancel);
+        chooseExerciseBtn = (Button) getActivity().findViewById(R.id.fragment_accounting_quantity_choose_exercise);
+        nameTv = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_name);
+        descriptionTv = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_description);
+        commentTv = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_comment);
+        physicalTrainingSp = (Spinner) getActivity().findViewById(R.id.fragment_accounting_spinner_category_exercise);
 
+        exerciseImageIv = (ImageView) getActivity().findViewById(R.id.fragment_aq_image);
+        exerciseNameTv = (TextView) getActivity().findViewById(R.id.fragment_aq_name);
+        exerciseCategoryTv = (TextView) getActivity().findViewById(R.id.fragment_aq_name_category);
+        exerciseTypeExerciseTv = (TextView) getActivity().findViewById(R.id.fragment_aq_type_exercise);
+        exerciseEquipmentTv = (TextView) getActivity().findViewById(R.id.fragment_aq_equipment);
+        exerciseCommentTv = (TextView) getActivity().findViewById(R.id.fragment_aq_comment);
 
-        fragmentAccountingQuantityChooseExercise.setOnClickListener(new View.OnClickListener() {
+        numberApproachesEt = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_number_approaches);
+        numberTimeApproachEt = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_number_time_approach);
+        additionalWeightEt = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_additional_weight);
+        measurementMeasureSp = (Spinner) getActivity().findViewById(R.id.fragment_accounting_quantity_spinner_measurement_measure);
+        quantityDistanceEt = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_distance);
+        Log.d(TAG, "initXmlFields() done");
+    }
+
+    private void updateExerciseFields() {
+        Log.d(TAG, "updateExerciseFields() start");
+        // TODO: сделать в AsyncTask
+        if (getArguments() == null
+                || getArguments().getString(TrainingsActivity.EXERCISE_ID) == null
+                || getArguments().getString(TrainingsActivity.EXERCISE_ID).isEmpty()) {
+            return;
+        }
+        exerciseId = Integer.valueOf(getArguments().getString(TrainingsActivity.EXERCISE_ID));
+        exercise = getExerciseFromDB();
+        if (exercise.getImagePath() != null && !exercise.getImagePath().isEmpty()) {
+            File file = new File(exercise.getImagePath());
+            Picasso.with(getActivity()).load(file).into(exerciseImageIv);
+        }
+        exerciseNameTv.setText(exercise.getName());
+        exerciseCategoryTv.setText(exercise.getCategory().getName());
+        exerciseTypeExerciseTv.setText(exercise.getTypeExercise().getName());
+        exerciseEquipmentTv.setText(exercise.getEquipment().getName());
+        exerciseCommentTv.setText(exercise.getComment());
+        nameTv.setText(exercise.getName());
+        Log.d(TAG, "updateExerciseFields() done");
+    }
+
+    private void loadListeners() {
+        Log.d(TAG, "loadListeners() start");
+        chooseExerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callBack.chooseExercise();
             }
         });
 
-        fragmentAccountingButtonOk.setOnClickListener(new View.OnClickListener() {
+        // сохранение учета количества
+        saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AccountingQuantity accountingQuantity = new AccountingQuantity();
-                accountingQuantity.setNumberApproaches(Integer.valueOf(numberApproaches.getText().toString()));
-                accountingQuantity.setNumberTimeApproach(Integer.valueOf(numberTimeApproach.getText().toString()));
-                accountingQuantity.setAdditionalWeight(Float.valueOf(additionalWeight.getText().toString()));
+                accountingQuantity.setNumberApproaches(Integer.valueOf(numberApproachesEt.getText().toString()));
+                accountingQuantity.setNumberTimeApproach(Integer.valueOf(numberTimeApproachEt.getText().toString()));
+                accountingQuantity.setAdditionalWeight(Float.valueOf(additionalWeightEt.getText().toString()));
                 accountingQuantity.setMeasurementMeasure(
-                        MeasurementMeasure.getMeasurementMeasureByName((String)spinnerMeasurementMeasure.getSelectedItem()));
-                accountingQuantity.setDistance(Float.valueOf(quantityDistance.getText().toString()));
-
+                        MeasurementMeasure.getMeasurementMeasureByName((String) measurementMeasureSp.getSelectedItem()));
+                accountingQuantity.setPhysicalTraining(PhysicalTraining.getPhysicalTrainingByName((String)physicalTrainingSp.getSelectedItem()));
+                accountingQuantity.setDistance(Float.valueOf(quantityDistanceEt.getText().toString()));
 //                accountingQuantity.setTimeBegin();
 //                accountingQuantity.setTimeEnd();
-
-                accountingQuantity.setExercise(getExerciseFromDB());
-
-                accountingQuantity.setDescription(fragmentAccountingQuantityDescription.getText().toString());
-                accountingQuantity.setComment(fragmentAccountingQuantityComment.getText().toString());
-
+                accountingQuantity.setExercise(exercise);
+                accountingQuantity.setDescription(descriptionTv.getText().toString());
+                accountingQuantity.setComment(commentTv.getText().toString());
                 callBack.addNewAccountingQuantity(accountingQuantity);
             }
         });
 
-        fragmentAccountingButtonCancel.setOnClickListener(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callBack.cancelAccountingQuantity();
             }
         });
-
-        fragmentAqImage = (ImageView) getActivity().findViewById(R.id.fragment_aq_image);
-        if (imagePath != null && !imagePath.isEmpty()) {
-            fragmentAqImage.setImageBitmap(BitmapFactory.decodeFile(imagePath));
-        }
-        fragmentAqName = (TextView) getActivity().findViewById(R.id.fragment_aq_name);
-        fragmentAqName.setText(name);
-        fragmentAccountingQuantityName.setText(name);
-        fragmentAqNameCategory = (TextView) getActivity().findViewById(R.id.fragment_aq_name_category);
-        fragmentAqNameCategory.setText(category);
-        fragmentAqTypeExercise = (TextView) getActivity().findViewById(R.id.fragment_aq_type_exercise);
-        fragmentAqTypeExercise.setText(typeExercise);
-        fragmentAqEquipment = (TextView) getActivity().findViewById(R.id.fragment_aq_equipment);
-        fragmentAqEquipment.setText(equipment);
-        fragmentAqComment = (TextView) getActivity().findViewById(R.id.fragment_aq_comment);
-        fragmentAqComment.setText(comment);
-        fragmentAccountingQuantityDescription = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_description);
-        fragmentAccountingQuantityComment = (TextView) getActivity().findViewById(R.id.fragment_accounting_quantity_comment);
-
-        numberApproaches = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_number_approaches);
-        numberTimeApproach = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_number_time_approach);
-        additionalWeight = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_additional_weight);
-        spinnerMeasurementMeasure = (Spinner) getActivity().findViewById(R.id.fragment_accounting_quantity_spinner_measurement_measure);
-        quantityDistance = (EditText) getActivity().findViewById(R.id.fragment_accounting_quantity_distance);
-
-        updateDate();
+        Log.d(TAG, "loadListeners() done");
     }
 
-    private void updateDate() {
-//        TODO сделать свой адаптер
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+    private void initMeasurementMeasureSpinner() {
+        // TODO: сделать свой адаптер
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, MeasurementMeasure.getNameByLocale(Locale.getDefault()));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMeasurementMeasure.setAdapter(arrayAdapter);
+        measurementMeasureSp.setAdapter(arrayAdapter);
     }
 
-    private Exercise getExerciseFromDB () {
+    private void initCategoryExerciseSpinner() {
+        // TODO: сделать свой адаптер c преферансом и куртизанками!
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, PhysicalTraining.getNameByLocale(Locale.getDefault()));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        physicalTrainingSp.setAdapter(arrayAdapter);
+    }
+
+    private Exercise getExerciseFromDB() {
         Exercise exercise = null;
         OrmHelper ormHelper = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
                 ICommonEntities.EXERCISE_DATABASE_VERSION);
@@ -180,35 +216,6 @@ public class AccountingQuantityFragment extends Fragment {
         }
         ormHelper.close();
         return exercise;
-    }
-
-//    GET & SET
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setTypeExercise(String typeExercise) {
-        this.typeExercise = typeExercise;
-    }
-
-    public void setEquipment(String equipment) {
-        this.equipment = equipment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setExerciseId(int exerciseId) {
-        this.exerciseId = exerciseId;
     }
 
     public interface IAccountingQuantityFragmentCallBack {

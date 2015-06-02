@@ -59,20 +59,21 @@ public class TrainingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initDB();
         trainings = loadTrainingFromDB();
         trainingsListAdapter = new TrainingsListAdapter(getActivity(), trainings);
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         trainingsLayoutListView = (ListView) getActivity().findViewById(R.id.fragment_trainings_list_view);
         fragmentTrainingsFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_trainings_float_button);
+        loadListeners();
+        trainingsLayoutListView.setAdapter(trainingsListAdapter);
+    }
 
+    private void loadListeners() {
         trainingsLayoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,8 +89,6 @@ public class TrainingsFragment extends Fragment {
                 callBack.createNewTraining();
             }
         });
-
-        trainingsLayoutListView.setAdapter(trainingsListAdapter);
     }
 
     @Nullable

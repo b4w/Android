@@ -54,14 +54,13 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_layout);
 
-        toolbar = (Toolbar) findViewById(R.id.category_layout_toolbar);
-
         initializeToolbar();
         initializeTabs();
     }
 
     private void initializeToolbar() {
         Log.d(TAG, "initializeToolbar() start");
+        toolbar = (Toolbar) findViewById(R.id.category_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -20,7 +21,6 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.TypeExercise;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.climbingtraining.constantine.climbingtraining.fragments.AccountingQuantityFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.ChoiceExerciseFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.OkCancelFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TrainingFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TrainingsFragment;
 
@@ -32,10 +32,12 @@ import java.util.List;
  * Created by KonstantinSysoev on 01.05.15.
  */
 public class TrainingsActivity extends AppCompatActivity implements TrainingsFragment.ITrainingsFragmentCallBack,
-        OkCancelFragment.IOkCancelFragmentCallBack, TrainingFragment.ITrainingFragmentCallBack,
-        AccountingQuantityFragment.IAccountingQuantityFragmentCallBack, ChoiceExerciseFragment.IChoiceExercisesFragmentCallBack {
+        TrainingFragment.ITrainingFragmentCallBack, AccountingQuantityFragment.IAccountingQuantityFragmentCallBack, ChoiceExerciseFragment.IChoiceExercisesFragmentCallBack {
 
     private static final String TAG = TrainingsActivity.class.getSimpleName();
+
+    public static final String EXERCISE_ID = "exerciseId";
+    public static final String TRAINING_ID = "trainingId";
 
     private Toolbar toolbar;
 
@@ -43,19 +45,25 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trainings_layout);
+        initToolbar();
+        loadTrainingsFragment();
+    }
 
+    private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.trainings_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.trainings);
         }
+    }
 
+    private void loadTrainingsFragment() {
         // load trainings fragment
         FragmentManager fragmentManager = getFragmentManager();
         TrainingsFragment trainingsFragment = TrainingsFragment.newInstance();
         fragmentManager.beginTransaction()
-                .replace(R.id.trainings_container_one, trainingsFragment)
+                .replace(R.id.trainings_container, trainingsFragment)
                 .commit();
     }
 
@@ -67,141 +75,179 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Создание новой тренировки.
+     */
     @Override
     public void createNewTraining() {
-        loadTrainingFragments();
+        loadFragmentNewTraining();
     }
 
+    /**
+     * Редактирование тренировки.
+     *
+     * @param training - тренировка.
+     */
     @Override
     public void editTraining(Training training) {
         loadEditTrainingFragment(training);
     }
 
+    /**
+     * Создание нового количества подходов для упражнения.
+     */
     @Override
     public void createNewAccountingQuantity() {
-        loadAccountingQuantityFragment();
+        loadFragmentNewAccountingQuantity();
     }
 
+    /**
+     * Сохранить тренировку.
+     *
+     * @param training - тренировка.
+     */
     @Override
-    public void clickOkBtn() {
-        loadDataFromTrainingFragment();
+    public void saveTraining(Training training) {
+        saveNewTraining(training);
     }
 
+    /**
+     * Отмена.
+     */
     @Override
-    public void clickCancelBnt() {
+    public void cancel() {
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
     }
 
+    /**
+     * Добавление нового учета количества подходов в тренировку.
+     *
+     * @param accountingQuantity
+     */
     @Override
     public void addNewAccountingQuantity(AccountingQuantity accountingQuantity) {
         addAccountQuantityToTraining(accountingQuantity);
     }
 
+    /**
+     * Отмена создания нового учета количества подходов.
+     */
     @Override
     public void cancelAccountingQuantity() {
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
     }
 
+    /**
+     * Загружаем список упражнений для дальнейшего добавления в учет количества подходов.
+     */
     @Override
     public void chooseExercise() {
         loadChooseExerciseFragment();
     }
 
+    /**
+     * Выбираем упражнение для добавления в учет количества подходов.
+     *
+     * @param exerciseId - id упражнения.
+     */
     @Override
-    public void chooseExercise(Exercise exercise) {
-        selectChosenExercise(exercise);
+    public void chooseExercise(Integer exerciseId) {
+        selectChosenExercise(exerciseId);
     }
 
-    private void loadTrainingFragments() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        TrainingFragment trainingFragment = TrainingFragment.newInstance();
-        fragmentTransaction.replace(R.id.trainings_container_one, trainingFragment,
-                TrainingFragment.class.getSimpleName());
-
-        OkCancelFragment okCancelFragment = OkCancelFragment.newInstance();
-        fragmentTransaction.add(R.id.trainings_container_two, okCancelFragment,
-                OkCancelFragment.class.getSimpleName());
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(TrainingFragment.class.getSimpleName());
-        fragmentTransaction.commit();
+    /**
+     * Фрагмент для создания новой тренировки
+     */
+    private void loadFragmentNewTraining() {
+        Log.d(TAG, "loadFragmentNewTraining() start");
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, TrainingFragment.newInstance(), TrainingFragment.class.getSimpleName())
+                .addToBackStack(TrainingFragment.class.getSimpleName())
+                .commit();
+        Log.d(TAG, "loadFragmentNewTraining() done");
     }
 
-    private void loadAccountingQuantityFragment() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        AccountingQuantityFragment accountingQuantityFragment = AccountingQuantityFragment.newInstance();
-        fragmentTransaction.replace(R.id.trainings_container_one, accountingQuantityFragment,
-                AccountingQuantityFragment.class.getSimpleName());
-
-        fragmentTransaction.remove(getFragmentManager().findFragmentByTag(OkCancelFragment.class.getSimpleName()));
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(AccountingQuantityFragment.class.getSimpleName());
-        fragmentTransaction.commit();
+    private void loadFragmentNewAccountingQuantity() {
+        Log.d(TAG, "loadFragmentNewAccountingQuantity() start");
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, AccountingQuantityFragment.newInstance(), AccountingQuantityFragment.class.getSimpleName())
+                .addToBackStack(AccountingQuantityFragment.class.getSimpleName())
+                .commit();
+        Log.d(TAG, "loadFragmentNewAccountingQuantity() done");
     }
 
     private void loadChooseExerciseFragment() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        ChoiceExerciseFragment choiceExerciseFragment = ChoiceExerciseFragment.newInstance();
-        fragmentTransaction.replace(R.id.trainings_container_one, choiceExerciseFragment,
-                ChoiceExerciseFragment.class.getSimpleName());
-
-        // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
-        fragmentTransaction.addToBackStack(ChoiceExerciseFragment.class.getSimpleName());
-        fragmentTransaction.commit();
+        Log.d(TAG, "loadChooseExerciseFragment() start");
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, ChoiceExerciseFragment.newInstance(), ChoiceExerciseFragment.class.getSimpleName())
+                .addToBackStack(ChoiceExerciseFragment.class.getSimpleName())
+                .commit();
+        Log.d(TAG, "loadChooseExerciseFragment() done");
     }
 
-    private void selectChosenExercise(Exercise exercise) {
+    private void selectChosenExercise(Integer exerciseId) {
+        Log.d(TAG, "selectChosenExercise() start");
         getFragmentManager().popBackStack();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        AccountingQuantityFragment fragment = (AccountingQuantityFragment)
-                getFragmentManager().findFragmentByTag(AccountingQuantityFragment.class.getSimpleName());
 
-        fragment.setImagePath(exercise.getImagePath());
-        fragment.setName(exercise.getName());
-        fragment.setCategory(exercise.getCategory().getName());
-        fragment.setTypeExercise(exercise.getTypeExercise().getName());
-        fragment.setEquipment(exercise.getEquipment().getName());
-        fragment.setComment(exercise.getComment());
-        fragment.setExerciseId(exercise.getId());
+        Bundle bundle = new Bundle();
+        // TODO: подумать как переделать в Integer для проверки на != null
+        bundle.putString(EXERCISE_ID, String.valueOf(exerciseId));
+
+        AccountingQuantityFragment fragment = AccountingQuantityFragment.newInstance();
+        fragment.setArguments(bundle);
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, fragment, AccountingQuantityFragment.class.getSimpleName())
+                .addToBackStack(TrainingFragment.class.getSimpleName())
+                .commit();
+        Log.d(TAG, "selectChosenExercise() start");
     }
 
     private void addAccountQuantityToTraining(AccountingQuantity accountingQuantity) {
+        Log.d(TAG, "addAccountQuantityToTraining() start");
         getFragmentManager().popBackStack();
-//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        TrainingFragment trainingFragment = (TrainingFragment)
-                getFragmentManager().findFragmentByTag(TrainingFragment.class.getSimpleName());
-        trainingFragment.addAccountingQuantities(accountingQuantity);
+
+        // TODO: findByTag VS create new fragment?
+        TrainingFragment fragment = TrainingFragment.newInstance();
+        fragment.addAccountingQuantities(accountingQuantity);
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, fragment, AccountingQuantityFragment.class.getSimpleName())
+                .addToBackStack(TrainingFragment.class.getSimpleName())
+                .commit();
+        Log.d(TAG, "addAccountQuantityToTraining() done");
     }
 
-    private void loadDataFromTrainingFragment() {
-//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        TrainingFragment trainingFragment = (TrainingFragment)
-                getFragmentManager().findFragmentByTag(TrainingFragment.class.getSimpleName());
-
-        Training training = new Training();
-        training.setDate(trainingFragment.getTrainingDate());
-        training.setPhysicalTraining(trainingFragment.getPhysicalTraining());
-//        TODO !!!
-        training.setPhysicalTrainingImagePath("Заменить на путь к изображению");
-        training.setDescription(trainingFragment.getDescription());
-        training.setComment(trainingFragment.getComment());
-        training.setQuantities(trainingFragment.getAccountingQuantities());
-
+    private void saveNewTraining(Training training) {
+        Log.d(TAG, "saveNewTraining() start");
         saveDataToDB(training);
-        getFragmentManager().popBackStack();
+        TrainingsFragment fragment = TrainingsFragment.newInstance();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(TrainingsActivity.TRAINING_ID, training.getId());
+        fragment.setArguments(bundle);
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, fragment, TrainingsFragment.class.getSimpleName())
+                .addToBackStack(TrainingsFragment.class.getSimpleName())
+                .commit();
+
+        Log.d(TAG, "saveNewTraining() done");
     }
 
     private void loadEditTrainingFragment(Training training) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
         TrainingFragment trainingFragment = TrainingFragment.newInstance();
-        fragmentTransaction.replace(R.id.trainings_container_one, trainingFragment,
+        fragmentTransaction.replace(R.id.trainings_container, trainingFragment,
                 TrainingFragment.class.getSimpleName());
 
         Bundle bundle = new Bundle();
@@ -213,9 +259,9 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
     }
 
     private void saveDataToDB(Training training) {
+        Log.d(TAG, "saveDataToDB() start");
         OrmHelper ormHelper = new OrmHelper(this, ICommonEntities.TRAINING_DATABASE_NAME,
                 ICommonEntities.TRAINING_DATABASE_VERSION);
-
         try {
             CommonDao commonDao = ormHelper.getDaoByClass(Training.class);
             if (commonDao != null) {
@@ -254,7 +300,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
         Toast.makeText(this, training.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
         // Закрываем все подключения
-        if (ormHelper != null)
-            ormHelper.close();
+        ormHelper.close();
+        Log.d(TAG, "saveDataToDB() start");
     }
 }

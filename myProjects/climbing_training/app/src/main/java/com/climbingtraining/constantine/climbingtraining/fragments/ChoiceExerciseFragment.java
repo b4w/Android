@@ -75,7 +75,7 @@ public class ChoiceExerciseFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Exercise exercise = (Exercise) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-                callBack.chooseExercise(exercise);
+                callBack.chooseExercise(exercise.getId());
                 return false;
             }
         });
@@ -120,10 +120,8 @@ public class ChoiceExerciseFragment extends Fragment {
         if (exercises == null || exercises.isEmpty() || categories == null || categories.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-
         List<List<Exercise>> parent = new ArrayList<>();
         List<Exercise> child;
-
         for (Category category : categories) {
             child = new ArrayList<>();
             for (Exercise exercise : exercises) {
@@ -139,6 +137,6 @@ public class ChoiceExerciseFragment extends Fragment {
     }
 
     public interface IChoiceExercisesFragmentCallBack {
-        void chooseExercise(Exercise exercise);
+        void chooseExercise(Integer exerciseId);
     }
 }

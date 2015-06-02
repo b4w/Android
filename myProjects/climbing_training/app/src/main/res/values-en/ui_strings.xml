@@ -45,5 +45,9 @@
     <string name="share">Share</string>
     <string name="delete">Delete</string>
 
+    <string name="name_exercise">Name exercise</string>
+    <string name="category_exercise">Category exercise</string>
+    <string name="accounting_quantity">Accounting quantity</string>
+
 
 </resources>

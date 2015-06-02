@@ -51,7 +51,7 @@
         <activity android:name=".activity.SettingsActivity">
             <intent-filter>
                 <action android:name="SettingsActivity" />
-                <category android:name="ANDROID.INTENT.CATEGORY.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

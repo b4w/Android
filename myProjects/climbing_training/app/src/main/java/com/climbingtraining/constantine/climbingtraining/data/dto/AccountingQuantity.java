@@ -1,6 +1,7 @@
 package com.climbingtraining.constantine.climbingtraining.data.dto;
 
 import com.climbingtraining.constantine.climbingtraining.enums.MeasurementMeasure;
+import com.climbingtraining.constantine.climbingtraining.enums.PhysicalTraining;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -26,6 +27,9 @@ public class AccountingQuantity implements ICommonEntities {
 
     @DatabaseField(columnName = COLUMN_NAME_MEASUREMENT_MEASURE)
     private MeasurementMeasure measurementMeasure;
+
+    @DatabaseField(columnName = COLUMN_NAME_PHYSICAL_TRAINING)
+    private PhysicalTraining physicalTraining;
 
     @DatabaseField(columnName = COLUMN_NAME_DISTANCE)
     private float distance;
@@ -53,19 +57,23 @@ public class AccountingQuantity implements ICommonEntities {
 //        need for ormlite
     }
 
-    public AccountingQuantity(int numberApproaches, int numberTimeApproach, float additionalWeight,
-                              MeasurementMeasure measurementMeasure, float distance, Date timeBegin,
-                              Date timeEnd, Exercise exercise, String description, String comment) {
+    public AccountingQuantity(int id, int numberApproaches, int numberTimeApproach, float additionalWeight,
+                              MeasurementMeasure measurementMeasure, PhysicalTraining physicalTraining,
+                              float distance, Date timeBegin, Date timeEnd, Exercise exercise,
+                              String description, String comment, Training training) {
+        this.id = id;
         this.numberApproaches = numberApproaches;
         this.numberTimeApproach = numberTimeApproach;
         this.additionalWeight = additionalWeight;
         this.measurementMeasure = measurementMeasure;
+        this.physicalTraining = physicalTraining;
         this.distance = distance;
         this.timeBegin = timeBegin;
         this.timeEnd = timeEnd;
         this.exercise = exercise;
         this.description = description;
         this.comment = comment;
+        this.training = training;
     }
 
     public int getId() {
@@ -156,6 +164,22 @@ public class AccountingQuantity implements ICommonEntities {
         this.comment = comment;
     }
 
+    public PhysicalTraining getPhysicalTraining() {
+        return physicalTraining;
+    }
+
+    public void setPhysicalTraining(PhysicalTraining physicalTraining) {
+        this.physicalTraining = physicalTraining;
+    }
+
+    public Training getTraining() {
+        return training;
+    }
+
+    public void setTraining(Training training) {
+        this.training = training;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,6 +193,7 @@ public class AccountingQuantity implements ICommonEntities {
         if (Float.compare(that.additionalWeight, additionalWeight) != 0) return false;
         if (Float.compare(that.distance, distance) != 0) return false;
         if (measurementMeasure != that.measurementMeasure) return false;
+        if (physicalTraining != that.physicalTraining) return false;
         if (timeBegin != null ? !timeBegin.equals(that.timeBegin) : that.timeBegin != null)
             return false;
         if (timeEnd != null ? !timeEnd.equals(that.timeEnd) : that.timeEnd != null) return false;
@@ -176,7 +201,8 @@ public class AccountingQuantity implements ICommonEntities {
             return false;
         if (description != null ? !description.equals(that.description) : that.description != null)
             return false;
-        return !(comment != null ? !comment.equals(that.comment) : that.comment != null);
+        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
+        return !(training != null ? !training.equals(that.training) : that.training != null);
 
     }
 
@@ -187,12 +213,14 @@ public class AccountingQuantity implements ICommonEntities {
         result = 31 * result + numberTimeApproach;
         result = 31 * result + (additionalWeight != +0.0f ? Float.floatToIntBits(additionalWeight) : 0);
         result = 31 * result + (measurementMeasure != null ? measurementMeasure.hashCode() : 0);
+        result = 31 * result + (physicalTraining != null ? physicalTraining.hashCode() : 0);
         result = 31 * result + (distance != +0.0f ? Float.floatToIntBits(distance) : 0);
         result = 31 * result + (timeBegin != null ? timeBegin.hashCode() : 0);
         result = 31 * result + (timeEnd != null ? timeEnd.hashCode() : 0);
         result = 31 * result + (exercise != null ? exercise.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (training != null ? training.hashCode() : 0);
         return result;
     }
 }
