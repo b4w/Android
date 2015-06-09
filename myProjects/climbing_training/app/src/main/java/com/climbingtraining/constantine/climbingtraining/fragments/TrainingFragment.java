@@ -9,31 +9,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
-import com.climbingtraining.constantine.climbingtraining.activity.CategoriesActivity;
+import com.climbingtraining.constantine.climbingtraining.activity.TrainingsActivity;
 import com.climbingtraining.constantine.climbingtraining.adapters.AccountingQuantitiesAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuantity;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
+import com.climbingtraining.constantine.climbingtraining.data.helpers.ICommonOrmHelper;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.climbingtraining.constantine.climbingtraining.enums.PhysicalTraining;
 import com.climbingtraining.constantine.climbingtraining.utils.DatePicker;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by KonstantinSysoev on 10.05.15.
@@ -56,8 +52,8 @@ public class TrainingFragment extends Fragment {
     private AccountingQuantitiesAdapter accountingQuantitiesAdapter;
     private Training training;
 
-    private OrmHelper ormHelper;
-    private CommonDao commonDao;
+    private CommonDao trainingDao;
+    private CommonDao aqDao;
 
     public static TrainingFragment newInstance() {
         return new TrainingFragment();
@@ -80,7 +76,7 @@ public class TrainingFragment extends Fragment {
         // Если открыли на редактирование, то загружаем все данные по упражнениям
         if (getArguments() != null) {
             initDB();
-            training = getTrainingById(getArguments().getInt(CategoriesActivity.ENTITY_ID));
+            training = getTrainingById(getArguments().getInt(TrainingsActivity.TRAINING_ID));
         }
         return view;
     }
@@ -104,7 +100,19 @@ public class TrainingFragment extends Fragment {
         comment = (TextView) getActivity().findViewById(R.id.fragment_training_comment_edit_text);
         saveBtn = (Button) getActivity().findViewById(R.id.fragment_training_save_btn);
         cancelBtn = (Button) getActivity().findViewById(R.id.fragment_training_cancel_btn);
+        if (training != null) {
+            initXmlFieldsFromDB();
+        }
         Log.d(TAG, "initXmlFields() done");
+    }
+
+    private void initXmlFieldsFromDB() {
+        Log.d(TAG, "initXmlFieldsFromDB() start");
+        date.setText(sdf.format(training.getDate()));
+//        accountingQuantities = new ArrayList<>(training.getQuantities());
+        description.setText(training.getDescription());
+        comment.setText(training.getComment());
+        Log.d(TAG, "initXmlFieldsFromDB() done");
     }
 
     private void loadListeners() {
@@ -147,10 +155,14 @@ public class TrainingFragment extends Fragment {
     }
 
     private void initDB() {
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.TRAINING_DATABASE_NAME,
+        OrmHelper trainingOrmHelper = new OrmHelper(getActivity(), ICommonEntities.TRAINING_DATABASE_NAME,
                 ICommonEntities.TRAINING_DATABASE_VERSION);
+        OrmHelper aqOrmHelper = new OrmHelper(getActivity(), ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_NAME,
+                ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_VERSION);
+
         try {
-            commonDao = ormHelper.getDaoByClass(Training.class);
+            trainingDao = trainingOrmHelper.getDaoByClass(Training.class);
+            aqDao = aqOrmHelper.getDaoByClass(AccountingQuantity.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,7 +188,20 @@ public class TrainingFragment extends Fragment {
     private Training getTrainingById(int trainingId) {
         Training result = null;
         try {
-            result = (Training) commonDao.queryForId(trainingId);
+            result = (Training) trainingDao.queryForId(trainingId);
+
+            accountingQuantities = aqDao.queryForAll();
+
+//            accountingQuantities = aqDao.queryForEq("training_id", trainingId);
+//            for (AccountingQuantity quantity : accountingQuantities) {
+//                Exercise exercise = quantity.getExercise();
+//                OrmHelper exerciseOrm = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
+//                        ICommonEntities.EXERCISE_DATABASE_VERSION);
+//                int test = exerciseOrm.getDaoByClass(Exercise.class).refresh(exercise);
+//                quantity.setExercise(exercise);
+//            }
+
+            result.setQuantities(accountingQuantities);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -188,30 +213,6 @@ public class TrainingFragment extends Fragment {
             accountingQuantities = new ArrayList<>();
         }
         accountingQuantities.add(accountingQuantity);
-    }
-
-//    GET & SET
-
-    public List<AccountingQuantity> getAccountingQuantities() {
-        return accountingQuantities;
-    }
-
-    public Date getTrainingDate() {
-        Date date = null;
-        try {
-            date = sdf.parse(this.date.getText().toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-
-    public String getDescription() {
-        return description.getText().toString();
-    }
-
-    public String getComment() {
-        return comment.getText().toString();
     }
 
     public interface ITrainingFragmentCallBack {

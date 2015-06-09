@@ -92,33 +92,4 @@ public class Training implements ICommonEntities {
     public void setQuantities(Collection<AccountingQuantity> quantities) {
         this.quantities = quantities;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Training training = (Training) o;
-
-        if (id != null ? !id.equals(training.id) : training.id != null) return false;
-        if (date != null ? !date.equals(training.date) : training.date != null) return false;
-        if (physicalTrainingImagePath != null ? !physicalTrainingImagePath.equals(training.physicalTrainingImagePath) : training.physicalTrainingImagePath != null)
-            return false;
-        if (description != null ? !description.equals(training.description) : training.description != null)
-            return false;
-        if (comment != null ? !comment.equals(training.comment) : training.comment != null)
-            return false;
-        return !(quantities != null ? !quantities.equals(training.quantities) : training.quantities != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (physicalTrainingImagePath != null ? physicalTrainingImagePath.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (quantities != null ? quantities.hashCode() : 0);
-        return result;
-    }
 }

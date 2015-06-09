@@ -14,7 +14,7 @@ import java.util.Date;
 public class AccountingQuantity implements ICommonEntities {
 
     @DatabaseField(generatedId = true, columnName = COLUMN_NAME_ID)
-    private int id;
+    private Integer id;
 
     @DatabaseField(columnName = COLUMN_NAME_NUMBER_APPROACHES)
     private int numberApproaches;
@@ -57,7 +57,7 @@ public class AccountingQuantity implements ICommonEntities {
 //        need for ormlite
     }
 
-    public AccountingQuantity(int id, int numberApproaches, int numberTimeApproach, float additionalWeight,
+    public AccountingQuantity(Integer id, int numberApproaches, int numberTimeApproach, float additionalWeight,
                               MeasurementMeasure measurementMeasure, PhysicalTraining physicalTraining,
                               float distance, Date timeBegin, Date timeEnd, Exercise exercise,
                               String description, String comment, Training training) {
@@ -73,14 +73,14 @@ public class AccountingQuantity implements ICommonEntities {
         this.exercise = exercise;
         this.description = description;
         this.comment = comment;
-        this.training = training;
+//        this.training = training;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -178,49 +178,5 @@ public class AccountingQuantity implements ICommonEntities {
 
     public void setTraining(Training training) {
         this.training = training;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AccountingQuantity that = (AccountingQuantity) o;
-
-        if (id != that.id) return false;
-        if (numberApproaches != that.numberApproaches) return false;
-        if (numberTimeApproach != that.numberTimeApproach) return false;
-        if (Float.compare(that.additionalWeight, additionalWeight) != 0) return false;
-        if (Float.compare(that.distance, distance) != 0) return false;
-        if (measurementMeasure != that.measurementMeasure) return false;
-        if (physicalTraining != that.physicalTraining) return false;
-        if (timeBegin != null ? !timeBegin.equals(that.timeBegin) : that.timeBegin != null)
-            return false;
-        if (timeEnd != null ? !timeEnd.equals(that.timeEnd) : that.timeEnd != null) return false;
-        if (exercise != null ? !exercise.equals(that.exercise) : that.exercise != null)
-            return false;
-        if (description != null ? !description.equals(that.description) : that.description != null)
-            return false;
-        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        return !(training != null ? !training.equals(that.training) : that.training != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + numberApproaches;
-        result = 31 * result + numberTimeApproach;
-        result = 31 * result + (additionalWeight != +0.0f ? Float.floatToIntBits(additionalWeight) : 0);
-        result = 31 * result + (measurementMeasure != null ? measurementMeasure.hashCode() : 0);
-        result = 31 * result + (physicalTraining != null ? physicalTraining.hashCode() : 0);
-        result = 31 * result + (distance != +0.0f ? Float.floatToIntBits(distance) : 0);
-        result = 31 * result + (timeBegin != null ? timeBegin.hashCode() : 0);
-        result = 31 * result + (timeEnd != null ? timeEnd.hashCode() : 0);
-        result = 31 * result + (exercise != null ? exercise.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (training != null ? training.hashCode() : 0);
-        return result;
     }
 }

@@ -26,6 +26,7 @@ import com.climbingtraining.constantine.climbingtraining.fragments.TrainingsFrag
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -86,11 +87,11 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
     /**
      * Редактирование тренировки.
      *
-     * @param training - тренировка.
+     * @param trainingId - id тренировки.
      */
     @Override
-    public void editTraining(Training training) {
-        loadEditTrainingFragment(training);
+    public void editTraining(Integer trainingId) {
+        loadEditTrainingFragment(trainingId);
     }
 
     /**
@@ -170,6 +171,9 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "loadFragmentNewTraining() done");
     }
 
+    /**
+     * Фрагмент для создания нового количества учета подходов.
+     */
     private void loadFragmentNewAccountingQuantity() {
         Log.d(TAG, "loadFragmentNewAccountingQuantity() start");
         getFragmentManager()
@@ -180,6 +184,9 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "loadFragmentNewAccountingQuantity() done");
     }
 
+    /**
+     * Фрагмент - список упражнений для добавления.
+     */
     private void loadChooseExerciseFragment() {
         Log.d(TAG, "loadChooseExerciseFragment() start");
         getFragmentManager()
@@ -190,6 +197,10 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "loadChooseExerciseFragment() done");
     }
 
+    /**
+     * Добавление выбранного упражнения к учету подходов.
+     * @param exerciseId - id выбранного упражнения.
+     */
     private void selectChosenExercise(Integer exerciseId) {
         Log.d(TAG, "selectChosenExercise() start");
         getFragmentManager().popBackStack();
@@ -209,6 +220,10 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "selectChosenExercise() start");
     }
 
+    /**
+     * Добавление учета подходов в тренировку.
+     * @param accountingQuantity - сущность учета подходов.
+     */
     private void addAccountQuantityToTraining(AccountingQuantity accountingQuantity) {
         Log.d(TAG, "addAccountQuantityToTraining() start");
         getFragmentManager().popBackStack();
@@ -225,6 +240,10 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "addAccountQuantityToTraining() done");
     }
 
+    /**
+     * Сохранение новой тренировки.
+     * @param training
+     */
     private void saveNewTraining(Training training) {
         Log.d(TAG, "saveNewTraining() start");
         saveDataToDB(training);
@@ -243,64 +262,65 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "saveNewTraining() done");
     }
 
-    private void loadEditTrainingFragment(Training training) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+    private void loadEditTrainingFragment(Integer trainingId) {
+        Log.d(TAG, "loadEditTrainingFragment() start");
 
-        TrainingFragment trainingFragment = TrainingFragment.newInstance();
-        fragmentTransaction.replace(R.id.trainings_container, trainingFragment,
-                TrainingFragment.class.getSimpleName());
+        TrainingFragment fragment = TrainingFragment.newInstance();
 
         Bundle bundle = new Bundle();
-        bundle.getInt(CategoriesActivity.ENTITY_ID, training.getId());
-        trainingFragment.setArguments(bundle);
+        bundle.putInt(TrainingsActivity.TRAINING_ID, trainingId);
+        fragment.setArguments(bundle);
 
-        fragmentTransaction.addToBackStack(TrainingFragment.class.getSimpleName());
-        fragmentTransaction.commit();
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.trainings_container, fragment, TrainingFragment.class.getSimpleName())
+                .addToBackStack(TrainingFragment.class.getSimpleName())
+                .commit();
+
+        Log.d(TAG, "loadEditTrainingFragment() done");
     }
 
     private void saveDataToDB(Training training) {
         Log.d(TAG, "saveDataToDB() start");
-        OrmHelper ormHelper = new OrmHelper(this, ICommonEntities.TRAINING_DATABASE_NAME,
+        OrmHelper ormTrainingHelper = new OrmHelper(this, ICommonEntities.TRAINING_DATABASE_NAME,
                 ICommonEntities.TRAINING_DATABASE_VERSION);
+        OrmHelper ormAQHelper = new OrmHelper(this, ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_NAME,
+                ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_VERSION);
         try {
-            CommonDao commonDao = ormHelper.getDaoByClass(Training.class);
-            if (commonDao != null) {
+            CommonDao trainingDao = ormTrainingHelper.getDaoByClass(Training.class);
+            if (trainingDao != null) {
 
                 List<AccountingQuantity> quantities = new ArrayList<>();
                 for (AccountingQuantity item : training.getQuantities()) {
                     Exercise exercise = item.getExercise();
-                    ormHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
-                    ormHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
-                    ormHelper.getDaoByClass(TypeExercise.class).createOrUpdate(exercise.getTypeExercise());
-                    ormHelper.getDaoByClass(Exercise.class).createOrUpdate(exercise);
+                    ormTrainingHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
+                    ormTrainingHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
+                    ormTrainingHelper.getDaoByClass(TypeExercise.class).createOrUpdate(exercise.getTypeExercise());
+                    ormTrainingHelper.getDaoByClass(Exercise.class).createOrUpdate(exercise);
                     item.setExercise(exercise);
-                    ormHelper.getDaoByClass(AccountingQuantity.class).createOrUpdate(item);
+                    item.setTimeBegin(new Date());
+                    item.setTimeEnd(new Date());
                     quantities.add(item);
                 }
-
+//                // сохраняем тренировку
                 training.setQuantities(quantities);
-                commonDao.createOrUpdate(training);
+                trainingDao.createOrUpdate(training);
+
+                // сохраняем список упражнений
+                CommonDao aqDao = ormAQHelper.getDaoByClass(AccountingQuantity.class);
+                for (AccountingQuantity quantity : quantities) {
+                    quantity.setTraining(training);
+                    aqDao.createOrUpdate(quantity);
+                }
             }
         } catch (SQLException e) {
             Toast.makeText(this, getString(R.string.error_added), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
-//        try {
-//            // проверяем добавилась запись или нет
-//            List<AbstractEntity> result = trainingDao.queryBuilder().where().like(ICommonEntities.COLUMN_NAME_NAME, training.getName() + "%").query();
-//            if (result != null && !result.isEmpty()) {
-//                Toast.makeText(this, exercise.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, getString(R.string.error_added), Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
         Toast.makeText(this, training.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
         // Закрываем все подключения
-        ormHelper.close();
-        Log.d(TAG, "saveDataToDB() start");
+        ormAQHelper.close();
+        ormTrainingHelper.close();
+        Log.d(TAG, "saveDataToDB() done");
     }
 }

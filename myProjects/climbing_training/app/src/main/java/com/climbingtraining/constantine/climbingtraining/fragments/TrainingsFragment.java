@@ -77,9 +77,8 @@ public class TrainingsFragment extends Fragment {
         trainingsLayoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), getString(R.string.option_temporarily), Toast.LENGTH_SHORT).show();
-//                Training training = (Training) parent.getAdapter().getItem(position);
-//                callBack.editTraining(training);
+                Training training = (Training) parent.getAdapter().getItem(position);
+                callBack.editTraining(training.getId());
             }
         });
 
@@ -124,6 +123,6 @@ public class TrainingsFragment extends Fragment {
     public interface ITrainingsFragmentCallBack {
         void createNewTraining();
 
-        void editTraining(Training training);
+        void editTraining(Integer trainingId);
     }
 }
