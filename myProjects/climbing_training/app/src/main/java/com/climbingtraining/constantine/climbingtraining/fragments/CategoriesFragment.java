@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,31 +66,33 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
-
         initDB();
         categories = getAllCategories();
         categoriesListAdapter = new CategoriesListAdapter(getActivity(), categories);
-
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        initListeners();
+        fragmentCategoryList.setAdapter(categoriesListAdapter);
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
         fragmentCategoryTitle = (TextView) getActivity().findViewById(R.id.category_list_layout_title);
         fragmentCategoryDescription = (TextView) getActivity().findViewById(R.id.category_list_layout_description);
         fragmentCategoryComments = (TextView) getActivity().findViewById(R.id.category_list_layout_comments);
         fragmentCategoryList = (ListView) getActivity().findViewById(R.id.fragment_category_list);
-        fragmentCategoryFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_category_float_button);
+        fragmentCategoryFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_category_float_button);
         fragmentCategoryFloatButton.attachToListView(fragmentCategoryList);
-
-        loadListeners();
-
-        fragmentCategoryList.setAdapter(categoriesListAdapter);
+        Log.d(TAG, "initXmlFields() done");
     }
 
-    private void loadListeners() {
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         fragmentCategoryFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,42 +107,47 @@ public class CategoriesFragment extends Fragment {
                 callBack.editCategory(category);
             }
         });
+        Log.d(TAG, "initListeners() done");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         initDB();
         categories = getAllCategories();
         categoriesListAdapter.notifyDataSetChanged();
     }
 
     private void initDB() {
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CATEGORIES_DATABASE_NAME,
-                ICommonEntities.CATEGORIES_DATABASE_VERSION);
-//        ormHelper.clearDatabase();
+        Log.d(TAG, "initDB() start");
+        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         connectionSource = ormHelper.getConnectionSource();
         try {
             commonDao = ormHelper.getDaoByClass(Category.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if (ormHelper != null)
+            ormHelper.close();
+        Log.d(TAG, "initDB() done");
     }
 
     private List<Category> getAllCategories() {
+        Log.d(TAG, "getAllCategories() start");
         List<Category> result = null;
         try {
             result = commonDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getAllCategories() done");
         return result != null ? result : Collections.<Category>emptyList();
     }
 
-
     public interface ICategoryFragmentCallBack {
         void editCategory(Category category);
+
         void createNewCategory();
     }
 }

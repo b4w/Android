@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,14 +81,13 @@ public class TypesExercisesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        initListeners();
+        fragmentTypesExercisesList.setAdapter(typesExercisesListAdapter);
+    }
 
-        typesExercisesListLayoutTitle = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_title);
-        typesExercisesListLayoutDescription = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_description);
-        typesExercisesListLayoutComments = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_comments);
-        fragmentTypesExercisesList = (ListView) getActivity().findViewById(R.id.fragment_types_exercises_list);
-        fragmentTypesExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_types_exercises_float_button);
-        fragmentTypesExercisesFloatButton.attachToListView(fragmentTypesExercisesList);
-
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         fragmentTypesExercisesFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,34 +102,48 @@ public class TypesExercisesFragment extends Fragment {
                 callBack.editTypeExercise(typeExercise);
             }
         });
+        Log.d(TAG, "initListeners() done");
+    }
 
-        fragmentTypesExercisesList.setAdapter(typesExercisesListAdapter);
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
+        typesExercisesListLayoutTitle = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_title);
+        typesExercisesListLayoutDescription = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_description);
+        typesExercisesListLayoutComments = (TextView) getActivity().findViewById(R.id.types_exercises_list_layout_comments);
+        fragmentTypesExercisesList = (ListView) getActivity().findViewById(R.id.fragment_types_exercises_list);
+        fragmentTypesExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_types_exercises_float_button);
+        fragmentTypesExercisesFloatButton.attachToListView(fragmentTypesExercisesList);
+        Log.d(TAG, "initXmlFields() done");
     }
 
     private void initDB() {
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.TYPE_EXERCISES_DATABASE_NAME,
-                ICommonEntities.TYPE_EXERCISES_DATABASE_VERSION);
-//        ormHelper.clearDatabase();
+        Log.d(TAG, "initDB() start");
+        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         connectionSource = ormHelper.getConnectionSource();
         try {
             commonDao = ormHelper.getDaoByClass(TypeExercise.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "initDB() done");
     }
 
     private List<TypeExercise> getAllCategories() {
+        Log.d(TAG, "getAllCategories() start");
         List<TypeExercise> result = null;
         try {
             result = commonDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getAllCategories() done");
         return result != null ? result : Collections.<TypeExercise>emptyList();
     }
 
     public interface ITypesExercisesFragmentCallBack {
         void editTypeExercise(TypeExercise typeExercise);
+
         void createNewTypeExercise();
     }
 }

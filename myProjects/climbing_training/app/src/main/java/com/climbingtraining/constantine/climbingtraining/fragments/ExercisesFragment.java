@@ -70,18 +70,21 @@ public class ExercisesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        exercisesLayoutExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_exercises_exlist_view);
-        fragmentExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_exercises_float_button);
-        fragmentExercisesFloatButton.attachToListView(exercisesLayoutExlistView);
-
-        loadListeners();
-
+        initXmlFields();
+        initListeners();
         exercisesLayoutExlistView.setAdapter(exercisesListAdapter);
     }
 
-    private void loadListeners() {
-        Log.d(TAG, "loadListeners() start");
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
+        exercisesLayoutExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_exercises_exlist_view);
+        fragmentExercisesFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_exercises_float_button);
+        fragmentExercisesFloatButton.attachToListView(exercisesLayoutExlistView);
+        Log.d(TAG, "initXmlFields() done");
+    }
+
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         exercisesLayoutExlistView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -97,7 +100,7 @@ public class ExercisesFragment extends Fragment {
                 exercisesCallBack.createNewExercise();
             }
         });
-        Log.d(TAG, "loadListeners() done");
+        Log.d(TAG, "initListeners() done");
     }
 
     @Override
@@ -126,13 +129,11 @@ public class ExercisesFragment extends Fragment {
      */
     private void initDB() {
         Log.d(TAG, "initDB() start");
-        ormHelperExercise = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
-                ICommonEntities.EXERCISE_DATABASE_VERSION);
-        ormHelperCategory = new OrmHelper(getActivity(), ICommonEntities.CATEGORIES_DATABASE_NAME,
-                ICommonEntities.CATEGORIES_DATABASE_VERSION);
+        OrmHelper ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
-            commonDaoExercise = ormHelperExercise.getDaoByClass(Exercise.class);
-            commonDaoCategory = ormHelperCategory.getDaoByClass(Category.class);
+            commonDaoExercise = ormHelper.getDaoByClass(Exercise.class);
+            commonDaoCategory = ormHelper.getDaoByClass(Category.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

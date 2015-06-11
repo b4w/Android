@@ -21,7 +21,6 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuan
 import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
-import com.climbingtraining.constantine.climbingtraining.data.helpers.ICommonOrmHelper;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
 import com.climbingtraining.constantine.climbingtraining.utils.DatePicker;
 
@@ -54,6 +53,7 @@ public class TrainingFragment extends Fragment {
 
     private CommonDao trainingDao;
     private CommonDao aqDao;
+    private OrmHelper ormHelper;
 
     public static TrainingFragment newInstance() {
         return new TrainingFragment();
@@ -84,9 +84,8 @@ public class TrainingFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         initXmlFields();
-        loadListeners();
+        initListeners();
         updateAccountingQuantities();
     }
 
@@ -115,7 +114,8 @@ public class TrainingFragment extends Fragment {
         Log.d(TAG, "initXmlFieldsFromDB() done");
     }
 
-    private void loadListeners() {
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         // добавление учета количества для упражнения
         addExerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +145,7 @@ public class TrainingFragment extends Fragment {
                 callBack.cancel();
             }
         });
+        Log.d(TAG, "initListeners() done");
     }
 
     private void updateAccountingQuantities() {
@@ -155,20 +156,20 @@ public class TrainingFragment extends Fragment {
     }
 
     private void initDB() {
-        OrmHelper trainingOrmHelper = new OrmHelper(getActivity(), ICommonEntities.TRAINING_DATABASE_NAME,
-                ICommonEntities.TRAINING_DATABASE_VERSION);
-        OrmHelper aqOrmHelper = new OrmHelper(getActivity(), ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_NAME,
-                ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_VERSION);
-
+        Log.d(TAG, "initDB() start");
+        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
-            trainingDao = trainingOrmHelper.getDaoByClass(Training.class);
-            aqDao = aqOrmHelper.getDaoByClass(AccountingQuantity.class);
+            trainingDao = ormHelper.getDaoByClass(Training.class);
+            aqDao = ormHelper.getDaoByClass(AccountingQuantity.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "initDB() done");
     }
 
     private Training getCreatedTraining() {
+        Log.d(TAG, "getCreatedTraining() start");
         Training training = new Training();
         Date dateTraining;
 //        try {
@@ -182,29 +183,28 @@ public class TrainingFragment extends Fragment {
         training.setDescription(description.getText().toString());
         training.setComment(comment.getText().toString());
         training.setQuantities(accountingQuantities);
+        Log.d(TAG, "getCreatedTraining() done");
         return training;
     }
 
     private Training getTrainingById(int trainingId) {
+        Log.d(TAG, "getTrainingById() start");
         Training result = null;
+        if (ormHelper == null) {
+            initDB();
+        }
         try {
             result = (Training) trainingDao.queryForId(trainingId);
-
             accountingQuantities = aqDao.queryForAll();
-
-//            accountingQuantities = aqDao.queryForEq("training_id", trainingId);
-//            for (AccountingQuantity quantity : accountingQuantities) {
-//                Exercise exercise = quantity.getExercise();
-//                OrmHelper exerciseOrm = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
-//                        ICommonEntities.EXERCISE_DATABASE_VERSION);
-//                int test = exerciseOrm.getDaoByClass(Exercise.class).refresh(exercise);
-//                quantity.setExercise(exercise);
-//            }
-
+            for (AccountingQuantity quantity : accountingQuantities) {
+                ormHelper.getDaoByClass(Training.class).refresh(quantity.getTraining());
+                ormHelper.getDaoByClass(Exercise.class).refresh(quantity.getExercise());
+            }
             result.setQuantities(accountingQuantities);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getTrainingById() done");
         return result;
     }
 
@@ -217,7 +217,9 @@ public class TrainingFragment extends Fragment {
 
     public interface ITrainingFragmentCallBack {
         void createNewAccountingQuantity();
+
         void saveTraining(Training training);
+
         void cancel();
     }
 }

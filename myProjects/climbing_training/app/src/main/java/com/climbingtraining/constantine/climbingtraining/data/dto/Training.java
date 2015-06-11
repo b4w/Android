@@ -30,6 +30,7 @@ public class Training implements ICommonEntities {
     private String comment;
 
     @ForeignCollectionField(eager = true)
+//    @ForeignCollectionField(eager = true,maxEagerLevel = 7, foreignFieldName = "training", maxEagerForeignCollectionLevel = 7)
     private Collection<AccountingQuantity> quantities;
 
     public Training() {

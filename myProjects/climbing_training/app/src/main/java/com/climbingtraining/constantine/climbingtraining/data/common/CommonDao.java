@@ -1,6 +1,5 @@
 package com.climbingtraining.constantine.climbingtraining.data.common;
 
-import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;

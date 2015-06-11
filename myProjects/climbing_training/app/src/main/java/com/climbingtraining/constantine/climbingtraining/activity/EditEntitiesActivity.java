@@ -1,7 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -59,22 +58,24 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_entities_layout);
 
-        toolbar = (Toolbar) findViewById(R.id.edit_entities_layout_toolbar);
-
-        initializeFields();
-        initializeToolbar();
+        initFields();
+        initToolbar();
         loadFragments();
     }
 
-    private void initializeToolbar() {
+    private void initToolbar() {
+        Log.d(TAG, "initToolbar() start");
+        toolbar = (Toolbar) findViewById(R.id.edit_entities_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.edit) + " " + entityName);
         }
+        Log.d(TAG, "initToolbar() done");
     }
 
-    private void initializeFields() {
+    private void initFields() {
+        Log.d(TAG, "initFields() start");
         categoriesParcelable = getIntent().getParcelableExtra(CategoriesActivity.CATEGORIES_PARCELABLE);
         // редактирование сущности
         if (categoriesParcelable != null) {
@@ -85,6 +86,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
         else {
             entityName = getIntent().getStringExtra(CategoriesActivity.ENTITY);
         }
+        Log.d(TAG, "initFields() done");
     }
 
     @Override
@@ -103,39 +105,35 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
 
     @Override
     public void saveEntity(AbstractEntity abstractEntity, Drawable drawable) {
+        Log.d(TAG, "saveEntity() start");
         initDBConnection(abstractEntity);
-
         if (!saveImageToSDCard(drawable)) {
             Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
         }
-
         entity.setImagePath(imageNameAndPath != null ? imageNameAndPath : "");
         saveDataToDB();
-//        TODO Переделать возврат на categories
-        backToCategory();
+        getFragmentManager().popBackStack();
+        Log.d(TAG, "saveEntity() done");
     }
 
     @Override
     public void cancel() {
+        Log.d(TAG, "cancel() start");
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
+        Log.d(TAG, "cancel() done");
     }
 
     private void initDBConnection(AbstractEntity abstractEntity) {
-        if (abstractEntity.getClass().equals(Category.class)) {
-            ormHelper = new OrmHelper(this, ICommonEntities.CATEGORIES_DATABASE_NAME,
-                    ICommonEntities.CATEGORIES_DATABASE_VERSION);
-        } else if (abstractEntity.getClass().equals(Equipment.class)) {
-            ormHelper = new OrmHelper(this, ICommonEntities.EQUIPMENTS_DATABASE_NAME,
-                    ICommonEntities.EQUIPMENTS_DATABASE_VERSION);
-        } else {
-            ormHelper = new OrmHelper(this, ICommonEntities.TYPE_EXERCISES_DATABASE_NAME,
-                    ICommonEntities.TYPE_EXERCISES_DATABASE_VERSION);
-        }
+        Log.d(TAG, "initDBConnection() start");
+        ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         entity = abstractEntity;
+        Log.d(TAG, "initDBConnection() done");
     }
 
     private void loadFragments() {
+        Log.d(TAG, "loadFragments() start");
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
         AbstractCategoriesFragment fragment = null;
@@ -153,6 +151,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             // передаем данные, если редактируем сущность
             if (categoriesParcelable != null) {
                 bundle = new Bundle();
+//                TODO: посмотреть подробнее, возможно нет необходимости тянуть объект
                 bundle.putParcelable(CategoriesActivity.CATEGORIES_PARCELABLE, categoriesParcelable);
                 fragment.setArguments(bundle);
             }
@@ -161,9 +160,11 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         }
         fragmentTransaction.commit();
+        Log.d(TAG, "loadFragments() done");
     }
 
     private void saveDataToDB() {
+        Log.d(TAG, "saveDataToDB() start");
         if (entity != null && ormHelper != null) {
             try {
                 commonDao = ormHelper.getDaoByClass(entity.getClass());
@@ -173,7 +174,6 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             try {
                 if (commonDao != null) {
                     // проверяем добавилась запись или нет
@@ -187,14 +187,14 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             // Закрываем все подключения
-            if (ormHelper != null)
-                ormHelper.close();
+            ormHelper.close();
         }
+        Log.d(TAG, "saveDataToDB() done");
     }
 
     private boolean saveImageToSDCard(Drawable drawable) {
+        Log.d(TAG, "saveImageToSDCard() start");
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
         Bitmap bmp = bitmapDrawable.getBitmap();
 
@@ -227,11 +227,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             return false;
         }
         imageNameAndPath = sdPath + "/" + imageNameForSDCard;
+        Log.d(TAG, "saveImageToSDCard() done");
         return true;
-    }
-
-    private void backToCategory() {
-        Intent intent = new Intent(getApplicationContext(), CategoriesActivity.class);
-        startActivity(intent);
     }
 }

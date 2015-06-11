@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,6 @@ public class    EquipmentsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initDB();
         equipments = getAllCategories();
         equipmentsListAdapter = new EquipmentsListAdapter(getActivity(), equipments);
@@ -80,20 +80,24 @@ public class    EquipmentsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        initListeners();
+        fragmentEquipmentsList.setAdapter(equipmentsListAdapter);
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
         fragmentEquipmentsTitle = (TextView) getActivity().findViewById(R.id.equipments_list_layout_title);
         fragmentEquipmentsDescription = (TextView) getActivity().findViewById(R.id.equipments_list_layout_description);
         fragmentEquipmentsComments = (TextView) getActivity().findViewById(R.id.equipments_list_layout_comments);
         fragmentEquipmentsList = (ListView) getActivity().findViewById(R.id.fragment_equipments_list);
         fragmentEquipmentsFloatButton = (FloatingActionButton)getActivity().findViewById(R.id.fragment_equipments_float_button);
         fragmentEquipmentsFloatButton.attachToListView(fragmentEquipmentsList);
-
-        initializeListeners();
-
-        fragmentEquipmentsList.setAdapter(equipmentsListAdapter);
+        Log.d(TAG, "initXmlFields() done");
     }
 
-    private void initializeListeners() {
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         fragmentEquipmentsFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,27 +112,31 @@ public class    EquipmentsFragment extends Fragment {
                 callBack.editEquipment(equipment);
             }
         });
+        Log.d(TAG, "initListeners() done");
     }
 
     private void initDB() {
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.EQUIPMENTS_DATABASE_NAME,
-                ICommonEntities.EQUIPMENTS_DATABASE_VERSION);
-//        ormHelper.clearDatabase();
+        Log.d(TAG, "initDB() start");
+        OrmHelper ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         connectionSource = ormHelper.getConnectionSource();
         try {
             commonDao = ormHelper.getDaoByClass(Equipment.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "initDB() done");
     }
 
     private List<Equipment> getAllCategories() {
+        Log.d(TAG, "getAllCategories() start");
         List<Equipment> result = null;
         try {
             result = commonDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getAllCategories() done");
         return result != null ? result : Collections.<Equipment>emptyList();
     }
 

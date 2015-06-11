@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,14 @@ public class ExerciseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        initListeners();
+        initFields();
+        initSpinners();
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
         image = (ImageView) getActivity().findViewById(R.id.fragment_exercise_image);
         spinnerCategory = (Spinner) getActivity().findViewById(R.id.fragment_exercise_spinner_category);
         spinnerTypeExercise = (Spinner) getActivity().findViewById(R.id.fragment_exercise_spinner_type_exercise);
@@ -97,13 +105,11 @@ public class ExerciseFragment extends Fragment {
         comment = (EditText) getActivity().findViewById(R.id.fragment_exercise_comment_edit_text);
         saveBtn = (Button) getActivity().findViewById(R.id.fragment_exercise_save_btn);
         cancelBtn = (Button) getActivity().findViewById(R.id.fragment_exercise_cancel_btn);
-
-        loadListeners();
-        initializeFields();
-        initializeSpinners();
+        Log.d(TAG, "initXmlFields() done");
     }
 
-    private void loadListeners() {
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +168,7 @@ public class ExerciseFragment extends Fragment {
                 startActivityForResult(photoPickerIntent, EXERCISE_GALLERY_REQUEST);
             }
         });
+        Log.d(TAG, "initListeners() done");
     }
 
     @Override
@@ -186,7 +193,8 @@ public class ExerciseFragment extends Fragment {
         }
     }
 
-    private void initializeFields() {
+    private void initFields() {
+        Log.d(TAG, "initFields() start");
         exerciseParcelable = getArguments().getParcelable(ExercisesActivity.EXERCISE_PARCELABLE);
 
         equipments = exerciseParcelable.getEquipments();
@@ -201,11 +209,13 @@ public class ExerciseFragment extends Fragment {
             name.setText(exerciseParcelable.getName());
             description.setText(exerciseParcelable.getDescription());
             comment.setText(exerciseParcelable.getComment());
-            initializeSpinnerValues();
+            initSpinnerValues();
         }
+        Log.d(TAG, "initFields() start");
     }
 
-    private void initializeSpinnerValues() {
+    private void initSpinnerValues() {
+        Log.d(TAG, "initSpinnerValues() start");
 //        TODO переделать на  array.getPosition()
         for (int i = 0; i < equipments.size(); i++) {
             if (equipments.get(i).getId() == exerciseParcelable.getEquipmentId()) {
@@ -222,22 +232,26 @@ public class ExerciseFragment extends Fragment {
                 spinnerTypeExercise.setSelection(i);
             }
         }
+        Log.d(TAG, "initSpinnerValues() done");
     }
 
-    private void initializeSpinners() {
+    private void initSpinners() {
+        Log.d(TAG, "initSpinners() start");
 //        TODO сделать свой адаптер
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, namesCategories());
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getNamesCategories());
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(arrayAdapter);
-        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, namesEquipments());
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getNamesEquipments());
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEquipment.setAdapter(arrayAdapter);
-        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, namesTypeExercise());
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getNamesTypeExercise());
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTypeExercise.setAdapter(arrayAdapter);
+        Log.d(TAG, "initSpinners() done");
     }
 
     private Exercise loadExercise() {
+        Log.d(TAG, "loadExercise() start");
         Exercise exercise = new Exercise();
         exercise.setId(exerciseParcelable.getName() != null ? exerciseParcelable.getExerciseId() : null);
         exercise.setName(name.getText().toString());
@@ -246,36 +260,43 @@ public class ExerciseFragment extends Fragment {
         exercise.setEquipment(choseEquipment);
         exercise.setCategory(choseCategory);
         exercise.setTypeExercise(choseTypeExercise);
+        Log.d(TAG, "loadExercise() done");
         return exercise;
     }
 
-    private List<String> namesCategories() {
+    private List<String> getNamesCategories() {
+        Log.d(TAG, "getNamesCategories() start");
         List<String> result = new ArrayList<>();
         for (Category item : categories) {
             if (item.getName() != null) {
                 result.add(item.getName());
             }
         }
+        Log.d(TAG, "getNamesCategories() done");
         return result;
     }
 
-    private List<String> namesEquipments() {
+    private List<String> getNamesEquipments() {
+        Log.d(TAG, "getNamesEquipments() start");
         List<String> result = new ArrayList<>();
         for (Equipment item : equipments) {
             if (item.getName() != null) {
                 result.add(item.getName());
             }
         }
+        Log.d(TAG, "getNamesEquipments() done");
         return result;
     }
 
-    private List<String> namesTypeExercise() {
+    private List<String> getNamesTypeExercise() {
+        Log.d(TAG, "getNamesTypeExercise() start");
         List<String> result = new ArrayList<>();
         for (TypeExercise item : typeExercises) {
             if (item.getName() != null) {
                 result.add(item.getName());
             }
         }
+        Log.d(TAG, "getNamesTypeExercise() done");
         return result;
     }
 

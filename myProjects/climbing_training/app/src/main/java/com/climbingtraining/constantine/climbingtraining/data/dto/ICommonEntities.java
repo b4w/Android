@@ -28,28 +28,11 @@ public interface ICommonEntities {
     String COLUMN_NAME_PHYSICAL_TRAINING = "physical_training";
     String COLUMN_NAME_PHYSICAL_TRAINING_IMAGE_PATH = "physical_training_image_path";
 
-//  --  DB NAMES --
-    String CATEGORIES_DATABASE_NAME = "categories";
-    int CATEGORIES_DATABASE_VERSION = 3;
+//  --  DB NAME --
+    String CLIMBING_TRAINING_DB_NAME = "climbing_training_db";
+    int CLIMBING_TRAINING_DB_VERSION = 1;
 
-    String EQUIPMENTS_DATABASE_NAME = "equipments";
-    int EQUIPMENTS_DATABASE_VERSION = 3;
-
-    String TYPE_EXERCISES_DATABASE_NAME = "type_exercises";
-    int TYPE_EXERCISES_DATABASE_VERSION = 3;
-
-    String EXERCISES_DATABASE_NAME = "exercises";
-    int EXERCISE_DATABASE_VERSION = 3;
-
-    String TRAINING_DATABASE_NAME = "trainings";
-    int TRAINING_DATABASE_VERSION = 3;
-
-    String ACCOUNTING_QUANTITY_DATABASE_NAME = "accounting_quantities";
-    int ACCOUNTING_QUANTITY_DATABASE_VERSION = 3;
-
-    String MAIN_LIST_DATABASE_NAME = "main_list";
-    int MAIN_LIST_DATABASE_VERSION = 3;
-
+//  --  MAIN LIST ITEMS --
     int SHEET_ITEM_TRAINING = 0;
     int SHEET_ITEM_EXERCISE = 1;
     int SHEET_CATEGORY = 2;

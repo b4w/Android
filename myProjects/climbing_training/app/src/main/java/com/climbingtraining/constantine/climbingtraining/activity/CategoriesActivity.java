@@ -32,15 +32,15 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
     public final static String DESCRIPTION = "description";
     public final static String COMMENT = "comment";
     public final static String ENTITY = "entity";
-    public final static String ENTITY_ID = "entityId";
+//    public final static String ENTITY_ID = "entityId";
 
     public final static String CATEGORIES_PARCELABLE = "categoriesParcelable";
     public final static String CATEGORIES_ID = "categoriesId";
     public final static String EQUIPMENTS_ID = "equipmentsId";
     public final static String TYPE_EXERCISES_ID = "typeExercisesId";
-    public final static String CATEGORIES_NAME = "categoriesName";
-    public final static String EQUIPMENTS_NAME = "equipmentsName";
-    public final static String TYPE_EXERCISES_NAME = "typeExercisesName";
+//    public final static String CATEGORIES_NAME = "categoriesName";
+//    public final static String EQUIPMENTS_NAME = "equipmentsName";
+//    public final static String TYPE_EXERCISES_NAME = "typeExercisesName";
 
 
     private Toolbar toolbar;
@@ -54,23 +54,23 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_layout);
 
-        initializeToolbar();
-        initializeTabs();
+        initToolbar();
+        initTabs();
     }
 
-    private void initializeToolbar() {
-        Log.d(TAG, "initializeToolbar() start");
+    private void initToolbar() {
+        Log.d(TAG, "initToolbar() start");
         toolbar = (Toolbar) findViewById(R.id.category_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.categories));
         }
-        Log.d(TAG, "initializeToolbar() done");
+        Log.d(TAG, "initToolbar() done");
     }
 
-    private void initializeTabs() {
-        Log.d(TAG, "initializeTabs() start");
+    private void initTabs() {
+        Log.d(TAG, "initTabs() start");
         CharSequence titles[] = {getString(R.string.category), getString(R.string.equipment), getString(R.string.type_of_exercise)};
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), titles, numbOfTabs);
 
@@ -90,7 +90,7 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
         });
 
         tabs.setViewPager(pager);
-        Log.d(TAG, "initializeTabs() done");
+        Log.d(TAG, "initTabs() done");
     }
 
     @Override
@@ -103,6 +103,7 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
 
     @Override
     public void editCategory(Category category) {
+        Log.d(TAG, "editCategory() atart");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(CATEGORIES_PARCELABLE,
                 new CategoriesParcelable(String.valueOf(category.getImagePath()),
@@ -112,17 +113,21 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
                         category.getClass().getSimpleName(),
                         category.getId()));
         startActivity(intent);
+        Log.d(TAG, "editCategory() done");
     }
 
     @Override
     public void createNewCategory() {
+        Log.d(TAG, "createNewCategory() start");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(ENTITY, Category.class.getSimpleName());
         startActivity(intent);
+        Log.d(TAG, "createNewCategory() done");
     }
 
     @Override
     public void editEquipment(Equipment equipment) {
+        Log.d(TAG, "editEquipment() start");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(CATEGORIES_PARCELABLE,
                 new CategoriesParcelable(String.valueOf(equipment.getImagePath()),
@@ -132,17 +137,21 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
                         equipment.getClass().getSimpleName(),
                         equipment.getId()));
         startActivity(intent);
+        Log.d(TAG, "editEquipment() done");
     }
 
     @Override
     public void createNewEquipment() {
+        Log.d(TAG, "createNewEquipment() start");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(ENTITY, Equipment.class.getSimpleName());
         startActivity(intent);
+        Log.d(TAG, "createNewEquipment() done");
     }
 
     @Override
     public void editTypeExercise(TypeExercise typeExercise) {
+        Log.d(TAG, "editTypeExercise() start");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(CATEGORIES_PARCELABLE,
                 new CategoriesParcelable(String.valueOf(typeExercise.getImagePath()),
@@ -152,12 +161,15 @@ public class CategoriesActivity extends AppCompatActivity implements CategoriesF
                         typeExercise.getClass().getSimpleName(),
                         typeExercise.getId()));
         startActivity(intent);
+        Log.d(TAG, "editTypeExercise() done");
     }
 
     @Override
     public void createNewTypeExercise() {
+        Log.d(TAG, "createNewTypeExercise() start");
         Intent intent = new Intent(getApplicationContext(), EditEntitiesActivity.class);
         intent.putExtra(ENTITY, TypeExercise.class.getSimpleName());
         startActivity(intent);
+        Log.d(TAG, "createNewTypeExercise() done");
     }
 }

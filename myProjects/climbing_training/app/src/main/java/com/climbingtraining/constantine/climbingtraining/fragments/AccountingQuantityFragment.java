@@ -58,13 +58,6 @@ public class AccountingQuantityFragment extends Fragment {
     private Spinner physicalTrainingSp;
     private EditText quantityDistanceEt;
 
-    private String imagePath;
-    private String name;
-    private String category;
-    private String typeExercise;
-    private String equipment;
-    private String comment;
-
     private int exerciseId;
     private Exercise exercise;
 
@@ -95,7 +88,7 @@ public class AccountingQuantityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initXmlFields();
-        loadListeners();
+        initListeners();
         initMeasurementMeasureSpinner();
         initCategoryExerciseSpinner();
         updateExerciseFields();
@@ -149,8 +142,8 @@ public class AccountingQuantityFragment extends Fragment {
         Log.d(TAG, "updateExerciseFields() done");
     }
 
-    private void loadListeners() {
-        Log.d(TAG, "loadListeners() start");
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         chooseExerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +161,7 @@ public class AccountingQuantityFragment extends Fragment {
                 accountingQuantity.setAdditionalWeight(Float.valueOf(additionalWeightEt.getText().toString()));
                 accountingQuantity.setMeasurementMeasure(
                         MeasurementMeasure.getMeasurementMeasureByName((String) measurementMeasureSp.getSelectedItem()));
-                accountingQuantity.setPhysicalTraining(PhysicalTraining.getPhysicalTrainingByName((String)physicalTrainingSp.getSelectedItem()));
+                accountingQuantity.setPhysicalTraining(PhysicalTraining.getPhysicalTrainingByName((String) physicalTrainingSp.getSelectedItem()));
                 accountingQuantity.setDistance(Float.valueOf(quantityDistanceEt.getText().toString()));
 //                accountingQuantity.setTimeBegin();
 //                accountingQuantity.setTimeEnd();
@@ -185,29 +178,34 @@ public class AccountingQuantityFragment extends Fragment {
                 callBack.cancelAccountingQuantity();
             }
         });
-        Log.d(TAG, "loadListeners() done");
+        Log.d(TAG, "initListeners() done");
     }
 
     private void initMeasurementMeasureSpinner() {
+        Log.d(TAG, "initMeasurementMeasureSpinner() start");
         // TODO: сделать свой адаптер
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, MeasurementMeasure.getNameByLocale(Locale.getDefault()));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measurementMeasureSp.setAdapter(arrayAdapter);
+        Log.d(TAG, "initMeasurementMeasureSpinner() done");
     }
 
     private void initCategoryExerciseSpinner() {
+        Log.d(TAG, "initCategoryExerciseSpinner() start");
         // TODO: сделать свой адаптер c преферансом и куртизанками!
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, PhysicalTraining.getNameByLocale(Locale.getDefault()));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         physicalTrainingSp.setAdapter(arrayAdapter);
+        Log.d(TAG, "initCategoryExerciseSpinner() done");
     }
 
     private Exercise getExerciseFromDB() {
+        Log.d(TAG, "getExerciseFromDB() start");
         Exercise exercise = null;
-        OrmHelper ormHelper = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
-                ICommonEntities.EXERCISE_DATABASE_VERSION);
+        OrmHelper ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
             CommonDao commonDao = ormHelper.getDaoByClass(Exercise.class);
             exercise = (Exercise) commonDao.queryForId(exerciseId);
@@ -215,6 +213,7 @@ public class AccountingQuantityFragment extends Fragment {
             e.printStackTrace();
         }
         ormHelper.close();
+        Log.d(TAG, "getExerciseFromDB() done");
         return exercise;
     }
 

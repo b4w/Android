@@ -1,7 +1,6 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,21 +50,25 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
     }
 
     private void initToolbar() {
+        Log.d(TAG, "initToolbar() start");
         toolbar = (Toolbar) findViewById(R.id.trainings_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.trainings);
         }
+        Log.d(TAG, "initToolbar() done");
     }
 
     private void loadTrainingsFragment() {
+        Log.d(TAG, "loadTrainingsFragment() start");
         // load trainings fragment
         FragmentManager fragmentManager = getFragmentManager();
         TrainingsFragment trainingsFragment = TrainingsFragment.newInstance();
         fragmentManager.beginTransaction()
                 .replace(R.id.trainings_container, trainingsFragment)
                 .commit();
+        Log.d(TAG, "loadTrainingsFragment() done");
     }
 
     @Override
@@ -199,6 +202,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
     /**
      * Добавление выбранного упражнения к учету подходов.
+     *
      * @param exerciseId - id выбранного упражнения.
      */
     private void selectChosenExercise(Integer exerciseId) {
@@ -222,6 +226,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
     /**
      * Добавление учета подходов в тренировку.
+     *
      * @param accountingQuantity - сущность учета подходов.
      */
     private void addAccountQuantityToTraining(AccountingQuantity accountingQuantity) {
@@ -242,6 +247,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
     /**
      * Сохранение новой тренировки.
+     *
      * @param training
      */
     private void saveNewTraining(Training training) {
@@ -282,34 +288,32 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
     private void saveDataToDB(Training training) {
         Log.d(TAG, "saveDataToDB() start");
-        OrmHelper ormTrainingHelper = new OrmHelper(this, ICommonEntities.TRAINING_DATABASE_NAME,
-                ICommonEntities.TRAINING_DATABASE_VERSION);
-        OrmHelper ormAQHelper = new OrmHelper(this, ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_NAME,
-                ICommonEntities.ACCOUNTING_QUANTITY_DATABASE_VERSION);
+        OrmHelper ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
-            CommonDao trainingDao = ormTrainingHelper.getDaoByClass(Training.class);
+            CommonDao trainingDao = ormHelper.getDaoByClass(Training.class);
             if (trainingDao != null) {
 
                 List<AccountingQuantity> quantities = new ArrayList<>();
                 for (AccountingQuantity item : training.getQuantities()) {
                     Exercise exercise = item.getExercise();
-                    ormTrainingHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
-                    ormTrainingHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
-                    ormTrainingHelper.getDaoByClass(TypeExercise.class).createOrUpdate(exercise.getTypeExercise());
-                    ormTrainingHelper.getDaoByClass(Exercise.class).createOrUpdate(exercise);
+                    ormHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
+                    ormHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
+                    ormHelper.getDaoByClass(TypeExercise.class).createOrUpdate(exercise.getTypeExercise());
+                    ormHelper.getDaoByClass(Exercise.class).createOrUpdate(exercise);
                     item.setExercise(exercise);
+//                    TODO: заменить на выбранные даты
                     item.setTimeBegin(new Date());
                     item.setTimeEnd(new Date());
+                    item.setTraining(training);
                     quantities.add(item);
                 }
-//                // сохраняем тренировку
-                training.setQuantities(quantities);
-                trainingDao.createOrUpdate(training);
+                // сохраняем тренировку
+                trainingDao.create(training);
 
                 // сохраняем список упражнений
-                CommonDao aqDao = ormAQHelper.getDaoByClass(AccountingQuantity.class);
+                CommonDao aqDao = ormHelper.getDaoByClass(AccountingQuantity.class);
                 for (AccountingQuantity quantity : quantities) {
-                    quantity.setTraining(training);
                     aqDao.createOrUpdate(quantity);
                 }
             }
@@ -319,8 +323,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         }
         Toast.makeText(this, training.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
         // Закрываем все подключения
-        ormAQHelper.close();
-        ormTrainingHelper.close();
+        ormHelper.close();
         Log.d(TAG, "saveDataToDB() done");
     }
 }

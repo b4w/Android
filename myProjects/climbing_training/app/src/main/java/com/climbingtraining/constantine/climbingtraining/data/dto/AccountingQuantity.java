@@ -41,7 +41,7 @@ public class AccountingQuantity implements ICommonEntities {
     @DatabaseField(columnName = COLUMN_NAME_TIME_END)
     private Date timeEnd;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
     private Exercise exercise;
 
     @DatabaseField(columnName = COLUMN_NAME_DESCRIPTION)
@@ -50,18 +50,17 @@ public class AccountingQuantity implements ICommonEntities {
     @DatabaseField(columnName = COLUMN_NAME_COMMENT)
     private String comment;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
     private Training training;
 
     public AccountingQuantity() {
 //        need for ormlite
     }
 
-    public AccountingQuantity(Integer id, int numberApproaches, int numberTimeApproach, float additionalWeight,
+    public AccountingQuantity(int numberApproaches, int numberTimeApproach, float additionalWeight,
                               MeasurementMeasure measurementMeasure, PhysicalTraining physicalTraining,
                               float distance, Date timeBegin, Date timeEnd, Exercise exercise,
                               String description, String comment, Training training) {
-        this.id = id;
         this.numberApproaches = numberApproaches;
         this.numberTimeApproach = numberTimeApproach;
         this.additionalWeight = additionalWeight;
@@ -73,7 +72,7 @@ public class AccountingQuantity implements ICommonEntities {
         this.exercise = exercise;
         this.description = description;
         this.comment = comment;
-//        this.training = training;
+        this.training = training;
     }
 
     public Integer getId() {
