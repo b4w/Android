@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.ExercisesListAdapter;
@@ -35,10 +37,7 @@ public class ExercisesFragment extends Fragment {
     private ExercisesListAdapter exercisesListAdapter;
     private FloatingActionButton fragmentExercisesFloatButton;
 
-    private OrmHelper ormHelperExercise;
     private CommonDao commonDaoExercise;
-
-    private OrmHelper ormHelperCategory;
     private CommonDao commonDaoCategory;
 
     private List<Exercise> exercises;
@@ -90,7 +89,7 @@ public class ExercisesFragment extends Fragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Exercise exercise = (Exercise) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
                 exercisesCallBack.editExercise(exercise);
-                return false;
+                return true;
             }
         });
 
@@ -98,6 +97,13 @@ public class ExercisesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 exercisesCallBack.createNewExercise();
+            }
+        });
+        exercisesLayoutExlistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "it isn't realized", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
         Log.d(TAG, "initListeners() done");
@@ -188,7 +194,8 @@ public class ExercisesFragment extends Fragment {
         for (Category category : categories) {
             child = new ArrayList<>();
             for (Exercise exercise : exercises) {
-                if (category.getId() == exercise.getCategory().getId()) {
+                if (exercise.getCategory() != null && category.getId() == exercise.getCategory().getId()) {
+//                    TODO: ошибка. при удалении сущности - не отображается созданное ранее упражнение
                     child.add(exercise);
                 }
             }
@@ -204,5 +211,7 @@ public class ExercisesFragment extends Fragment {
         void createNewExercise();
 
         void editExercise(Exercise exercise);
+
+        void showHideOptionsMenu(boolean entitiesIsChecked);
     }
 }

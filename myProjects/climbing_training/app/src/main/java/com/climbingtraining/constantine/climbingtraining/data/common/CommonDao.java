@@ -79,9 +79,4 @@ public class CommonDao<T, ID> extends BaseDaoImpl<T, ID> {
             childrenEntityDao.createOrUpdate(entity);
         }
     }
-
-    public int deleteAll() throws SQLException {
-        DeleteBuilder<T, ID> deleteBuilder = this.deleteBuilder();
-        return deleteBuilder.delete();
-    }
 }

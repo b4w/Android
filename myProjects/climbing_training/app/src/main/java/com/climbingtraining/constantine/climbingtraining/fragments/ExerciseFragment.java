@@ -92,6 +92,7 @@ public class ExerciseFragment extends Fragment {
         initListeners();
         initFields();
         initSpinners();
+        callBack.showHideOptionsMenu(true);
     }
 
     private void initXmlFields() {
@@ -301,12 +302,14 @@ public class ExerciseFragment extends Fragment {
     }
 
     /**
-     * Интерфейс для передачи данных в Activity.
+     * Интерфейс для передачи данных в ExerciseActivity.
      */
     public interface IExerciseFragmentCallBack {
         // Передаем drawable, что бы после успешного сохранения сущности в БД, сохранять изображение.
         void saveExercise(Exercise exercise, Drawable drawable);
 
         void cancel();
+
+        void showHideOptionsMenu(boolean entitiesIsChecked);
     }
 }

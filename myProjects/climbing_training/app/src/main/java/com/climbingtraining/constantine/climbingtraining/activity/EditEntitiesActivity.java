@@ -53,11 +53,13 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
     private AbstractEntity entity;
     private CommonDao commonDao;
 
+    private MenuItem menuItemShare;
+    private MenuItem menuItemDelete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_entities_layout);
-
         initFields();
         initToolbar();
         loadFragments();
@@ -79,8 +81,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
         categoriesParcelable = getIntent().getParcelableExtra(CategoriesActivity.CATEGORIES_PARCELABLE);
         // редактирование сущности
         if (categoriesParcelable != null) {
-            imageNameAndPath = categoriesParcelable.getImageNameAndPath();
-            entityName = categoriesParcelable.getEntity();
+            initEntity(categoriesParcelable);
         }
         // создание новой сущности
         else {
@@ -89,9 +90,33 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
         Log.d(TAG, "initFields() done");
     }
 
+    private void initEntity(CategoriesParcelable categoriesParcelable) {
+        Log.d(TAG, "initEntity() start");
+        if (categoriesParcelable.getEntity().equals(Category.class.getSimpleName())) {
+            entity = new Category();
+        } else if (categoriesParcelable.getEntity().equals(Equipment.class.getSimpleName())) {
+            entity = new Equipment();
+        } else if (categoriesParcelable.getEntity().equals(TypeExercise.class.getSimpleName())) {
+            entity = new TypeExercise();
+        }
+
+        entityName = categoriesParcelable.getEntity();
+        imageNameAndPath = categoriesParcelable.getImageNameAndPath();
+
+        entity.setId(categoriesParcelable.getEntityId());
+        entity.setName(categoriesParcelable.getName());
+        entity.setComment(categoriesParcelable.getComment());
+        entity.setDescription(categoriesParcelable.getDescription());
+        entity.setImagePath(categoriesParcelable.getImageNameAndPath());
+        Log.d(TAG, "initEntity() done");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_edit_entity, menu);
+        menuItemShare = menu.findItem(R.id.menu_toolbar_share);
+        menuItemDelete = menu.findItem(R.id.menu_toolbar_delete);
+        initMenuListeners();
         return true;
     }
 
@@ -112,7 +137,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
         }
         entity.setImagePath(imageNameAndPath != null ? imageNameAndPath : "");
         saveDataToDB();
-        getFragmentManager().popBackStack();
+        onBackPressed();
         Log.d(TAG, "saveEntity() done");
     }
 
@@ -120,8 +145,37 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
     public void cancel() {
         Log.d(TAG, "cancel() start");
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
-        getFragmentManager().popBackStack();
+        onBackPressed();
         Log.d(TAG, "cancel() done");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (ormHelper != null) {
+            ormHelper.close();
+        }
+    }
+
+    private void initMenuListeners() {
+        Log.d(TAG, "initMenuListeners() start");
+        menuItemShare.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(), "It doesn't work yet", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                deleteDataFromDB();
+                deleteImageFromSDCard();
+                onBackPressed();
+                return false;
+            }
+        });
+        Log.d(TAG, "initMenuListeners() done");
     }
 
     private void initDBConnection(AbstractEntity abstractEntity) {
@@ -157,6 +211,7 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             }
             fragmentTransaction.replace(R.id.edit_entities_container, fragment, fragment.getClass().getSimpleName());
             // добавляем в стек, что бы потом по кнопкам ok, cancel вернуться на view
+            // addBackStack - null ?
             fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         }
         fragmentTransaction.commit();
@@ -191,6 +246,32 @@ public class EditEntitiesActivity extends AppCompatActivity implements AbstractC
             ormHelper.close();
         }
         Log.d(TAG, "saveDataToDB() done");
+    }
+
+    private void deleteDataFromDB() {
+        Log.d(TAG, "deleteDataFromDB() start");
+        initDBConnection(entity);
+        try {
+            commonDao = ormHelper.getDaoByClass(entity.getClass());
+            commonDao.delete(entity);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        Log.d(TAG, "deleteDataFromDB() done");
+    }
+
+    private void deleteImageFromSDCard() {
+        Log.d(TAG, "deleteImageFromSDCard() start");
+        // проверяем доступность cd карты
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.d(TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
+            return;
+        }
+        File file = new File(entity.getImagePath());
+        if (!file.delete()) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.file_not_delete), Toast.LENGTH_SHORT).show();
+        }
+        Log.d(TAG, "deleteImageFromSDCard() done");
     }
 
     private boolean saveImageToSDCard(Drawable drawable) {

@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,11 +58,13 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
     private List<Equipment> equipments;
     private List<TypeExercise> typeExercises;
 
+    private MenuItem menuItemShare;
+    private MenuItem menuItemDelete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.exercises_layout);
-
         initToolbar();
         initExercisesFragment();
     }
@@ -72,6 +75,14 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // TODO: onStop or onDestroy ???
+        if (ormHelper != null)
+            ormHelper.close();
     }
 
     /**
@@ -87,7 +98,26 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_edit_entity, menu);
+        menuItemShare = menu.findItem(R.id.menu_toolbar_share);
+        menuItemDelete = menu.findItem(R.id.menu_toolbar_delete);
+        menuItemShare.setVisible(false);
+        menuItemDelete.setVisible(false);
+        initMenuListeners();
         return true;
+    }
+
+    @Override
+    public void showHideOptionsMenu(boolean entitiesIsChecked) {
+        Log.d(TAG, "showHideOptionsMenu() start");
+        boolean menuIsVisible;
+        if (entitiesIsChecked) {
+            menuIsVisible = true;
+        } else {
+            menuIsVisible = false;
+        }
+        menuItemDelete.setVisible(menuIsVisible);
+        menuItemShare.setVisible(menuIsVisible);
+        Log.d(TAG, "showHideOptionsMenu() done");
     }
 
     /**
@@ -98,6 +128,8 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
     @Override
     public void editExercise(Exercise exercise) {
         Log.d(TAG, "editExercise() start");
+        // добавляем упражнение, если будем его удалять
+        entity = exercise;
         initFragments(exercise);
         Log.d(TAG, "editExercise() done");
     }
@@ -111,6 +143,7 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
     @Override
     public void saveExercise(Exercise exercise, Drawable drawable) {
         Log.d(TAG, "saveExercise() start");
+        showHideOptionsMenu(false);
         initDBConnection(exercise);
         if (!saveImageToSDCard(drawable)) {
             Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
@@ -124,9 +157,35 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
     @Override
     public void cancel() {
         Log.d(TAG, "cancel() start");
+        showHideOptionsMenu(false);
+        // необходимо только для множественного выбора и удаления
+//        EntitiesForEditing.getInstance().getExercisesForEditing().remove(entity);
+        entity = null;
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
         Log.d(TAG, "cancel() done");
+    }
+
+    private void initMenuListeners() {
+        Log.d(TAG, "initMenuListeners() start");
+        menuItemShare.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(), "It doesn't work yet", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                deleteExercises(Arrays.asList(entity));
+                // раскомментировать, когда понадобится множественное удаление
+//                deleteExercises(EntitiesForEditing.getInstance().getExercisesForEditing());
+                cancel();
+                return true;
+            }
+        });
+        Log.d(TAG, "initMenuListeners() done");
     }
 
     private void initToolbar() {
@@ -157,6 +216,7 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
 
     /**
      * Инициализация фрагмента Упражнение для редактирования упражнения.
+     *
      * @param exercise - упражнение.
      */
     private void initFragments(Exercise exercise) {
@@ -213,6 +273,42 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
         fragmentTransaction.addToBackStack(ExerciseFragment.class.getSimpleName());
         fragmentTransaction.commit();
         Log.d(TAG, "loadFragmentExercise() done");
+    }
+
+    private void deleteExercises(List<Exercise> exercises) {
+        Log.d(TAG, "deleteExercises() start");
+        if (exercises.isEmpty()) {
+            Toast.makeText(this, "Is empty or new exercise", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
+        for (Exercise exercise : exercises) {
+            try {
+                if (commonDao == null) {
+                    commonDao = ormHelper.getDaoByClass(Exercise.class);
+                }
+                commonDao.delete(exercise);
+                deleteImageFromSD(exercise.getImagePath());
+            } catch (SQLException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        Log.d(TAG, "deleteExercises() done");
+    }
+
+    private void deleteImageFromSD(String imagePath) {
+        Log.d(TAG, "deleteImageFromSD() start");
+        // проверяем доступность cd карты
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.d(TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
+            return;
+        }
+        File file = new File(imagePath);
+        if (!file.delete()) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.file_not_delete), Toast.LENGTH_SHORT).show();
+        }
+        Log.d(TAG, "deleteImageFromSD() done");
     }
 
     private void saveDataToDB() {
@@ -298,10 +394,11 @@ public class ExercisesActivity extends AppCompatActivity implements ExercisesFra
      */
     private void updateSectionsExercise() {
         Log.d(TAG, "updateSectionsExercise() start");
-        if (ormHelper == null) {
+//        if (ormHelper == null) {
+        // TODO: ошибка если if
             ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
                     ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
-        }
+//        }
         try {
             CommonDao commonDao = ormHelper.getDaoByClass(Category.class);
             if (commonDao != null) {

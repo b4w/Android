@@ -58,6 +58,11 @@
     <string name="name_exercise">Name exercise</string>
     <string name="category_exercise">Category exercise</string>
     <string name="accounting_quantity">Accounting quantity</string>
+    <string name="file_not_delete">it wasn\'t succeeded to delete the image from the memory stick</string>
+    <string name="choose_date">Choose date</string>
+    <string name="ready">Ready</string>
+    <string name="trainings">Trainings</string>
+    <string name="exercises">Exercises</string>
 
 
 </resources>

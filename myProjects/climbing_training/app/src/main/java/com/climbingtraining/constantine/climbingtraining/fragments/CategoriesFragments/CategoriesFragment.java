@@ -1,7 +1,6 @@
-package com.climbingtraining.constantine.climbingtraining.fragments;
+package com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,9 +16,8 @@ import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.CategoriesListAdapter;
 import com.climbingtraining.constantine.climbingtraining.data.common.CommonDao;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Category;
-import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
-import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
-import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.android.loadercallback.OrmCursorLoaderCallback;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
@@ -29,7 +27,7 @@ import java.util.List;
 /**
  * Created by KonstantinSysoev on 08.05.15.
  */
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends AbstractCategoriesListFragment {
 
     private final static String TAG = CategoriesFragment.class.getSimpleName();
 
@@ -44,13 +42,9 @@ public class CategoriesFragment extends Fragment {
     private ICategoryFragmentCallBack callBack;
     private FloatingActionButton fragmentCategoryFloatButton;
 
-    private OrmHelper ormHelper;
-    private ConnectionSource connectionSource;
-    private CommonDao commonDao;
+    private OrmCursorLoaderCallback<Category, Integer> categoryLoaderCallback;
 
-    public static CategoriesFragment newInstance() {
-        return new CategoriesFragment();
-    }
+    private CommonDao commonDao;
 
     @Override
     public void onAttach(Activity activity) {
@@ -66,21 +60,26 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
-        initDB();
-        categories = getAllCategories();
-        categoriesListAdapter = new CategoriesListAdapter(getActivity(), categories);
+        categoriesListAdapter = new CategoriesListAdapter(getActivity());
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initXmlFields();
-        initListeners();
-        fragmentCategoryList.setAdapter(categoriesListAdapter);
+    public void onResume() {
+        super.onResume();
+        // TODO: костыль!
+        // т.к. почему-то не работает categoryLoaderCallback (дожен обновляться автоматически),
+        // на время поставил restartLoader
+        if (categoriesListAdapter.getCursor() != null) {
+            getActivity().getLoaderManager().restartLoader(CATEGORIES_ORM_LOADER_ID, null, categoryLoaderCallback);
+        }
     }
 
-    private void initXmlFields() {
+    public static CategoriesFragment newInstance() {
+        return new CategoriesFragment();
+    }
+
+    protected void initXmlFields() {
         Log.d(TAG, "initXmlFields() start");
         fragmentCategoryTitle = (TextView) getActivity().findViewById(R.id.category_list_layout_title);
         fragmentCategoryDescription = (TextView) getActivity().findViewById(R.id.category_list_layout_description);
@@ -91,7 +90,7 @@ public class CategoriesFragment extends Fragment {
         Log.d(TAG, "initXmlFields() done");
     }
 
-    private void initListeners() {
+    protected void initListeners() {
         Log.d(TAG, "initListeners() start");
         fragmentCategoryFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,51 +102,66 @@ public class CategoriesFragment extends Fragment {
         fragmentCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Category category = (Category) parent.getAdapter().getItem(position);
+                Category category = categoriesListAdapter.getTypedItem(position);
                 callBack.editCategory(category);
+            }
+        });
+
+        fragmentCategoryList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                CategoriesListAdapter.ViewHolder holder;
+                holder = (CategoriesListAdapter.ViewHolder) view.getTag();
+                if (holder.isChecked) {
+                    holder.isChecked = false;
+                    // выделение цветом выбранной позиции
+                    view.setBackgroundColor(getResources().getColor(R.color.text_icon));
+                } else {
+                    holder.isChecked = true;
+                    // выделение цветом выбранной позиции
+                    view.setBackgroundColor(getResources().getColor(R.color.divider_color));
+                }
+                Category category = categoriesListAdapter.getTypedItem(position);
+                updateEntitiesForEditing(holder.isChecked, category);
+                callBack.showHideOptionsMenu(!getEntitiesForEditing().isEmpty());
+                return true;
             }
         });
         Log.d(TAG, "initListeners() done");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initDB();
-        categories = getAllCategories();
-        categoriesListAdapter.notifyDataSetChanged();
-    }
-
-    private void initDB() {
-        Log.d(TAG, "initDB() start");
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
-                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
-        connectionSource = ormHelper.getConnectionSource();
-        try {
-            commonDao = ormHelper.getDaoByClass(Category.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (ormHelper != null)
-            ormHelper.close();
-        Log.d(TAG, "initDB() done");
-    }
-
-    private List<Category> getAllCategories() {
-        Log.d(TAG, "getAllCategories() start");
+    public void updateEntities() {
+        Log.d(TAG, "updateEntities() start");
         List<Category> result = null;
         try {
+            commonDao = getOrmHelper().getDaoByClass(Category.class);
             result = commonDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "getAllCategories() done");
-        return result != null ? result : Collections.<Category>emptyList();
+        Log.d(TAG, "updateEntities() done");
+        categories = result != null ? result : Collections.<Category>emptyList();
+    }
+
+    protected void initOrmCursorLoader() {
+        Log.d(TAG, "initOrmCursorLoader() start");
+        fragmentCategoryList.setAdapter(categoriesListAdapter);
+        try {
+            PreparedQuery query = commonDao.queryBuilder().prepare();
+            categoryLoaderCallback =
+                    new OrmCursorLoaderCallback<Category, Integer>(getActivity(), commonDao, query, categoriesListAdapter);
+            getActivity().getLoaderManager().initLoader(CATEGORIES_ORM_LOADER_ID, null, categoryLoaderCallback);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        Log.d(TAG, "initOrmCursorLoader() done");
     }
 
     public interface ICategoryFragmentCallBack {
         void editCategory(Category category);
 
         void createNewCategory();
+
+        void showHideOptionsMenu(boolean entitiesIsChecked);
     }
 }
