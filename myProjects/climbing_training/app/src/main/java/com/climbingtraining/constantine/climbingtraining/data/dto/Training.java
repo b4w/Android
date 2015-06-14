@@ -1,7 +1,5 @@
 package com.climbingtraining.constantine.climbingtraining.data.dto;
 
-import com.climbingtraining.constantine.climbingtraining.enums.PhysicalTraining;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -22,9 +20,6 @@ public class Training implements ICommonEntities {
     @DatabaseField(columnName = COLUMN_NAME_DATE)
     private Date date;
 
-    @DatabaseField(columnName = COLUMN_NAME_PHYSICAL_TRAINING)
-    private PhysicalTraining physicalTraining;
-
     @DatabaseField(columnName = COLUMN_NAME_PHYSICAL_TRAINING_IMAGE_PATH)
     private String physicalTrainingImagePath;
 
@@ -35,16 +30,16 @@ public class Training implements ICommonEntities {
     private String comment;
 
     @ForeignCollectionField(eager = true)
+//    @ForeignCollectionField(eager = true,maxEagerLevel = 7, foreignFieldName = "training", maxEagerForeignCollectionLevel = 7)
     private Collection<AccountingQuantity> quantities;
 
     public Training() {
 //        need for ormlite
     }
 
-    public Training(Date date, PhysicalTraining physicalTraining, String physicalTrainingImagePath,
+    public Training(Date date, String physicalTrainingImagePath,
                     String description, String comment, List<AccountingQuantity> quantities) {
         this.date = date;
-        this.physicalTraining = physicalTraining;
         this.physicalTrainingImagePath = physicalTrainingImagePath;
         this.description = description;
         this.comment = comment;
@@ -65,14 +60,6 @@ public class Training implements ICommonEntities {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public PhysicalTraining getPhysicalTraining() {
-        return physicalTraining;
-    }
-
-    public void setPhysicalTraining(PhysicalTraining physicalTraining) {
-        this.physicalTraining = physicalTraining;
     }
 
     public String getPhysicalTrainingImagePath() {
@@ -105,37 +92,5 @@ public class Training implements ICommonEntities {
 
     public void setQuantities(Collection<AccountingQuantity> quantities) {
         this.quantities = quantities;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Training training = (Training) o;
-
-        if (id != null ? !id.equals(training.id) : training.id != null) return false;
-        if (date != null ? !date.equals(training.date) : training.date != null) return false;
-        if (physicalTraining != training.physicalTraining) return false;
-        if (physicalTrainingImagePath != null ? !physicalTrainingImagePath.equals(training.physicalTrainingImagePath) : training.physicalTrainingImagePath != null)
-            return false;
-        if (description != null ? !description.equals(training.description) : training.description != null)
-            return false;
-        if (comment != null ? !comment.equals(training.comment) : training.comment != null)
-            return false;
-        return !(quantities != null ? !quantities.equals(training.quantities) : training.quantities != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (physicalTraining != null ? physicalTraining.hashCode() : 0);
-        result = 31 * result + (physicalTrainingImagePath != null ? physicalTrainingImagePath.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (quantities != null ? quantities.hashCode() : 0);
-        return result;
     }
 }

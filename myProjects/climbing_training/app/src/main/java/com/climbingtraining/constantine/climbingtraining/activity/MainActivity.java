@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -45,14 +46,33 @@ public class MainActivity extends AppCompatActivity {
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
+        initToolbar();
+        initXmlFields();
+        initListeners();
+        initNavigationDrawer();
+
+        MainListAdapter adapter = new MainListAdapter(this, initMainList());
+        mainLayoutListView.setAdapter(adapter);
+    }
+
+    private void initToolbar() {
+        Log.d(TAG, "initToolbar() start");
         toolbar = (Toolbar) findViewById(R.id.main_layout_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        Log.d(TAG, "initToolbar() done");
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
         mainLayoutListView = (ListView) findViewById(R.id.main_layout_list_view);
+        Log.d(TAG, "initXmlFields() done");
+    }
 
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         mainLayoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -75,11 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        MainListAdapter adapter = new MainListAdapter(this, initMainList());
-        mainLayoutListView.setAdapter(adapter);
-
-        initializeNavigationDrawer();
+        Log.d(TAG, "initListeners() done");
     }
 
     @Override
@@ -91,13 +107,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeNavigationDrawer() {
+    private void initNavigationDrawer() {
+        Log.d(TAG, "initNavigationDrawer() start");
         drawerResult = new Drawer()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withDisplayBelowToolbar(true)
                 .withActionBarDrawerToggleAnimated(true)
-                .addDrawerItems(initializeDrawerItems())
+                .addDrawerItems(initDrawerItems())
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
@@ -121,9 +138,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .build();
+        Log.d(TAG, "initNavigationDrawer() done");
     }
 
-    private IDrawerItem[] initializeDrawerItems() {
+    private IDrawerItem[] initDrawerItems() {
+        Log.d(TAG, "initDrawerItems()");
         return new IDrawerItem[]{new PrimaryDrawerItem()
                 .withName(R.string.home)
                 .withIdentifier(1)
@@ -138,10 +157,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<MainList> initMainList() {
+        Log.d(TAG, "initMainList() start");
         List<MainList> mainLists = new ArrayList<>();
         mainLists.add(new MainList(R.drawable.training, getString(R.string.trainings), ""));
         mainLists.add(new MainList(R.drawable.exercise, getString(R.string.exercises), ""));
         mainLists.add(new MainList(R.drawable.graph, getString(R.string.categories), ""));
+        Log.d(TAG, "initMainList() done");
         return mainLists;
     }
 }

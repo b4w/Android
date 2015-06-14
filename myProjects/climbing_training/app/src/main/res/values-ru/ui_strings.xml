@@ -45,4 +45,10 @@
     <string name="share">Share</string>
     <string name="delete">Удалить</string>
 
+    <string name="name_exercise">Название упражнения</string>
+    <string name="category_exercise">Категория упражнения</string>
+    <string name="accounting_quantity">Учет количества</string>
+    <string name="file_not_delete">не удалось удалить изображение с карты памяти</string>
+
+
 </resources>

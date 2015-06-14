@@ -28,7 +28,7 @@ import java.io.File;
 public abstract class AbstractCategoriesFragment extends Fragment {
 
     private final static String TAG = CategoryFragment.class.getSimpleName();
-    static final int GALLERY_REQUEST = 11;
+    private static final int GALLERY_REQUEST = 1;
 
     private ImageView image;
     private TextView name;

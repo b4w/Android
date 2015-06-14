@@ -4,9 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.EquipmentsFragment;
-import com.climbingtraining.constantine.climbingtraining.fragments.TypesExercisesFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.AbstractCategoriesListFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.CategoriesFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.EquipmentsFragment;
+import com.climbingtraining.constantine.climbingtraining.fragments.CategoriesFragments.TypesExercisesFragment;
 
 /**
  * Created by KonstantinSysoev on 09.05.15.
@@ -26,14 +27,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     //This method return the fragment for the every position in the View Pager
     @Override
     public Fragment getItem(int position) {
-
-        if (position == 0) {
-            return CategoriesFragment.newInstance();
-        } else if (position == 1){
-            return EquipmentsFragment.newInstance();
-        } else {
-            return TypesExercisesFragment.newInstance();
-        }
+        return AbstractCategoriesListFragment.newInstance(position);
     }
 
     // This method return the titles for the Tabs in the Tab Strip

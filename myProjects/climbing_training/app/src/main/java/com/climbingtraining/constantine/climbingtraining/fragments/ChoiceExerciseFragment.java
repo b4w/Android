@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +28,14 @@ import java.util.List;
  */
 public class ChoiceExerciseFragment extends Fragment {
 
+    private static final String TAG = ChoiceExerciseFragment.class.getSimpleName();
+
     private ExpandableListView fragmentChoiceExercisesExlistView;
     private IChoiceExercisesFragmentCallBack callBack;
     private ExercisesListAdapter exercisesListAdapter;
 
-    private OrmHelper ormHelperExercise;
+    private OrmHelper ormHelper;
     private CommonDao commonDaoExercise;
-
-    private OrmHelper ormHelperCategory;
     private CommonDao commonDaoCategory;
 
     private List<Exercise> exercises;
@@ -69,61 +70,79 @@ public class ChoiceExerciseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentChoiceExercisesExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_choice_exercises_exlist_view);
+        initXmlFields();
+        initListeners();
+        fragmentChoiceExercisesExlistView.setAdapter(exercisesListAdapter);
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
+        fragmentChoiceExercisesExlistView = (ExpandableListView) getActivity().findViewById(R.id.fragment_choice_exercises_exlist_view);
+        Log.d(TAG, "initXmlFields() done");
+    }
+
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         fragmentChoiceExercisesExlistView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Exercise exercise = (Exercise) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-                callBack.chooseExercise(exercise);
+                callBack.chooseExercise(exercise.getId());
                 return false;
             }
         });
-        fragmentChoiceExercisesExlistView.setAdapter(exercisesListAdapter);
+        Log.d(TAG, "initListeners() done");
     }
 
     private void initDB() {
-        ormHelperExercise = new OrmHelper(getActivity(), ICommonEntities.EXERCISES_DATABASE_NAME,
-                ICommonEntities.EXERCISE_DATABASE_VERSION);
-        ormHelperCategory = new OrmHelper(getActivity(), ICommonEntities.CATEGORIES_DATABASE_NAME,
-                ICommonEntities.CATEGORIES_DATABASE_VERSION);
+        Log.d(TAG, "initDB() start");
+        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
-            commonDaoExercise = ormHelperExercise.getDaoByClass(Exercise.class);
-            commonDaoCategory = ormHelperCategory.getDaoByClass(Category.class);
+            commonDaoExercise = ormHelper.getDaoByClass(Exercise.class);
+            commonDaoCategory = ormHelper.getDaoByClass(Category.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+//        TODO: будут вытаскиваться данные без ormHelper?
+//        if (ormHelper != null)
+//            ormHelper.close();
+        Log.d(TAG, "initDB() done");
     }
 
     private List<Exercise> getAllExercises() {
+        Log.d(TAG, "getAllExercises() start");
         List<Exercise> result = null;
         try {
+//            TODO: добавить проверку на commonDaoExercise != null?
             result = commonDaoExercise.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getAllExercises() done");
         return result != null ? result : Collections.<Exercise>emptyList();
     }
 
 
     private List<Category> getAllCategory() {
+        Log.d(TAG, "getAllCategory() start");
         List<Category> result = null;
         try {
             result = commonDaoCategory.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "getAllCategory() done");
         return result != null ? result : Collections.<Category>emptyList();
     }
 
     private List<List<Exercise>> initData() {
+        Log.d(TAG, "initData() start");
         if (exercises == null || exercises.isEmpty() || categories == null || categories.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-
         List<List<Exercise>> parent = new ArrayList<>();
         List<Exercise> child;
-
         for (Category category : categories) {
             child = new ArrayList<>();
             for (Exercise exercise : exercises) {
@@ -135,10 +154,11 @@ public class ChoiceExerciseFragment extends Fragment {
                 parent.add(child);
             }
         }
+        Log.d(TAG, "initData() done");
         return parent;
     }
 
     public interface IChoiceExercisesFragmentCallBack {
-        void chooseExercise(Exercise exercise);
+        void chooseExercise(Integer exerciseId);
     }
 }

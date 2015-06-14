@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.adapters.TrainingsListAdapter;
@@ -22,7 +21,6 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,9 +28,9 @@ import java.util.List;
  */
 public class TrainingsFragment extends Fragment {
 
-    private ListView trainingsLayoutListView;
+    private static final String TAG = TrainingsFragment.class.getSimpleName();
 
-    //    private List<Trainings> tmpList;
+    private ListView trainingsLayoutListView;
     private List<Training> trainings;
     private TrainingsListAdapter trainingsListAdapter;
     private FloatingActionButton fragmentTrainingsFloatButton;
@@ -59,26 +57,33 @@ public class TrainingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initDB();
         trainings = loadTrainingFromDB();
         trainingsListAdapter = new TrainingsListAdapter(getActivity(), trainings);
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initXmlFields();
+        initListeners();
+        trainingsLayoutListView.setAdapter(trainingsListAdapter);
+    }
 
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() start");
         trainingsLayoutListView = (ListView) getActivity().findViewById(R.id.fragment_trainings_list_view);
         fragmentTrainingsFloatButton = (FloatingActionButton) getActivity().findViewById(R.id.fragment_trainings_float_button);
+        Log.d(TAG, "initXmlFields() done");
+    }
 
+    private void initListeners() {
+        Log.d(TAG, "initListeners() start");
         trainingsLayoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), getString(R.string.option_temporarily), Toast.LENGTH_SHORT).show();
-//                Training training = (Training) parent.getAdapter().getItem(position);
-//                callBack.editTraining(training);
+                Training training = (Training) parent.getAdapter().getItem(position);
+                callBack.editTraining(training.getId());
             }
         });
 
@@ -88,8 +93,7 @@ public class TrainingsFragment extends Fragment {
                 callBack.createNewTraining();
             }
         });
-
-        trainingsLayoutListView.setAdapter(trainingsListAdapter);
+        Log.d(TAG, "initListeners() done");
     }
 
     @Nullable
@@ -100,31 +104,32 @@ public class TrainingsFragment extends Fragment {
     }
 
     private void initDB() {
-        ormHelper = new OrmHelper(getActivity(), ICommonEntities.TRAINING_DATABASE_NAME,
-                ICommonEntities.TRAINING_DATABASE_VERSION);
+        Log.d(TAG, "initDB() start");
+        ormHelper = new OrmHelper(getActivity(), ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
             commonDao = ormHelper.getDaoByClass(Training.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "initDB() done");
     }
 
     private List<Training> loadTrainingFromDB() {
+        Log.d(TAG, "loadTrainingFromDB() start");
         List<Training> result = null;
         try {
             result = commonDao.queryForAll();
-//            for (Training item : result) {
-//
-//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "loadTrainingFromDB() done");
         return result != null ? result : Collections.<Training>emptyList();
     }
 
     public interface ITrainingsFragmentCallBack {
         void createNewTraining();
 
-        void editTraining(Training training);
+        void editTraining(Integer trainingId);
     }
 }
