@@ -3,6 +3,7 @@ package com.climbingtraining.constantine.climbingtraining.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
 import com.climbingtraining.constantine.climbingtraining.data.dto.ICommonEntities;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
 import com.climbingtraining.constantine.climbingtraining.data.helpers.OrmHelper;
+import com.climbingtraining.constantine.climbingtraining.enums.PhysicalTraining;
 import com.climbingtraining.constantine.climbingtraining.utils.DatePicker;
 
 import java.sql.SQLException;
@@ -87,6 +89,7 @@ public class TrainingFragment extends Fragment {
         initXmlFields();
         initListeners();
         updateAccountingQuantities();
+        callBack.showHideOptionsMenu(true);
     }
 
     private void initXmlFields() {
@@ -135,7 +138,7 @@ public class TrainingFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.saveTraining(getCreatedTraining());
+                callBack.saveTraining(getCreatedTraining(), getImageForTraining());
             }
         });
         // отмена сохранения тренировки
@@ -170,7 +173,9 @@ public class TrainingFragment extends Fragment {
 
     private Training getCreatedTraining() {
         Log.d(TAG, "getCreatedTraining() start");
-        Training training = new Training();
+        if (training == null) {
+            training = new Training();
+        }
         Date dateTraining;
 //        try {
 //            dateTraining = sdf.parse(date.getText().toString());
@@ -179,12 +184,35 @@ public class TrainingFragment extends Fragment {
 //        }
         training.setDate(new Date());
         // TODO: Разобраться с изображением
-        training.setPhysicalTrainingImagePath("");
+//        training.setPhysicalTrainingImagePath("");
         training.setDescription(description.getText().toString());
         training.setComment(comment.getText().toString());
         training.setQuantities(accountingQuantities);
         Log.d(TAG, "getCreatedTraining() done");
         return training;
+    }
+
+    private Drawable getImageForTraining() {
+        Log.d(TAG, "getImageForTraining() start");
+        Drawable result = null;
+        if (!accountingQuantities.isEmpty()) {
+            PhysicalTraining physicalTraining = accountingQuantities.get(0).getPhysicalTraining();
+            if (PhysicalTraining.OFP.equals(physicalTraining)) {
+                result = getResources().getDrawable(R.drawable.ofp);
+            } else if (PhysicalTraining.SFP.equals(physicalTraining)) {
+                result = getResources().getDrawable(R.drawable.sfp);
+            } else if (PhysicalTraining.OFP_SFP.equals(physicalTraining)) {
+                result = getResources().getDrawable(R.drawable.sfp_ofp);
+            } else if (PhysicalTraining.CARDIO.equals(physicalTraining)) {
+                // TODO: т.к. пока нет cardio
+                result = getResources().getDrawable(R.drawable.ofp);
+            }
+        } else {
+            Log.e(TAG, "AccountingQuantities.isEmpty()");
+            result = null;
+        }
+        Log.d(TAG, "getImageForTraining() done");
+        return result;
     }
 
     private Training getTrainingById(int trainingId) {
@@ -218,8 +246,10 @@ public class TrainingFragment extends Fragment {
     public interface ITrainingFragmentCallBack {
         void createNewAccountingQuantity();
 
-        void saveTraining(Training training);
+        void saveTraining(Training training, Drawable drawable);
 
         void cancel();
+
+        void showHideOptionsMenu(boolean entitiesIsChecked);
     }
 }

@@ -2,6 +2,7 @@ package com.climbingtraining.constantine.climbingtraining.utils;
 
 import com.climbingtraining.constantine.climbingtraining.data.dto.AbstractEntity;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Exercise;
+import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,10 @@ public class EntitiesForEditing {
 
     // список сущностей (категория, оборудование, вид упражнения) для редактирования
     private List<AbstractEntity> entitiesForEditing;
-    // список упражнения для редактирования
+    // список упражнений для редактирования
     private List<Exercise> exercisesForEditing;
+    // списо тренировок для редактирования
+    private List<Training> trainingsForEditing;
 
     public static EntitiesForEditing getInstance() {
         if (instance == null) {
@@ -37,5 +40,12 @@ public class EntitiesForEditing {
             exercisesForEditing = new ArrayList<>();
         }
         return exercisesForEditing;
+    }
+
+    public List<Training> getTrainingsForEditing() {
+        if (trainingsForEditing == null) {
+            trainingsForEditing = new ArrayList<>();
+        }
+        return trainingsForEditing;
     }
 }

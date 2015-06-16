@@ -1,10 +1,15 @@
 package com.climbingtraining.constantine.climbingtraining.activity;
 
 import android.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,8 +28,12 @@ import com.climbingtraining.constantine.climbingtraining.fragments.ChoiceExercis
 import com.climbingtraining.constantine.climbingtraining.fragments.TrainingFragment;
 import com.climbingtraining.constantine.climbingtraining.fragments.TrainingsFragment;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +47,19 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 
     public static final String EXERCISE_ID = "exerciseId";
     public static final String TRAINING_ID = "trainingId";
+    public final static String DIR_SD = "/Climbing training/images/trainings/";
 
     private Toolbar toolbar;
+    private Training entity;
+
+    private CommonDao trainingDao;
+    private CommonDao aqDao;
+
+    private String imageNameAndPath;
+    private String imageNameForSDCard;
+
+    private MenuItem menuItemShare;
+    private MenuItem menuItemDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +67,59 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         setContentView(R.layout.trainings_layout);
         initToolbar();
         loadTrainingsFragment();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_edit_entity, menu);
+        menuItemShare = menu.findItem(R.id.menu_toolbar_share);
+        menuItemDelete = menu.findItem(R.id.menu_toolbar_delete);
+        menuItemShare.setVisible(false);
+        menuItemDelete.setVisible(false);
+        initMenuListeners();
+        return true;
+    }
+
+    @Override
+    public void showHideOptionsMenu(boolean entitiesIsChecked) {
+        Log.d(TAG, "showHideOptionsMenu() start");
+        boolean menuIsVisible;
+        if (entitiesIsChecked) {
+            menuIsVisible = true;
+        } else {
+            menuIsVisible = false;
+        }
+        menuItemDelete.setVisible(menuIsVisible);
+        menuItemShare.setVisible(menuIsVisible);
+        Log.d(TAG, "showHideOptionsMenu() done");
+    }
+
+    private void initMenuListeners() {
+        Log.d(TAG, "initMenuListeners() start");
+        menuItemShare.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(), "It doesn't work yet", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (entity != null) {
+                    deleteTrainings(Arrays.asList(entity));
+                    // раскомментировать, когда понадобится множественное удаление
+//                  deleteExercises(EntitiesForEditing.getInstance().getExercisesForEditing());
+                    showHideOptionsMenu(false);
+                    getFragmentManager().popBackStack();
+                } else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.impossible_delete_new_training), Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
+        });
+        Log.d(TAG, "initMenuListeners() done");
     }
 
     private void initToolbar() {
@@ -90,11 +163,12 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
     /**
      * Редактирование тренировки.
      *
-     * @param trainingId - id тренировки.
+     * @param training - тренировка.
      */
     @Override
-    public void editTraining(Integer trainingId) {
-        loadEditTrainingFragment(trainingId);
+    public void editTraining(Training training) {
+        entity = training;
+        loadEditTrainingFragment();
     }
 
     /**
@@ -111,8 +185,9 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
      * @param training - тренировка.
      */
     @Override
-    public void saveTraining(Training training) {
-        saveNewTraining(training);
+    public void saveTraining(Training training, Drawable drawable) {
+        showHideOptionsMenu(false);
+        saveNewTraining(training, drawable);
     }
 
     /**
@@ -120,6 +195,7 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
      */
     @Override
     public void cancel() {
+        showHideOptionsMenu(false);
         Toast.makeText(this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStack();
     }
@@ -250,13 +326,18 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
      *
      * @param training
      */
-    private void saveNewTraining(Training training) {
+    private void saveNewTraining(Training training, Drawable drawable) {
         Log.d(TAG, "saveNewTraining() start");
-        saveDataToDB(training);
+        entity = training;
+        if (!saveImageToSDCard(drawable)) {
+            Toast.makeText(this, getString(R.string.saving_image_sd), Toast.LENGTH_SHORT).show();
+        }
+        entity.setPhysicalTrainingImagePath(imageNameAndPath != null ? imageNameAndPath : "");
+        saveDataToDB();
         TrainingsFragment fragment = TrainingsFragment.newInstance();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(TrainingsActivity.TRAINING_ID, training.getId());
+        bundle.putInt(TrainingsActivity.TRAINING_ID, entity.getId());
         fragment.setArguments(bundle);
 
         getFragmentManager()
@@ -268,13 +349,13 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "saveNewTraining() done");
     }
 
-    private void loadEditTrainingFragment(Integer trainingId) {
+    private void loadEditTrainingFragment() {
         Log.d(TAG, "loadEditTrainingFragment() start");
 
         TrainingFragment fragment = TrainingFragment.newInstance();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(TrainingsActivity.TRAINING_ID, trainingId);
+        bundle.putInt(TrainingsActivity.TRAINING_ID, entity.getId());
         fragment.setArguments(bundle);
 
         getFragmentManager()
@@ -286,16 +367,15 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
         Log.d(TAG, "loadEditTrainingFragment() done");
     }
 
-    private void saveDataToDB(Training training) {
+    private void saveDataToDB() {
         Log.d(TAG, "saveDataToDB() start");
         OrmHelper ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
                 ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
         try {
             CommonDao trainingDao = ormHelper.getDaoByClass(Training.class);
             if (trainingDao != null) {
-
                 List<AccountingQuantity> quantities = new ArrayList<>();
-                for (AccountingQuantity item : training.getQuantities()) {
+                for (AccountingQuantity item : entity.getQuantities()) {
                     Exercise exercise = item.getExercise();
                     ormHelper.getDaoByClass(Category.class).createOrUpdate(exercise.getCategory());
                     ormHelper.getDaoByClass(Equipment.class).createOrUpdate(exercise.getEquipment());
@@ -305,11 +385,11 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
 //                    TODO: заменить на выбранные даты
                     item.setTimeBegin(new Date());
                     item.setTimeEnd(new Date());
-                    item.setTraining(training);
+                    item.setTraining(entity);
                     quantities.add(item);
                 }
                 // сохраняем тренировку
-                trainingDao.create(training);
+                trainingDao.createOrUpdate(entity);
 
                 // сохраняем список упражнений
                 CommonDao aqDao = ormHelper.getDaoByClass(AccountingQuantity.class);
@@ -321,9 +401,78 @@ public class TrainingsActivity extends AppCompatActivity implements TrainingsFra
             Toast.makeText(this, getString(R.string.error_added), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-        Toast.makeText(this, training.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, entity.getClass().getSimpleName() + " " + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
         // Закрываем все подключения
         ormHelper.close();
         Log.d(TAG, "saveDataToDB() done");
+    }
+
+    private void deleteTrainings(List<Training> trainings) {
+        Log.d(TAG, "deleteTrainings() start");
+        if (trainings.isEmpty()) {
+            Toast.makeText(this, "Is empty or new training", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        OrmHelper ormHelper = new OrmHelper(this, ICommonEntities.CLIMBING_TRAINING_DB_NAME,
+                ICommonEntities.CLIMBING_TRAINING_DB_VERSION);
+        for (Training training : trainings) {
+            try {
+                if (trainingDao == null) {
+                    trainingDao = ormHelper.getDaoByClass(Training.class);
+                }
+                if (aqDao == null) {
+                    aqDao = ormHelper.getDaoByClass(AccountingQuantity.class);
+                }
+                for (AccountingQuantity quantity : training.getQuantities()) {
+                    aqDao.delete(quantity);
+                }
+                trainingDao.delete(training);
+                // изображение пока удалять не стоит, т.к. их всего 5
+//                deleteImageFromSD(training.getImagePath());
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.training_is_deleted), Toast.LENGTH_SHORT).show();
+            } catch (SQLException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        Log.d(TAG, "deleteExercises() done");
+    }
+
+    private boolean saveImageToSDCard(Drawable drawable) {
+        Log.d(TAG, "saveImageToSDCard() start");
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bmp = bitmapDrawable.getBitmap();
+
+        // проверяем доступность cd
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.d(TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
+            return false;
+        }
+        // название файла
+        List<AccountingQuantity> quantities = ((ArrayList) entity.getQuantities());
+        imageNameForSDCard = quantities.get(0).getPhysicalTraining().name() + ".jpg";
+        // получаем путь к SD
+        File sdPath = Environment.getExternalStorageDirectory();
+        // добавляем свой каталог к пути
+        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
+        // создаем каталог
+        sdPath.mkdirs();
+        // формируем объект File, который содержит путь к файлу
+        File imageToSd = new File(sdPath, imageNameForSDCard);
+        try {
+            FileOutputStream fos = new FileOutputStream(imageToSd);
+            // 100 - 100% качество
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            // пишем данные
+            fos.flush();
+            // закрываем поток
+            fos.close();
+            Log.d(TAG, "Файл записан на SD: " + imageToSd.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        imageNameAndPath = sdPath + "/" + imageNameForSDCard;
+        Log.d(TAG, "saveImageToSDCard() done");
+        return true;
     }
 }

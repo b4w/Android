@@ -49,6 +49,8 @@
     <string name="category_exercise">Category exercise</string>
     <string name="accounting_quantity">Accounting quantity</string>
     <string name="file_not_delete">it wasn\'t succeeded to delete the image from the memory stick</string>
+    <string name="impossible_delete_new_training">it is impossible to delete new training</string>
+    <string name="training_is_deleted">training is deleted</string>
 
 
 </resources>

@@ -49,6 +49,8 @@
     <string name="category_exercise">Категория упражнения</string>
     <string name="accounting_quantity">Учет количества</string>
     <string name="file_not_delete">не удалось удалить изображение с карты памяти</string>
+    <string name="impossible_delete_new_training">нельзя удалить новую тренировку</string>
+    <string name="training_is_deleted">тренировка удалена</string>
 
 
 </resources>

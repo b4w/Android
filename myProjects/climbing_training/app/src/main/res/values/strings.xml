@@ -63,6 +63,8 @@
     <string name="ready">Ready</string>
     <string name="trainings">Trainings</string>
     <string name="exercises">Exercises</string>
+    <string name="impossible_delete_new_training">it is impossible to delete new training</string>
+    <string name="training_is_deleted">training is deleted</string>
 
 
 </resources>

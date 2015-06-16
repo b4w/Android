@@ -83,7 +83,7 @@ public class TrainingsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Training training = (Training) parent.getAdapter().getItem(position);
-                callBack.editTraining(training.getId());
+                callBack.editTraining(training);
             }
         });
 
@@ -130,6 +130,6 @@ public class TrainingsFragment extends Fragment {
     public interface ITrainingsFragmentCallBack {
         void createNewTraining();
 
-        void editTraining(Integer trainingId);
+        void editTraining(Training training);
     }
 }

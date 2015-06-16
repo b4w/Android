@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.climbingtraining.constantine.climbingtraining.R;
 import com.climbingtraining.constantine.climbingtraining.data.dto.AccountingQuantity;
 import com.climbingtraining.constantine.climbingtraining.data.dto.Training;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import java.util.List;
  */
 public class TrainingsListAdapter extends BaseAdapter {
 
-//    TODO перенести в отдельный класс utils
+    //    TODO перенести в отдельный класс utils
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private Context context;
@@ -35,6 +37,7 @@ public class TrainingsListAdapter extends BaseAdapter {
 
     /**
      * Возвращает количество элементов.
+     *
      * @return
      */
     @Override
@@ -44,6 +47,7 @@ public class TrainingsListAdapter extends BaseAdapter {
 
     /**
      * Возвращает элемент списка по его позиции.
+     *
      * @param position
      * @return
      */
@@ -54,6 +58,7 @@ public class TrainingsListAdapter extends BaseAdapter {
 
     /**
      * Возвращает номер позиции элемента списка.
+     *
      * @param position
      * @return
      */
@@ -81,11 +86,16 @@ public class TrainingsListAdapter extends BaseAdapter {
         Training training = (Training) getItem(position);
 
         viewHolder.date.setText(training.getDate() != null ? sdf.format(training.getDate()) : "");
-        viewHolder.imageView.setImageResource(R.drawable.ofp);
+        if (!training.getPhysicalTrainingImagePath().isEmpty()) {
+            File file = new File(training.getPhysicalTrainingImagePath());
+            Picasso.with(context).load(file).into(viewHolder.imageView);
+        }
 
         StringBuilder sb = new StringBuilder();
-        for(AccountingQuantity item : training.getQuantities()) {
-            sb.append(item.getExercise().getName());
+        for (AccountingQuantity item : training.getQuantities()) {
+            if (item.getExercise() != null) {
+                sb.append(item.getExercise().getName());
+            }
         }
         viewHolder.exercises.setText(sb.toString());
         viewHolder.comments.setText(training.getComment());
