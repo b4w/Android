@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">DynamicFragmentExample</string>
-    <string name="add_btn">Добавить</string>
-    <string name="my_first_fragment">Мой первый фрагмент</string>
-    <string name="my_second_fragment">Мой второй фрагмент</string>
-    <string name="remove">Удалить</string>
-    <string name="replace">Заменить</string>
-    <string name="saveValuesToStack">Сохранять значения в стек</string>
-</resources>
