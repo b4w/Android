@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginLeft="0dp"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginTop="0dp"
+                  android:id="@+id/linearLayout">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_btn"
+                android:onClick="onClickFragment"
+                android:layout_weight="1"
+                android:id="@+id/btnAdd"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remove"
+                android:layout_weight="1"
+                android:onClick="onClickFragment"
+                android:id="@+id/btnRemove"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/replace"
+                android:layout_weight="1"
+                android:onClick="onClickFragment"
+                android:id="@+id/btnReplace"/>
+    </LinearLayout>
+
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saveValuesToStack"
+            android:id="@+id/switchBackStack"
+            android:layout_below="@+id/linearLayout" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+    <LinearLayout android:id="@+id/container"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:layout_below="@+id/switchBackStack"/>
+
+</RelativeLayout>
