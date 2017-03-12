@@ -11,8 +11,6 @@ This folder contain android application project.
 
 - / devColibri - vide-lesson devcolibri.ru
 
-- / myProjects - some my test projects
-
 - / startadnroid - video-lesson startadnroid.ru
 
 - / GooleAndroid - course adnroid develop on udacity.com
